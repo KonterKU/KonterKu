@@ -385,13 +385,34 @@
             </div>
         </div>
 
+        <!-- MODAL: Penyesuaian Saldo (Ubah ke Tambah/Kurangi) -->
         <div id="modal-adj-wallet" class="modal-overlay" onclick="closeModal('modal-adj-wallet')">
             <div class="modal-content" onclick="event.stopPropagation()">
-                <h4 class="text-lg font-black mb-6">Penyesuaian Saldo</h4>
+                <div class="flex justify-between items-center mb-6">
+                    <h4 class="text-lg font-black">Penyesuaian Saldo</h4>
+                    <button onclick="closeModal('modal-adj-wallet')" class="text-slate-400"><i class="fas fa-times"></i></button>
+                </div>
                 <div class="space-y-4">
-                    <div><label>Dompet</label><select id="adj-wallet" class="input-premium"></select></div>
-                    <div><label>Saldo Baru</label><input type="number" id="adj-amount" class="input-premium"></div>
-                    <button onclick="processAdjustment()" class="w-full py-4 bg-amber-500 text-white rounded-2xl font-black">SINKRONKAN</button>
+                    <div>
+                        <label>Pilih Dompet</label>
+                        <select id="adj-wallet" class="input-premium"></select>
+                    </div>
+                    <div>
+                        <label>Tipe Aksi</label>
+                        <select id="adj-type" class="input-premium">
+                            <option value="tambah">Tambah Saldo (+)</option>
+                            <option value="kurang">Kurangi Saldo (-)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Jumlah Nominal Perubahan</label>
+                        <input type="number" id="adj-amount" class="input-premium" placeholder="0">
+                    </div>
+                    <div>
+                        <label>Alasan / Keterangan</label>
+                        <input type="text" id="adj-reason" class="input-premium" placeholder="Contoh: Koreksi selisih, Bonus harian">
+                    </div>
+                    <button onclick="processAdjustment()" class="w-full py-4 bg-amber-500 text-white rounded-2xl font-black shadow-lg shadow-amber-200">SINKRONKAN SALDO</button>
                 </div>
             </div>
         </div>
@@ -408,7 +429,6 @@
     <script>
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxvat0C4aqitYiaEWWlcYx_C2BfUL65ODh1kNJtxvumbG90avcTLnc5rp7bXlHB6-FwAA/exec";
         
-        // Memuat database utama. Kita definisikan struktur default yang lengkap.
         let db = { dompet: [], transaksi: [], inventory: [], hutang: [], pelanggan: [], mutasi: [], notes: [] };
         
         let activeHutangTab = 'pelanggan';
@@ -416,35 +436,37 @@
         let currentManualHutangType = 'pelanggan';
         const fmt = (n) => new Intl.NumberFormat('id-ID').format(Number(n) || 0);
 
-        // Deklarasi fungsi utilitas sinkronisasi di cakupan global pertama kali
         function showSync(s) {
             const pill = document.getElementById('sync-pill');
             if (pill) pill.classList.toggle('hidden', !s);
         }
 
-        // Simpan data secara lokal di browser agar aman saat berpindah halaman/login/logout
         const saveLocalData = () => {
-            localStorage.setItem('konterku_db', JSON.stringify(db));
+            const activeStoreId = localStorage.getItem('k_sid');
+            if (activeStoreId) {
+                localStorage.setItem('konterku_db_' + activeStoreId, JSON.stringify(db));
+            }
         };
 
-        // Muat data lokal di browser untuk respon instan tanpa internet
         const loadLocalData = () => {
-            const saved = localStorage.getItem('konterku_db');
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved);
-                    // Amankan properties jika ada yang kosong
-                    db = {
-                        dompet: parsed.dompet || [],
-                        transaksi: parsed.transaksi || [],
-                        inventory: parsed.inventory || [],
-                        hutang: parsed.hutang || [],
-                        pelanggan: parsed.pelanggan || [],
-                        mutasi: parsed.mutasi || [],
-                        notes: parsed.notes || []
-                    };
-                } catch (e) {
-                    console.error("Gagal parse data lokal, menggunakan struktur default", e);
+            const activeStoreId = localStorage.getItem('k_sid');
+            if (activeStoreId) {
+                const saved = localStorage.getItem('konterku_db_' + activeStoreId);
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        db = {
+                            dompet: parsed.dompet || [],
+                            transaksi: parsed.transaksi || [],
+                            inventory: parsed.inventory || [],
+                            hutang: parsed.hutang || [],
+                            pelanggan: parsed.pelanggan || [],
+                            mutasi: parsed.mutasi || [],
+                            notes: parsed.notes || []
+                        };
+                    } catch (e) {
+                        console.error("Gagal membaca storage lokal", e);
+                    }
                 }
             }
         };
@@ -539,7 +561,6 @@
             const list = document.getElementById('notes-list-dashboard');
             if (!db.notes) db.notes = [];
             
-            // Sort: pinned first, then by ID descending
             const sortedNotes = [...db.notes].sort((a, b) => {
                 if (a.pinned && !b.pinned) return -1;
                 if (!a.pinned && b.pinned) return 1;
@@ -612,14 +633,6 @@
 
             closeModal('modal-note');
             await sync();
-            Swal.fire({
-                icon: 'success',
-                title: id ? 'Catatan Diperbarui' : 'Catatan Tersimpan',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 2000
-            });
         }
 
         function editNote(id) {
@@ -655,14 +668,6 @@
             if (res.isConfirmed) {
                 db.notes = db.notes.filter(n => n.id !== id);
                 await sync();
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Catatan Dihapus',
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 2000
-                });
             }
         }
 
@@ -709,7 +714,10 @@
             if(!sid) return;
             showSync(true);
             try {
-                const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'login', storeId: sid }) });
+                const res = await fetch(SCRIPT_URL, { 
+                  method: 'POST', 
+                  body: JSON.stringify({ action: 'login', storeId: sid }) 
+                });
                 const result = await res.json();
                 if(result.status === 'success') { 
                     localStorage.setItem('k_logged', 'true'); 
@@ -726,36 +734,50 @@
             document.getElementById('app-content').classList.remove('hidden');
             document.getElementById('display-store-name').innerText = localStorage.getItem('k_sid');
             
-            // 1. Muat data lokal instan dari browser agar langsung tampil
             loadLocalData();
             renderAll();
-            
-            // 2. Hubungkan ke server cloud untuk mendapatkan sinkronisasi data terbaru
             fetchCloudData();
         }
 
         async function fetchCloudData() {
+            const activeStoreId = localStorage.getItem('k_sid');
+            if(!activeStoreId) return;
+            
             showSync(true);
             try {
-                const res = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'load' }) });
-                const data = await res.json();
-                if (data) {
+                const res = await fetch(SCRIPT_URL, { 
+                  method: 'POST', 
+                  body: JSON.stringify({ action: 'load', storeId: activeStoreId }) 
+                });
+                const response = await res.json();
+                if (response && response.status === "success" && response.data) {
+                    const data = response.data;
                     db = { 
-                        dompet: data.dompet || [], transaksi: data.transaksi || [], inventory: data.inventory || [],
-                        hutang: data.hutang || [], pelanggan: data.pelanggan || [], mutasi: data.mutasi || [],
+                        dompet: data.dompet || [], 
+                        transaksi: data.transaksi || [], 
+                        inventory: data.inventory || [],
+                        hutang: data.hutang || [], 
+                        pelanggan: data.pelanggan || [], 
+                        mutasi: data.mutasi || [],
                         notes: data.notes || []
                     };
-                    saveLocalData(); // Cadangkan ke local storage setelah mengambil dari cloud
+                    saveLocalData();
                     renderAll();
                 }
             } catch(e) { console.error(e); } finally { showSync(false); }
         }
 
         async function sync() {
-            saveLocalData(); // Simpan di lokal terlebih dahulu
+            const activeStoreId = localStorage.getItem('k_sid');
+            if(!activeStoreId) return;
+            
+            saveLocalData();
             showSync(true);
             try { 
-                await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'save', data: db }) }); 
+                await fetch(SCRIPT_URL, { 
+                  method: 'POST', 
+                  body: JSON.stringify({ action: 'save', storeId: activeStoreId, data: db }) 
+                }); 
                 renderAll(); 
             } catch(e) { console.error(e); } finally { showSync(false); }
         }
@@ -806,15 +828,17 @@
             const items = document.getElementById('wallet-items');
             items.innerHTML = `
                 <div><label class="mb-3">TUNAI</label><div class="grid grid-cols-2 gap-3">${db.dompet.filter(w=>w.tipe==='kas').map(w=>`
-                    <div class="card-premium p-4 flex flex-col justify-between min-h-[90px]">
-                        <div class="flex justify-between items-center"><p class="text-[9px] font-black text-slate-400 uppercase">${w.nama}</p></div>
+                    <div class="card-premium p-4 flex flex-col justify-between min-h-[90px] relative">
+                        <p class="text-[9px] font-black text-slate-400 uppercase">${w.nama}</p>
                         <p class="text-sm font-black">Rp ${fmt(w.saldo)}</p>
+                        <button onclick="deleteWallet('${w.id}')" class="absolute right-3 top-3 text-slate-300 hover:text-red-500 text-[10px]"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 `).join('')}</div></div>
                 <div class="mt-4"><label class="mb-3">DIGITAL</label><div class="grid grid-cols-2 gap-3">${db.dompet.filter(w=>w.tipe==='digital').map(w=>`
-                    <div class="card-premium p-4 flex flex-col justify-between min-h-[90px]">
-                        <div class="flex justify-between items-center"><p class="text-[9px] font-black text-slate-400 uppercase">${w.nama}</p></div>
+                    <div class="card-premium p-4 flex flex-col justify-between min-h-[90px] relative">
+                        <p class="text-[9px] font-black text-slate-400 uppercase">${w.nama}</p>
                         <p class="text-sm font-black">Rp ${fmt(w.saldo)}</p>
+                        <button onclick="deleteWallet('${w.id}')" class="absolute right-3 top-3 text-slate-300 hover:text-red-500 text-[10px]"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 `).join('')}</div></div>
             `;
@@ -832,8 +856,10 @@
                         </div>
                         <p class="text-sm font-black ${tipe === 'pelanggan' ? 'text-red-600' : 'text-amber-600'}">Rp ${fmt(h.jumlah)}</p>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="openPayHutang('${h.id}')" class="flex-1 py-2 bg-emerald-50 text-emerald-600 rounded-xl text-[9px] font-black uppercase">BAYAR</button>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="openPayHutang('${h.id}')" class="py-2 bg-emerald-50 text-emerald-600 rounded-xl text-[9px] font-black uppercase">BAYAR / CICIL</button>
+                        <button onclick="openEditHutang('${h.id}')" class="py-2 bg-blue-50 text-blue-600 rounded-xl text-[9px] font-black uppercase">EDIT</button>
+                        <button onclick="deleteHutang('${h.id}')" class="py-2 bg-red-50 text-red-600 rounded-xl text-[9px] font-black uppercase">HAPUS</button>
                     </div>
                 </div>
             `).join('') || '<p class="text-center py-20 text-[10px] opacity-30 tracking-widest uppercase">Lunas!</p>';
@@ -842,13 +868,17 @@
         function renderStok() {
             const list = document.getElementById('stok-list');
             list.innerHTML = db.inventory.map(p => `
-                <div class="card-premium p-4 flex justify-between items-center">
-                    <div><p class="text-xs font-black uppercase">${p.nama}</p><p class="text-[9px] font-bold text-slate-400">Rp ${fmt(p.jual)}</p></div>
+                <div class="card-premium p-4 flex justify-between items-center relative">
+                    <div>
+                        <p class="text-xs font-black uppercase">${p.nama}</p>
+                        <p class="text-[9px] font-bold text-slate-400">Modal: Rp ${fmt(p.modal)} • Jual: Rp ${fmt(p.jual)}</p>
+                    </div>
                     <div class="flex items-center gap-4">
                         <p class="text-[10px] font-black ${p.stok < 5 ? 'text-red-500' : 'text-blue-500'}">${p.tipe === 'fisik' ? p.stok + ' UNIT' : 'DIGITAL'}</p>
+                        <button onclick="deleteProduk('${p.id}')" class="text-slate-300 hover:text-red-500"><i class="fas fa-trash-alt text-[11px]"></i></button>
                     </div>
                 </div>
-            `).join('');
+            `).join('') || '<p class="text-center py-10 text-[10px] opacity-30">Belum ada produk</p>';
         }
 
         function renderCustomers() {
@@ -858,7 +888,7 @@
                     <div class="w-8 h-8 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-2"><i class="fas fa-user text-[10px]"></i></div>
                     <p class="text-[9px] font-black truncate w-full uppercase">${c.nama}</p>
                 </div>
-            `).join('');
+            `).join('') || '<p class="text-[9px] opacity-30 px-4">Belum ada pelanggan</p>';
         }
 
         function updateSelects() {
@@ -911,6 +941,9 @@
             closeModal('modal-wallet'); await sync();
         }
 
+        async function deleteProduk(id) { db.inventory = db.inventory.filter(p => p.id !== id); await sync(); }
+        async function deleteWallet(id) { db.dompet = db.dompet.filter(w => w.id !== id); await sync(); }
+
         async function prosesKasir(tipe) {
             const isDig = tipe === 'digital';
             const pid = document.getElementById(isDig ? 'kd-produk' : 'kf-produk').value;
@@ -962,16 +995,48 @@
             closeModal('modal-tr-wallet'); await sync();
         }
 
+        // LOGIKA PENYESUAIAN SALDO DENGAN TAMBAH/KURANG
         async function processAdjustment() {
             const wId = document.getElementById('adj-wallet').value;
-            const a = Number(document.getElementById('adj-amount').value);
-            const wIdx = db.dompet.findIndex(w=>w.id===wId);
-            const diff = a - db.dompet[wIdx].saldo;
-            if(diff !== 0) {
-                addMutasi(wId, Math.abs(diff), diff > 0 ? 'in' : 'out', 'ADJUSTMENT');
-                db.dompet[wIdx].saldo = a;
-                closeModal('modal-adj-wallet'); await sync();
+            const type = document.getElementById('adj-type').value;
+            const amount = Number(document.getElementById('adj-amount').value);
+            const reason = document.getElementById('adj-reason').value || "Penyesuaian Manual";
+
+            if(amount <= 0) {
+                Swal.fire('Error', 'Jumlah penyesuaian harus lebih dari 0', 'warning');
+                return;
             }
+
+            const wIdx = db.dompet.findIndex(w => w.id === wId);
+            if(wIdx === -1) return;
+
+            if(type === 'tambah') {
+                db.dompet[wIdx].saldo += amount;
+                addMutasi(wId, amount, 'in', 'PENYESUAIAN (+): ' + reason);
+            } else {
+                if(db.dompet[wIdx].saldo < amount) {
+                    Swal.fire('Error', 'Saldo tidak mencukupi untuk dikurangi', 'error');
+                    return;
+                }
+                db.dompet[wIdx].saldo -= amount;
+                addMutasi(wId, amount, 'out', 'PENYESUAIAN (-): ' + reason);
+            }
+
+            // Catat sebagai transaksi log penyesuaian
+            db.transaksi.push({ 
+                id: 'ADJ-'+Date.now(), 
+                tgl: new Date().toISOString().split('T')[0], 
+                produk: `ADJ: ${db.dompet[wIdx].nama} (${reason})`, 
+                modal: 0, 
+                jual: amount, 
+                pelanggan: 'SISTEM', 
+                status: 'Lunas' 
+            });
+
+            document.getElementById('adj-amount').value = '';
+            document.getElementById('adj-reason').value = '';
+            closeModal('modal-adj-wallet');
+            await sync();
         }
 
         function openPayHutang(id) {
@@ -1005,15 +1070,11 @@
             closeModal('modal-pay-hutang'); await sync();
         }
 
-        // FUNGSI LOGOUT YANG DIPERBAIKI (TIDAK MENGHAPUS DATABASE KANVAS/LOCALSTORAGE)
         function logout() { 
-            // Kita hanya menghapus flag login sesi agar pengguna kembali ke layar Login,
-            // namun database 'konterku_db' dan 'k_sid' (ID Toko) di localStorage tidak kita bersihkan.
             localStorage.removeItem('k_logged'); 
             location.reload(); 
         }
 
-        // Bootstrapping aplikasi
         if(localStorage.getItem('k_logged') === 'true') {
             initApp();
         }
