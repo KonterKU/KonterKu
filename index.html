@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>KonterKU Cloud - Premium POS</title>
   
+  <!-- Favicon Shortcut Ikon -->
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   
@@ -12,6 +13,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Menambahkan Chart.js untuk grafik laporan laba rugi -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root { --primary: #0061C2; --bg: #F8FAFC; --slate-800: #1e293b; }
@@ -43,11 +45,13 @@
 </head>
 <body class="pb-32">
 
+    <!-- Loading Pill -->
     <div id="sync-pill" class="fixed top-6 left-1/2 -translate-x-1/2 bg-slate-900/90 text-white px-5 py-2.5 rounded-full text-[10px] font-black z-[3000] hidden flex items-center gap-3">
         <div class="w-2 h-2 bg-emerald-400 rounded-full animate-ping"></div>
         SINKRONISASI...
     </div>
 
+    <!-- Login UI -->
     <div id="login-screen" class="fixed inset-0 bg-white z-[2000] flex items-center justify-center p-10 overflow-y-auto">
         <div class="w-full max-w-sm text-center my-auto">
             <div class="w-20 h-20 bg-blue-600 text-white rounded-3xl flex items-center justify-center text-3xl shadow-xl mx-auto mb-8 rotate-3">
@@ -69,10 +73,12 @@
                     <hr class="flex-grow border-slate-200">
                 </div>
 
+                <!-- Tombol Coba Akun Demo -->
                 <button onclick="loginDemo()" class="w-full py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 mb-6">
                     <i class="fas fa-eye"></i> MASUK SEBAGAI TOKO DEMO
                 </button>
 
+                <!-- Box Catatan Pendaftaran ID Toko -->
                 <div class="text-left bg-blue-50/70 border border-blue-100 rounded-2xl p-4 space-y-2">
                     <div class="flex items-center gap-2 text-blue-700 font-black text-[11px] uppercase tracking-wider">
                         <i class="fas fa-info-circle text-xs text-blue-600"></i>
@@ -89,6 +95,7 @@
         </div>
     </div>
 
+    <!-- Main Content -->
     <div id="app-content" class="hidden">
         <header class="header-gradient pt-12 px-6 text-white">
             <div class="flex justify-between items-center mb-6">
@@ -102,6 +109,7 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
+                    <!-- Indikator Koneksi Offline / Online -->
                     <div id="connection-status" class="flex items-center gap-1.5 px-3 py-2 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 text-[10px] font-black transition-all">
                         <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" id="status-dot"></span>
                         <span id="status-text">ONLINE</span>
@@ -128,6 +136,7 @@
         </header>
 
         <main class="px-6 mt-16">
+            <!-- VIEW: DASHBOARD -->
             <section id="view-dashboard" class="view-section active space-y-8">
                 <div class="grid grid-cols-3 gap-2">
                     <div class="p-3 bg-white rounded-2xl border border-slate-100 shadow-sm">
@@ -139,11 +148,12 @@
                         <p id="stat-laba-today" class="text-[11px] font-black text-emerald-600">Rp 0</p>
                     </div>
                     <div class="p-3 bg-white rounded-2xl border border-slate-100 shadow-sm">
-                        <p class="text-[7px] font-black text-slate-800">TRX Hari Ini</p>
+                        <p class="text-[7px] font-black text-blue-600">TRX Hari Ini</p>
                         <p id="stat-trx-today" class="text-[11px] font-black text-blue-600">0</p>
                     </div>
                 </div>
 
+                <!-- Grafik Laporan Laba/Rugi Harian -->
                 <div class="card-premium p-5 space-y-3">
                     <div class="flex justify-between items-center border-b border-slate-50 pb-2">
                         <div>
@@ -171,11 +181,13 @@
                     <div class="flex justify-between items-center mb-4">
                         <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest">Transaksi Terakhir</h4>
                     </div>
+                    <!-- Filter Kategori Produk -->
                     <div class="flex gap-2 mb-2 overflow-x-auto no-scrollbar">
                         <button onclick="setTrFilter('all')" id="fltr-all" class="filter-chip active">SEMUA LAYANAN</button>
                         <button onclick="setTrFilter('DIG')" id="fltr-DIG" class="filter-chip">DIGITAL</button>
                         <button onclick="setTrFilter('FIS')" id="fltr-FIS" class="filter-chip">FISIK</button>
                     </div>
+                    <!-- Filter Rentang Waktu Baru -->
                     <div class="flex gap-2 mb-4 overflow-x-auto no-scrollbar">
                         <button onclick="setTimeFilter('all')" id="time-fltr-all" class="filter-chip active">SEMUA WAKTU</button>
                         <button onclick="setTimeFilter('today')" id="time-fltr-today" class="filter-chip">HARI INI</button>
@@ -185,6 +197,7 @@
                     <div id="recent-list" class="space-y-3"></div>
                 </div>
 
+                <!-- Section: Catatan Toko -->
                 <div>
                     <div class="flex justify-between items-center mb-4">
                         <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest">Catatan Toko</h4>
@@ -193,10 +206,12 @@
                         </button>
                     </div>
                     <div id="notes-list-dashboard" class="space-y-3">
-                        </div>
+                        <!-- Catatan rendered here -->
+                    </div>
                 </div>
             </section>
 
+            <!-- VIEW: KASIR -->
             <section id="view-kasir" class="view-section">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-xl font-black">Kasir</h3>
@@ -244,6 +259,7 @@
                 </div>
             </section>
 
+            <!-- VIEW: STOK -->
             <section id="view-stok" class="view-section">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-xl font-black">Stok Produk</h3>
@@ -252,6 +268,7 @@
                 <div id="stok-list" class="space-y-3"></div>
             </section>
 
+            <!-- VIEW: DOMPET & MUTASI -->
             <section id="view-wallets" class="view-section">
                 <div class="flex justify-between items-center mb-4">
                     <h3 class="text-xl font-black">Dompet</h3>
@@ -294,9 +311,11 @@
                 </div>
             </section>
 
+            <!-- VIEW: HUTANG -->
             <section id="view-hutang" class="view-section">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-xl font-black">Hutang</h3>
+                    <!-- Dropdown switcher tab diganti menjadi 3 tab: PELANGGAN, TOKO KITA, RIWAYAT BAYAR -->
                     <div class="flex bg-slate-200/50 p-1.5 rounded-2xl gap-1 flex-1 ml-4 border border-slate-200">
                         <button onclick="setHutangTab('pelanggan')" id="btn-h-plg" class="tab-btn active text-[10px]">PELANGGAN</button>
                         <button onclick="setHutangTab('toko')" id="btn-h-toko" class="tab-btn inactive text-[10px]">TOKO KITA</button>
@@ -314,6 +333,8 @@
             </section>
         </main>
 
+        <!-- MODALS -->
+        <!-- Modal: Tambah/Edit Catatan -->
         <div id="modal-note" class="modal-overlay" onclick="closeModal('modal-note')">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <div class="flex justify-between items-center mb-6">
@@ -335,6 +356,7 @@
             </div>
         </div>
 
+        <!-- Modal: Tambah Hutang Manual -->
         <div id="modal-add-hutang" class="modal-overlay" onclick="closeModal('modal-add-hutang')">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <div class="flex justify-between items-center mb-6">
@@ -362,6 +384,7 @@
             </div>
         </div>
 
+        <!-- Modal: Bayar Cicil Hutang -->
         <div id="modal-pay-hutang" class="modal-overlay" onclick="closeModal('modal-pay-hutang')">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <h4 class="text-lg font-black mb-6">Bayar / Cicil Hutang</h4>
@@ -375,6 +398,7 @@
             </div>
         </div>
 
+        <!-- Modal Edit Hutang -->
         <div id="modal-edit-hutang" class="modal-overlay" onclick="closeModal('modal-edit-hutang')">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <h4 class="text-lg font-black mb-6">Edit Data Hutang</h4>
@@ -388,6 +412,7 @@
             </div>
         </div>
 
+        <!-- MODAL LAINNYA -->
         <div id="modal-pelanggan" class="modal-overlay" onclick="closeModal('modal-pelanggan')">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <div class="flex justify-between items-center mb-6">
@@ -407,6 +432,7 @@
             </div>
         </div>
 
+        <!-- MODAL: Tambah/Edit Produk -->
         <div id="modal-produk" class="modal-overlay" onclick="closeModal('modal-produk')">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <h4 class="text-lg font-black mb-6" id="p-modal-title">Tambah Produk</h4>
@@ -448,6 +474,7 @@
             </div>
         </div>
 
+        <!-- MODAL: Penyesuaian Saldo -->
         <div id="modal-adj-wallet" class="modal-overlay" onclick="closeModal('modal-adj-wallet')">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <div class="flex justify-between items-center mb-6">
@@ -479,6 +506,7 @@
             </div>
         </div>
 
+        <!-- MODAL: Edit Transaksi Terakhir -->
         <div id="modal-edit-tr" class="modal-overlay" onclick="closeModal('modal-edit-tr')">
             <div class="modal-content" onclick="event.stopPropagation()">
                 <div class="flex justify-between items-center mb-6">
@@ -1102,17 +1130,15 @@
             loadLocalData();
             updateConnectionStatus();
             
-            resetKasirForms(); // Reset & inisialisasi awal form kasir
+            resetKasirForms(); 
             
             renderAll();
             fetchCloudData();
         }
 
-        // FUNGSI KHUSUS UNTUK MENGOSONGKAN FORM KASIR (BARU)
         function resetKasirForms() {
             const todayWIB = getWIBDate();
 
-            // 1. Reset Form Kasir Digital
             const kdTgl = document.getElementById('kd-tgl');
             if (kdTgl) kdTgl.value = todayWIB;
             
@@ -1136,7 +1162,6 @@
             
             document.getElementById('kd-note').value = "";
 
-            // 2. Reset Form Kasir Fisik
             const kfTgl = document.getElementById('kf-tgl');
             if (kfTgl) kfTgl.value = todayWIB;
             
@@ -1459,7 +1484,6 @@
             `).join('') || '<p class="text-center py-20 text-[10px] opacity-30 tracking-widest uppercase">Lunas!</p>';
         }
 
-        /* [KODE LANJUTAN TETAP SAMA] */
         function renderStok() {
             const list = document.getElementById('stok-list');
             list.innerHTML = db.inventory.map(p => `
@@ -1570,10 +1594,13 @@
             openModal('modal-produk');
         }
 
+        // FUNGSI UPDATE SELECTS DENGAN DETIL NOMINAL SALDO DOMPET (DIPERBARUI)
         function updateSelects() {
-            const wOpts = db.dompet.map(w => `<option value="${w.id}">${w.nama}</option>`).join('');
+            // Membuat opsi dompet dinamis dengan rincian nama dan jumlah nominal saldonya
+            const wOpts = db.dompet.map(w => `<option value="${w.id}">${w.nama} (Rp ${fmt(w.saldo)})</option>`).join('');
             const cOpts = db.pelanggan.map(c => `<option value="${c.nama}">${c.nama}</option>`).join('');
             
+            // For manual debt customer selection
             const mHCustSelect = document.getElementById('m-h-customer-select');
             if (mHCustSelect) {
                 mHCustSelect.innerHTML = '<option value="">-- Pilih Pelanggan --</option>' + cOpts + '<option value="manual">Tulis Manual...</option>';
@@ -1584,6 +1611,7 @@
                 if(el) el.innerHTML = wOpts;
             });
             
+            // Tambahkan "Tulis Manual..." di list produk digital
             document.getElementById('kd-produk').innerHTML = '<option value="">Pilih...</option>' + 
                 db.inventory.filter(p=>p.tipe==='digital').map(p=>`<option value="${p.id}">${p.nama}</option>`).join('') + 
                 '<option value="manual">Tulis Manual...</option>';
@@ -1687,7 +1715,6 @@
         
         async function deleteWallet(id) { db.dompet = db.dompet.filter(w => w.id !== id); await sync(); }
 
-        // PROSES KASIR SEKARANG OTOMATIS MERESET DAN MENGOSONGKAN FORM SETELAH BERHASIL (DIOPTIMALKAN)
         async function prosesKasir(tipe) {
             const isDig = tipe === 'digital';
             const tgl = document.getElementById(isDig ? 'kd-tgl' : 'kf-tgl').value || getWIBDate();
@@ -1801,7 +1828,6 @@
                 });
             }
 
-            // Jalankan pengosongan data pada form kasir sebelum sinkronisasi cloud selesai
             resetKasirForms();
 
             await sync();
@@ -1906,6 +1932,7 @@
                 nama: customerName,
                 tipe: hType,
                 shadow_tipe: hType,
+                shadow_amount: amount,
                 jumlah_bayar: amount,
                 sisa_sebelumnya: sisaSebelumnya,
                 sisa_sekarang: sisaSekarang,
