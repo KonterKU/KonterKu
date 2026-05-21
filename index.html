@@ -241,8 +241,8 @@
       <aside class="sidebar-panel" onclick="event.stopPropagation()">
 
         <!-- Sidebar Header -->
-        <div class="relative overflow-hidden px-5 pb-5"
-          style="padding-top: env(safe-area-inset-top, 16px); padding-top: max(16px, env(safe-area-inset-top)); background:linear-gradient(160deg,#060e1f 0%,#0b1e42 60%,#0a3272 100%);">
+        <div class="relative overflow-hidden px-5 pt-12 pb-5"
+          style="background:linear-gradient(160deg,#060e1f 0%,#0b1e42 60%,#0a3272 100%);">
 
           <!-- Dot pattern bg -->
           <div class="absolute inset-0 pointer-events-none" style="opacity:0.035;background-image:radial-gradient(circle,#7dd3fc 1px,transparent 1px);background-size:20px 20px;"></div>
@@ -2358,48 +2358,28 @@
 
       // ===== TAB RIWAYAT BAYAR =====
       if (tipe === 'riwayat') {
-        const activeFilter = window._riwayatFilter || 'semua';
-        let allData = [...(db.riwayat_hutang||[])].reverse();
-        const totalSemua = allData.length;
-        const totalLunas = allData.filter(h => h.sisa_sekarang === 0).length;
-        const totalCicilan = allData.filter(h => h.sisa_sekarang > 0).length;
-        if (activeFilter === 'lunas') allData = allData.filter(h => h.sisa_sekarang === 0);
-        else if (activeFilter === 'cicilan') allData = allData.filter(h => h.sisa_sekarang > 0);
-
-        let html = `<div class="flex gap-2 mb-4 overflow-x-auto no-scrollbar pb-1">
-            <button onclick="setRiwayatFilter('semua')" class="filter-chip flex-shrink-0 ${activeFilter==='semua'?'active':''}">Semua (${totalSemua})</button>
-            <button onclick="setRiwayatFilter('lunas')" class="filter-chip flex-shrink-0 ${activeFilter==='lunas'?'active':''}"><i class="fas fa-check-circle mr-1"></i>Lunas (${totalLunas})</button>
-            <button onclick="setRiwayatFilter('cicilan')" class="filter-chip flex-shrink-0 ${activeFilter==='cicilan'?'active':''}"><i class="fas fa-clock mr-1"></i>Cicilan (${totalCicilan})</button>
-          </div>`;
-
-        if (allData.length === 0) {
-          html += '<div class="text-center py-16"><i class="fas fa-file-invoice text-4xl text-slate-200 mb-3 block"></i><p class="text-[10px] opacity-40 tracking-widest uppercase font-bold">Belum ada riwayat</p></div>';
-          list.innerHTML = html;
+        const data = [...(db.riwayat_hutang||[])].reverse();
+        if (data.length === 0) {
+          list.innerHTML = '<div class="text-center py-20"><i class="fas fa-file-invoice text-4xl text-slate-200 mb-3 block"></i><p class="text-[10px] opacity-40 tracking-widest uppercase font-bold">Belum ada riwayat pembayaran</p></div>';
           return;
         }
-
-        html += allData.map(h => {
-          const lunas = h.sisa_sekarang === 0;
-          return `
-          <div class="card-premium p-4 flex flex-col gap-2 ${lunas ? 'border-l-4 border-emerald-400 bg-emerald-50/20' : 'border-l-4 ' + (h.tipe==='pelanggan' ? 'border-cyan-400' : 'border-amber-400')}">
+        list.innerHTML = data.map(h => `
+          <div class="card-premium p-4 border-l-4 ${h.tipe==='pelanggan' ? 'border-emerald-500' : 'border-amber-500'} flex flex-col gap-2">
             <div class="flex justify-between items-start">
-              <div class="flex-1 min-w-0 pr-2">
-                <div class="flex items-center gap-1.5 flex-wrap">
-                  <p class="text-xs font-black uppercase text-slate-800">${h.nama||''}</p>
-                  ${lunas ? '<span class="px-1.5 py-0.5 text-[7px] font-black uppercase rounded-full bg-emerald-100 text-emerald-700 flex-shrink-0"><i class="fas fa-check-circle mr-0.5"></i>LUNAS</span>' : '<span class="px-1.5 py-0.5 text-[7px] font-black uppercase rounded-full bg-orange-100 text-orange-700 flex-shrink-0"><i class="fas fa-clock mr-0.5"></i>CICILAN</span>'}
-                </div>
-                <p class="text-[8px] font-bold text-slate-400 mt-0.5 uppercase">${h.tgl||''} • ${h.dompet||''}</p>
-                <span class="px-1.5 py-0.5 text-[7px] font-black uppercase rounded-full mt-1 inline-block ${h.tipe==='pelanggan' ? 'bg-cyan-100 text-cyan-800' : 'bg-amber-100 text-amber-800'}">
+              <div>
+                <p class="text-xs font-black uppercase text-slate-800">${h.nama||''}</p>
+                <p class="text-[8px] font-bold text-slate-400 mt-0.5 uppercase">${h.tgl||''} • DOMPET: ${h.dompet||''}</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 text-[8px] font-black uppercase rounded-full ${h.tipe==='pelanggan' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
                   ${h.tipe==='pelanggan' ? 'PIUTANG' : 'HUTANG TOKO'}
                 </span>
+                <button onclick="deleteRiwayatHutang('${h.id}')" class="w-6 h-6 flex items-center justify-center bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 rounded-lg cursor-pointer border-0 transition-all" title="Hapus riwayat ini">
+                  <i class="fas fa-trash-alt text-[9px]"></i>
+                </button>
               </div>
-              <button onclick="deleteRiwayatHutang('${h.id}', ${lunas})"
-                class="w-7 h-7 flex items-center justify-center bg-slate-100 text-slate-400 hover:bg-red-50 hover:text-red-400 rounded-lg cursor-pointer border-0 transition-all flex-shrink-0 mt-0.5"
-                title="Hapus riwayat ini">
-                <i class="fas fa-trash-alt text-[9px]"></i>
-              </button>
             </div>
-            <div class="flex justify-between items-center bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+            <div class="flex justify-between items-center bg-slate-50 p-2.5 rounded-xl border border-slate-100 mt-1">
               <div>
                 <p class="text-[7px] text-slate-400 font-black uppercase">DIBAYAR</p>
                 <p class="text-emerald-600 font-black text-xs">Rp ${fmt(h.jumlah_bayar)}</p>
@@ -2407,16 +2387,14 @@
               <i class="fas fa-arrow-right text-slate-300 text-[10px]"></i>
               <div class="text-right">
                 <p class="text-[7px] text-slate-400 font-black uppercase">SISA HUTANG</p>
-                <p class="font-black text-xs ${lunas ? 'text-emerald-600' : 'text-red-500'}">
-                  ${lunas ? '<i class="fas fa-check-circle mr-1"></i>LUNAS' : 'Rp ' + fmt(h.sisa_sekarang)}
+                <p class="font-black text-xs ${h.sisa_sekarang === 0 ? 'text-emerald-600' : 'text-red-500'}">
+                  ${h.sisa_sekarang === 0 ? '<i class="fas fa-check-circle mr-1"></i>LUNAS' : 'Rp ' + fmt(h.sisa_sekarang)}
                 </p>
               </div>
             </div>
-            ${h.ket ? `<p class="text-[9px] text-slate-400 font-semibold italic px-0.5">Ket: ${h.ket}</p>` : ''}
-          </div>`;
-        }).join('');
-
-        list.innerHTML = html;
+            ${h.ket ? `<p class="text-[9px] text-slate-400 font-semibold italic">Ket: ${h.ket}</p>` : ''}
+          </div>
+        `).join('');
         return;
       }
 
@@ -2939,29 +2917,12 @@
       }
     }
 
-    async function deleteRiwayatHutang(id, isLunas) {
-      const title = isLunas ? 'Hapus Riwayat LUNAS?' : 'Hapus Riwayat Ini?';
-      const text = isLunas
-        ? 'Riwayat hutang yang sudah LUNAS ini akan dihapus permanen. Yakin ingin menghapus?'
-        : 'Entri riwayat bayar ini akan dihapus permanen.';
-      const confirmColor = isLunas ? '#dc2626' : '#ef4444';
-      const res = await Swal.fire({
-        title, text, icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: confirmColor,
-        confirmButtonText: isLunas ? 'Ya, Hapus Permanen' : 'Ya, Hapus',
-        cancelButtonText: 'Batal'
-      });
+    async function deleteRiwayatHutang(id) {
+      const res = await Swal.fire({ title: 'Hapus Riwayat Ini?', text: 'Entri riwayat bayar ini akan dihapus permanen.', icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', confirmButtonText: 'Ya, Hapus', cancelButtonText: 'Batal' });
       if (res.isConfirmed) {
         db.riwayat_hutang = (db.riwayat_hutang||[]).filter(h => h.id !== id);
         await sync();
-        renderHutang('riwayat');
       }
-    }
-
-    function setRiwayatFilter(filter) {
-      window._riwayatFilter = filter;
-      renderHutang('riwayat');
     }
 
     function openEditHutang(id) {
