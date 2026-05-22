@@ -1016,6 +1016,15 @@
       console.warn('[Subscription] Gagal buat subscription otomatis:', e.message);
     }
   }
+
+  // ===== ADMIN CONFIG =====
+  // UID admin yang aman — JANGAN diubah sembarangan
+  const ADMIN_UID = 'AGSCELL04JOGOLOYO';
+
+  function isAdminUser() {
+    const sid = localStorage.getItem('k_sid') || '';
+    return sid === ADMIN_UID;
+  }
   </script>
 
   <!-- ==================== APP CONTENT ==================== -->
@@ -1128,6 +1137,22 @@
               <i class="fas fa-chevron-right text-slate-600 text-[9px]"></i>
             </div>
           </button>
+
+          <!-- ADMIN ONLY SECTION -->
+          <div id="sidebar-admin-section" class="hidden">
+            <p class="sidebar-section-label" style="color:#f59e0b;">⚡ ADMIN</p>
+            <button class="sidebar-menu-item" onclick="openSidebarMenu('admin')"
+              style="background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(234,179,8,0.08));border:1px solid rgba(245,158,11,0.2);margin:2px 12px;border-radius:16px;">
+              <div class="sidebar-icon-wrap" style="background:rgba(245,158,11,0.15);">
+                <i class="fas fa-shield-halved" style="color:#f59e0b;"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-[12px] font-black" style="color:#fcd34d;">Panel Admin</p>
+                <p class="text-[9px] font-bold" style="color:#92400e;">Kelola langganan & user</p>
+              </div>
+              <i class="fas fa-chevron-right text-amber-600 text-[9px]"></i>
+            </button>
+          </div>
 
           <p class="sidebar-section-label">DATA</p>
 
@@ -1675,9 +1700,185 @@
         </div>
       </div>
     </div>
-    <header class="header-gradient text-white">
+    <!-- ===== MODAL ADMIN PANEL ===== -->
+    <div id="modal-admin-panel" class="modal-overlay">
+      <div class="modal-content" style="max-height:92vh;overflow-y:auto;padding:0;border-radius:32px 32px 0 0;">
+        <div class="relative overflow-hidden text-white px-5 pt-8 pb-6"
+          style="background:linear-gradient(150deg,#0a0f1e 0%,#1a1000 45%,#3d1a00 100%);">
+          <div class="absolute inset-0 pointer-events-none" style="opacity:0.04;background-image:radial-gradient(circle,#fcd34d 1px,transparent 1px);background-size:18px 18px;"></div>
+          <div class="absolute right-0 top-0 w-40 h-40 pointer-events-none" style="background:radial-gradient(circle at 100% 0%,rgba(245,158,11,0.25) 0%,transparent 70%)"></div>
+          <button onclick="closeModal('modal-admin-panel')"
+            class="absolute right-4 top-4 flex items-center justify-center cursor-pointer border-0 transition-all"
+            style="width:36px;height:36px;background:rgba(255,255,255,0.1);border-radius:12px;backdrop-filter:blur(8px);">
+            <i class="fas fa-times text-white" style="font-size:13px;opacity:0.7;"></i>
+          </button>
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"
+              style="background:linear-gradient(135deg,#f59e0b,#d97706);box-shadow:0 6px 20px rgba(245,158,11,0.5);">
+              <i class="fas fa-shield-halved text-white" style="font-size:18px;"></i>
+            </div>
+            <div>
+              <p class="font-black" style="font-size:9px;color:rgba(253,230,138,0.7);letter-spacing:0.18em;text-transform:uppercase;">SUPER ADMIN</p>
+              <h3 class="font-black text-white" style="font-size:20px;letter-spacing:-0.5px;">Panel Admin</h3>
+            </div>
+          </div>
+          <p class="font-bold" style="font-size:10px;color:rgba(255,255,255,0.4);">UID: <span class="font-black text-amber-300">AGSCELL04JOGOLOYO</span></p>
+        </div>
+        <div class="px-4 py-4 space-y-4" style="background:#f8fafc;">
+          <div class="grid grid-cols-3 gap-2">
+            <div class="bg-white rounded-2xl p-3 text-center border border-slate-100 shadow-sm">
+              <p class="text-lg font-black text-amber-600" id="admin-stat-total">0</p>
+              <p class="text-[7px] font-black text-slate-400 uppercase mt-0.5">Total User</p>
+            </div>
+            <div class="bg-white rounded-2xl p-3 text-center border border-slate-100 shadow-sm">
+              <p class="text-lg font-black text-emerald-600" id="admin-stat-active">0</p>
+              <p class="text-[7px] font-black text-slate-400 uppercase mt-0.5">Aktif</p>
+            </div>
+            <div class="bg-white rounded-2xl p-3 text-center border border-slate-100 shadow-sm">
+              <p class="text-lg font-black text-red-500" id="admin-stat-expired">0</p>
+              <p class="text-[7px] font-black text-slate-400 uppercase mt-0.5">Expired</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl border border-amber-100 shadow-sm overflow-hidden">
+            <div class="px-4 py-3 flex items-center gap-2"
+              style="background:linear-gradient(90deg,rgba(245,158,11,0.08),transparent);border-bottom:1px solid #fef3c7;">
+              <i class="fas fa-user-plus text-amber-500" style="font-size:11px;"></i>
+              <p class="font-black uppercase" style="font-size:9px;color:#92400e;letter-spacing:0.1em;">Set / Perpanjang Langganan</p>
+            </div>
+            <div class="p-4 space-y-3">
+              <div>
+                <label style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;display:block;margin-bottom:4px;">UID Pengguna</label>
+                <input type="text" id="admin-input-uid" class="input-premium" placeholder="Masukkan UID atau cari dari daftar..." style="font-size:12px;">
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;display:block;margin-bottom:4px;">Paket</label>
+                  <select id="admin-input-plan" class="input-premium" style="font-size:12px;">
+                    <option value="trial">Trial (30 hari)</option>
+                    <option value="basic">Basic</option>
+                    <option value="pro">Pro</option>
+                    <option value="unlimited">Unlimited</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;display:block;margin-bottom:4px;">Status</label>
+                  <select id="admin-input-status" class="input-premium" style="font-size:12px;">
+                    <option value="active">Active</option>
+                    <option value="expired">Expired</option>
+                    <option value="suspended">Suspended</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;display:block;margin-bottom:4px;">Tanggal Expired</label>
+                <input type="date" id="admin-input-expired" class="input-premium" style="font-size:12px;">
+              </div>
+              <div>
+                <label style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;display:block;margin-bottom:4px;">Referensi Pembayaran (opsional)</label>
+                <input type="text" id="admin-input-payref" class="input-premium" placeholder="Contoh: TRF-BCA-12345" style="font-size:12px;">
+              </div>
+              <button onclick="adminSaveSubscription()"
+                class="w-full py-3.5 font-black text-[11px] text-white rounded-xl cursor-pointer border-0 flex items-center justify-center gap-2 transition-all"
+                style="background:linear-gradient(135deg,#f59e0b,#d97706);box-shadow:0 6px 18px rgba(245,158,11,0.4);">
+                <i class="fas fa-floppy-disk"></i> SIMPAN LANGGANAN
+              </button>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div class="px-4 py-3 flex items-center justify-between"
+              style="border-bottom:1px solid #f1f5f9;">
+              <div class="flex items-center gap-2">
+                <i class="fas fa-users text-slate-500" style="font-size:11px;"></i>
+                <p class="font-black uppercase" style="font-size:9px;color:#64748b;letter-spacing:0.1em;">Semua Langganan</p>
+              </div>
+              <button onclick="adminLoadSubscriptions()" class="px-3 py-1.5 rounded-lg font-black text-[9px] text-white cursor-pointer border-0 flex items-center gap-1"
+                style="background:#0061C2;">
+                <i class="fas fa-rotate-right text-[8px]"></i> MUAT
+              </button>
+            </div>
+            <div class="px-4 pt-3">
+              <div class="relative">
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 text-[10px]"></i>
+                <input type="text" id="admin-search" oninput="adminFilterList()" class="input-premium pl-8 !py-2" placeholder="Cari email atau UID..." style="font-size:11px;">
+              </div>
+            </div>
+            <div class="flex gap-2 px-4 py-2 overflow-x-auto no-scrollbar">
+              <button onclick="adminSetFilter('all')" id="admin-chip-all" class="filter-chip active" style="font-size:9px;">SEMUA</button>
+              <button onclick="adminSetFilter('active')" id="admin-chip-active" class="filter-chip" style="font-size:9px;">AKTIF</button>
+              <button onclick="adminSetFilter('expired')" id="admin-chip-expired" class="filter-chip" style="font-size:9px;">EXPIRED</button>
+              <button onclick="adminSetFilter('trial')" id="admin-chip-trial" class="filter-chip" style="font-size:9px;">TRIAL</button>
+            </div>
+            <div id="admin-sub-list" class="px-4 pb-4 space-y-2" style="max-height:48vh;overflow-y:auto;">
+              <div class="text-center py-8">
+                <i class="fas fa-arrow-up text-slate-200 text-2xl block mb-2"></i>
+                <p class="text-[10px] font-bold text-slate-400">Klik MUAT untuk menampilkan data</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-      <!-- Ornamen blur background -->
+    <!-- MODAL ADMIN EDIT SUBSCRIPTION -->
+    <div id="modal-admin-edit" class="modal-overlay" style="z-index:3500;">
+      <div class="modal-content" style="border-radius:28px 28px 0 0;">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <h4 class="text-base font-black">Edit Langganan</h4>
+            <p class="text-[9px] text-slate-400 font-bold" id="admin-edit-uid-label">UID: -</p>
+          </div>
+          <button onclick="closeModal('modal-admin-edit')" class="text-slate-400 text-xl cursor-pointer border-0 bg-transparent"><i class="fas fa-times"></i></button>
+        </div>
+        <input type="hidden" id="admin-edit-uid">
+        <div class="space-y-3">
+          <div>
+            <label>Email</label>
+            <input type="text" id="admin-edit-email" class="input-premium" readonly style="font-size:12px;background:#f8fafc;">
+          </div>
+          <div>
+            <label>Nama Toko</label>
+            <input type="text" id="admin-edit-store" class="input-premium" style="font-size:12px;">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label>Paket</label>
+              <select id="admin-edit-plan" class="input-premium" style="font-size:12px;">
+                <option value="trial">Trial</option>
+                <option value="basic">Basic</option>
+                <option value="pro">Pro</option>
+                <option value="unlimited">Unlimited</option>
+              </select>
+            </div>
+            <div>
+              <label>Status</label>
+              <select id="admin-edit-status" class="input-premium" style="font-size:12px;">
+                <option value="active">Active</option>
+                <option value="expired">Expired</option>
+                <option value="suspended">Suspended</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label>Tanggal Expired</label>
+            <input type="date" id="admin-edit-expired" class="input-premium" style="font-size:12px;">
+          </div>
+          <div>
+            <label>Referensi Pembayaran</label>
+            <input type="text" id="admin-edit-payref" class="input-premium" placeholder="No. Transfer / Ref" style="font-size:12px;">
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button onclick="adminDeleteSubscription()" class="py-3 rounded-xl font-black text-[11px] text-white cursor-pointer border-0 flex items-center justify-center gap-1.5" style="background:#ef4444;">
+              <i class="fas fa-trash-alt"></i> HAPUS
+            </button>
+            <button onclick="adminUpdateSubscription()" class="py-3 rounded-xl font-black text-[11px] text-white cursor-pointer border-0 flex items-center justify-center gap-1.5" style="background:linear-gradient(135deg,#f59e0b,#d97706);">
+              <i class="fas fa-floppy-disk"></i> SIMPAN
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <header class="header-gradient text-white">
       <div class="absolute -right-10 -top-10 w-52 h-52 rounded-full pointer-events-none"
         style="background:radial-gradient(circle, rgba(56,189,248,0.18) 0%, transparent 70%)"></div>
       <div class="absolute -left-8 bottom-0 w-40 h-40 rounded-full pointer-events-none"
@@ -5217,10 +5418,214 @@
       reader.readAsText(file);
     }
 
+
+    // ============================================================
+    // ADMIN PANEL FUNCTIONS
+    // ============================================================
+    let _adminAllSubs = [];
+    let _adminFilter  = 'all';
+
+    function checkAdminMenu() {
+      const section = document.getElementById('sidebar-admin-section');
+      if (section) section.classList.toggle('hidden', !isAdminUser());
+    }
+
+    // Patch openSidebarMenu to handle 'admin'
+    (function() {
+      const _orig = openSidebarMenu;
+      openSidebarMenu = function(menu) {
+        if (menu === 'admin') {
+          document.getElementById('sidebar-overlay').classList.remove('open');
+          document.body.style.overflow = '';
+          if (!isAdminUser()) { Swal.fire('Akses Ditolak','Anda tidak punya akses admin.','error'); return; }
+          openModal('modal-admin-panel');
+          return;
+        }
+        _orig(menu);
+      };
+    })();
+
+    // Patch openSidebar to show admin menu
+    (function() {
+      const _orig = openSidebar;
+      openSidebar = function() { _orig(); checkAdminMenu(); };
+    })();
+
+    async function adminLoadSubscriptions() {
+      if (!isAdminUser()) return;
+      const listEl = document.getElementById('admin-sub-list');
+      if (listEl) listEl.innerHTML = '<div class="text-center py-6"><i class="fas fa-spinner fa-spin text-amber-400 text-xl"></i><p class="text-[10px] text-slate-400 mt-2">Memuat data...</p></div>';
+      try {
+        await waitFirebase();
+        const snap = await window._fbFirestore.collection('subscriptions').get();
+        _adminAllSubs = [];
+        const today = new Date(); today.setHours(0,0,0,0);
+        snap.forEach(doc => {
+          const d = doc.data();
+          let expTs = d.expired_at;
+          if (expTs && expTs.toDate) expTs = expTs.toDate();
+          else if (expTs) expTs = new Date(expTs);
+          _adminAllSubs.push({
+            uid: doc.id, email: d.email||'—', store_name: d.store_name||'—',
+            plan: d.plan||'trial', status: d.status||'active',
+            expired_at: expTs ? expTs.toISOString().split('T')[0] : null,
+            payment_ref: d.payment_ref||'',
+          });
+        });
+        const activeCount  = _adminAllSubs.filter(s => s.status==='active' && s.expired_at && new Date(s.expired_at)>=today).length;
+        const expiredCount = _adminAllSubs.filter(s => s.status==='expired' || (s.expired_at && new Date(s.expired_at)<today)).length;
+        const el = (id,v) => { const e=document.getElementById(id); if(e) e.innerText=v; };
+        el('admin-stat-total', _adminAllSubs.length);
+        el('admin-stat-active', activeCount);
+        el('admin-stat-expired', expiredCount);
+        adminRenderList();
+      } catch(e) {
+        if (listEl) listEl.innerHTML = '<div class="text-center py-6 text-red-400"><p class="text-[10px] font-bold">Gagal: '+(e.message||'error')+'</p></div>';
+      }
+    }
+
+    function adminRenderList() {
+      const q      = (document.getElementById('admin-search')?.value||'').toLowerCase();
+      const listEl = document.getElementById('admin-sub-list');
+      if (!listEl) return;
+      const today = new Date(); today.setHours(0,0,0,0);
+      let filtered = _adminAllSubs.filter(s => {
+        const mq = !q || s.email.toLowerCase().includes(q) || s.uid.toLowerCase().includes(q) || s.store_name.toLowerCase().includes(q);
+        if (!mq) return false;
+        if (_adminFilter==='active')  return s.status==='active' && s.expired_at && new Date(s.expired_at)>=today;
+        if (_adminFilter==='expired') return s.status==='expired' || (s.expired_at && new Date(s.expired_at)<today);
+        if (_adminFilter==='trial')   return s.plan==='trial';
+        return true;
+      });
+      filtered.sort((a,b) => {
+        const da = a.expired_at ? new Date(a.expired_at) : new Date('2099-01-01');
+        const db2= b.expired_at ? new Date(b.expired_at) : new Date('2099-01-01');
+        return da-db2;
+      });
+      if (!filtered.length) {
+        listEl.innerHTML = '<div class="text-center py-6"><p class="text-[10px] font-bold text-slate-400">Tidak ada data</p></div>';
+        return;
+      }
+      const pc = { trial:{bg:'#f5f3ff',color:'#7c3aed',border:'#ddd6fe'}, basic:{bg:'#eff6ff',color:'#1d4ed8',border:'#bfdbfe'}, pro:{bg:'#f0fdf4',color:'#15803d',border:'#bbf7d0'}, unlimited:{bg:'#fffbeb',color:'#b45309',border:'#fde68a'} };
+      listEl.innerHTML = filtered.map(s => {
+        const p      = pc[s.plan]||pc.trial;
+        const isExp  = s.expired_at && new Date(s.expired_at)<today;
+        const sc     = isExp ? '#ef4444' : (s.status==='suspended'?'#f59e0b':'#10b981');
+        const sl     = isExp ? 'EXPIRED' : (s.status==='suspended'?'SUSPENDED':'AKTIF');
+        const diff   = s.expired_at ? Math.ceil((new Date(s.expired_at)-today)/86400000) : null;
+        const sisa   = diff===null ? '—' : (diff<=0 ? 'Sudah expired' : (diff<=7 ? 'Sisa '+diff+' hari' : s.expired_at));
+        return `<div class="bg-white rounded-2xl overflow-hidden cursor-pointer hover:shadow-md transition-all" style="border:1px solid #f1f5f9;border-left:4px solid ${sc};" onclick="adminOpenEdit('${s.uid}')">
+          <div class="p-3 flex items-start gap-2.5">
+            <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 font-black text-white text-[10px]" style="background:linear-gradient(135deg,#0061C2,#38BDF8);">${(s.store_name||s.email).charAt(0).toUpperCase()}</div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-1.5 flex-wrap mb-0.5">
+                <p class="text-[11px] font-black text-slate-800 truncate">${s.store_name||'—'}</p>
+                <span class="px-1.5 py-0.5 rounded-full text-[7px] font-black uppercase" style="background:${p.bg};color:${p.color};border:1px solid ${p.border};">${s.plan.toUpperCase()}</span>
+                <span class="px-1.5 py-0.5 rounded-full text-[7px] font-black uppercase" style="background:${isExp?'#fef2f2':'#f0fdf4'};color:${sc};">${sl}</span>
+              </div>
+              <p class="text-[8px] font-bold text-slate-400 truncate">${s.email}</p>
+              <p class="text-[8px] font-bold" style="color:${isExp?'#ef4444':'#64748b'};">${sisa}</p>
+              <p class="text-[7px] text-slate-300 font-bold truncate">UID: ${s.uid}</p>
+            </div>
+            <i class="fas fa-chevron-right text-slate-300 text-[9px] mt-1 flex-shrink-0"></i>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function adminFilterList() { adminRenderList(); }
+
+    function adminSetFilter(f) {
+      _adminFilter = f;
+      ['all','active','expired','trial'].forEach(k => {
+        const el = document.getElementById('admin-chip-'+k);
+        if (el) el.className = 'filter-chip'+(k===f?' active':'');
+      });
+      adminRenderList();
+    }
+
+    function adminOpenEdit(uid) {
+      const s = _adminAllSubs.find(x => x.uid===uid);
+      if (!s) return;
+      document.getElementById('admin-edit-uid').value        = s.uid;
+      document.getElementById('admin-edit-uid-label').innerText = 'UID: '+s.uid;
+      document.getElementById('admin-edit-email').value      = s.email;
+      document.getElementById('admin-edit-store').value      = s.store_name;
+      document.getElementById('admin-edit-plan').value       = s.plan;
+      document.getElementById('admin-edit-status').value     = s.status;
+      document.getElementById('admin-edit-expired').value    = s.expired_at||'';
+      document.getElementById('admin-edit-payref').value     = s.payment_ref||'';
+      openModal('modal-admin-edit');
+    }
+
+    async function adminUpdateSubscription() {
+      const uid      = document.getElementById('admin-edit-uid').value;
+      if (!uid) return;
+      const plan     = document.getElementById('admin-edit-plan').value;
+      const status   = document.getElementById('admin-edit-status').value;
+      const expStr   = document.getElementById('admin-edit-expired').value;
+      const payref   = document.getElementById('admin-edit-payref').value.trim();
+      const storeName= document.getElementById('admin-edit-store').value.trim();
+      if (!expStr) { Swal.fire('Error','Tanggal expired harus diisi.','warning'); return; }
+      try {
+        await waitFirebase();
+        await window._fbFirestore.collection('subscriptions').doc(uid).update({
+          plan, status, store_name: storeName,
+          expired_at : new Date(expStr+'T23:59:59'),
+          payment_ref: payref,
+          updated_at : new Date(),
+          updated_by : ADMIN_UID,
+        });
+        closeModal('modal-admin-edit');
+        Swal.fire({ title:'Berhasil!', text:'Langganan '+uid+' diperbarui.', icon:'success', timer:2000, showConfirmButton:false });
+        adminLoadSubscriptions();
+      } catch(e) { Swal.fire('Gagal', e.message||'Error', 'error'); }
+    }
+
+    async function adminDeleteSubscription() {
+      const uid = document.getElementById('admin-edit-uid').value;
+      if (!uid) return;
+      const res = await Swal.fire({ title:'Hapus Langganan?', text:'subscriptions/'+uid+' akan dihapus permanen!', icon:'warning', showCancelButton:true, confirmButtonColor:'#ef4444', confirmButtonText:'Ya, Hapus', cancelButtonText:'Batal' });
+      if (!res.isConfirmed) return;
+      try {
+        await waitFirebase();
+        await window._fbFirestore.collection('subscriptions').doc(uid).delete();
+        closeModal('modal-admin-edit');
+        Swal.fire({ title:'Dihapus!', icon:'success', timer:1500, showConfirmButton:false });
+        adminLoadSubscriptions();
+      } catch(e) { Swal.fire('Gagal', e.message, 'error'); }
+    }
+
+    async function adminSaveSubscription() {
+      const uid    = document.getElementById('admin-input-uid').value.trim();
+      const plan   = document.getElementById('admin-input-plan').value;
+      const status = document.getElementById('admin-input-status').value;
+      const expStr = document.getElementById('admin-input-expired').value;
+      const payref = document.getElementById('admin-input-payref').value.trim();
+      if (!uid)    { Swal.fire('Error','UID harus diisi.','warning'); return; }
+      if (!expStr) { Swal.fire('Error','Tanggal expired harus diisi.','warning'); return; }
+      try {
+        await waitFirebase();
+        const existing = await window._fbFirestore.collection('subscriptions').doc(uid).get();
+        const isNew    = !existing.exists;
+        const subData  = {
+          uid, plan, status,
+          expired_at : new Date(expStr+'T23:59:59'),
+          payment_ref: payref,
+          updated_at : new Date(),
+          updated_by : ADMIN_UID,
+        };
+        if (isNew) { subData.email=''; subData.store_name=''; subData.created_at=new Date(); subData.trial_days=0; }
+        await window._fbFirestore.collection('subscriptions').doc(uid).set(subData, { merge:true });
+        ['admin-input-uid','admin-input-expired','admin-input-payref'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+        Swal.fire({ title: isNew?'Dibuat!':'Diperbarui!', text:(isNew?'Subscription baru: ':'Diperbarui: ')+uid, icon:'success', timer:2000, showConfirmButton:false });
+        adminLoadSubscriptions();
+      } catch(e) { Swal.fire('Gagal', e.message||'Error Firestore', 'error'); }
+    }
+
     // ---- AUTO LOGIN ----
     if (localStorage.getItem('k_logged') === 'true') {
       initApp(); // skipCloudFetch=false → akan fetch Firebase setelah 1.5s
     }
-  </script>
 </body>
 </html>
