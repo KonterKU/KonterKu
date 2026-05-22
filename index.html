@@ -5624,8 +5624,11 @@
     }
 
     // ---- AUTO LOGIN ----
-    if (localStorage.getItem('k_logged') === 'true') {
-      initApp(); // skipCloudFetch=false → akan fetch Firebase setelah 1.5s
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+      if (localStorage.getItem('k_logged') === 'true') {
+        initApp(); // skipCloudFetch=false → akan fetch Firebase setelah 1.5s
+      }
+    });
+  </script>
 </body>
 </html>
