@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -867,6 +866,39 @@
       localStorage.setItem('k_sid', uid);
       localStorage.setItem('k_email', email);
       if (token) localStorage.setItem('k_token', token);
+
+      // ── AMBIL store_name dari Firestore subscriptions ──
+      // Ini memastikan nama toko selalu sesuai per akun, bukan dari cache device lain
+      try {
+        await new Promise(resolve => {
+          if (window._fbFirestore) { resolve(); return; }
+          let w = 0;
+          const iv = setInterval(() => {
+            w += 100;
+            if (window._fbFirestore) { clearInterval(iv); resolve(); }
+            else if (w >= 5000) { clearInterval(iv); resolve(); }
+          }, 100);
+        });
+        if (window._fbFirestore) {
+          const subSnap = await window._fbFirestore.collection('subscriptions').doc(uid).get();
+          if (subSnap.exists) {
+            const subData = subSnap.data();
+            if (subData.store_name) {
+              localStorage.setItem('k_store_name', subData.store_name);
+            }
+            if (subData.plan) localStorage.setItem('k_plan', subData.plan);
+            if (subData.expired_at) {
+              let expTs = subData.expired_at;
+              if (expTs && expTs.toDate) expTs = expTs.toDate();
+              else if (expTs) expTs = new Date(expTs);
+              if (expTs) localStorage.setItem('k_expired_date', expTs.toISOString().split('T')[0]);
+            }
+          }
+        }
+      } catch(subErr) {
+        console.warn('[doLogin] Gagal ambil store_name dari subscriptions:', subErr.message);
+      }
+
       // skipCloudFetch=false agar data langsung diambil dari Firestore setelah login
       initApp(false);
     } catch(err) {
@@ -3645,6 +3677,27 @@
           _syncVersion   = parseInt(localStorage.getItem('k_sync_version') || '0');
           _syncedVersion = _syncVersion;
           saveLocalData();
+
+          // ── Refresh store_name dari subscriptions agar selalu up-to-date ──
+          if (sid !== 'DEMO' && window._fbFirestore) {
+            try {
+              const subSnap = await window._fbFirestore.collection('subscriptions').doc(sid).get();
+              if (subSnap.exists) {
+                const subData = subSnap.data();
+                if (subData.store_name) {
+                  localStorage.setItem('k_store_name', subData.store_name);
+                  const headerName = document.getElementById('display-store-name');
+                  if (headerName) headerName.innerText = subData.store_name;
+                  const sidebarName = document.getElementById('sidebar-store-name');
+                  if (sidebarName) sidebarName.innerText = subData.store_name;
+                }
+                if (subData.plan) localStorage.setItem('k_plan', subData.plan);
+              }
+            } catch(subErr) {
+              console.warn('[fetchCloudData] Gagal baca store_name:', subErr.message);
+            }
+          }
+
           renderAll();
           showSyncToast('ok', 'DATA DIPERBARUI ✓');
         } else {
