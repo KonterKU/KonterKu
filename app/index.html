@@ -1737,17 +1737,6 @@
             <i class="fas fa-chevron-right text-slate-600 text-[9px]"></i>
           </button>
 
-          <!-- Hubungi Admin -->
-          <a href="https://wa.me/62895621263666" target="_blank" class="sidebar-menu-item no-underline">
-            <div class="sidebar-icon-wrap bg-green-500/15">
-              <i class="fab fa-whatsapp text-green-400"></i>
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-[12px] font-black text-slate-200">Hubungi Admin</p>
-              <p class="text-[9px] text-slate-500 font-bold">Bantuan via WhatsApp</p>
-            </div>
-            <i class="fas fa-external-link text-slate-600 text-[9px]"></i>
-          </a>
         </div>
 
         <!-- Sidebar Footer -->
@@ -5706,6 +5695,10 @@
                   class="flex-1 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[9px] font-black rounded-xl flex items-center justify-center gap-1.5 cursor-pointer border-0 transition-all">
                   <i class="fas fa-edit text-[8px]"></i> EDIT
                 </button>
+                <button onclick="cetakThermal('${t.id}')"
+                  class="flex-1 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 text-[9px] font-black rounded-xl flex items-center justify-center gap-1.5 cursor-pointer border-0 transition-all">
+                  <i class="fas fa-print text-[8px]"></i> STRUK
+                </button>
                 <button onclick="deleteTr('${t.id}')"
                   class="flex-1 py-2 bg-red-50 hover:bg-red-100 text-red-500 text-[9px] font-black rounded-xl flex items-center justify-center gap-1.5 cursor-pointer border-0 transition-all">
                   <i class="fas fa-rotate-left text-[8px]"></i> REFUND
@@ -6945,6 +6938,162 @@
           console.warn('[Kasir] Cloud sync gagal, data pending di localStorage');
         }
       });
+    }
+
+    // ---- CETAK STRUK THERMAL 58mm ----
+    function cetakThermal(id) {
+      const t = db.transaksi.find(x => x.id === id);
+      if (!t) return;
+
+      const storeName = localStorage.getItem('k_store_name') || 'KONTERKU';
+      const kasirName = localStorage.getItem('k_kasir_nama') || localStorage.getItem('k_email') || '';
+
+      // Hitung nilai-nilai transaksi
+      const laba = (t.jual || 0) - (t.modal || 0);
+      const isLunas = t.status === 'Lunas';
+      const tipeLabel = t.tipe === 'ewallet' ? 'E-WALLET/TRANSFER' : t.tipe === 'digital' ? 'DIGITAL' : 'FISIK';
+
+      // Nama produk bersih (hapus prefix DIG:/FIS:/EWL:)
+      const namaProduk = (t.produk || '-').replace(/^(DIG:|FIS:|EWL:)\s*/i, '');
+
+      // Info dompet
+      const wModal = t.walletModal ? (db.dompet.find(w => w.id === t.walletModal)?.nama || '') : '';
+      const wJual  = t.walletJual  ? (db.dompet.find(w => w.id === t.walletJual)?.nama  || '') : '';
+
+      // Format angka
+      const rp = (n) => 'Rp ' + new Intl.NumberFormat('id-ID').format(Number(n) || 0);
+
+      // Garis pemisah thermal (32 karakter ~ lebar 58mm)
+      const line  = '--------------------------------';
+      const dline = '================================';
+
+      // Waktu cetak WIB
+      const now = new Date();
+      const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
+      const wib = new Date(utcMs + 3600000 * 7);
+      const pad = (x) => String(x).padStart(2,'0');
+      const waktuCetak = `${wib.getDate()}/${pad(wib.getMonth()+1)}/${wib.getFullYear()} ${pad(wib.getHours())}:${pad(wib.getMinutes())}`;
+
+      // Bangun HTML struk
+      const struHTML = `<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Struk ${t.id}</title>
+<style>
+  @page { margin: 0; size: 58mm auto; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 9pt;
+    width: 58mm;
+    padding: 4mm 3mm 6mm 3mm;
+    color: #000;
+    background: #fff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .center { text-align: center; }
+  .right  { text-align: right; }
+  .bold   { font-weight: bold; }
+  .line   { border-top: 1px dashed #000; margin: 3px 0; }
+  .dline  { border-top: 2px solid #000; margin: 3px 0; }
+  .row    { display: flex; justify-content: space-between; margin: 1px 0; }
+  .row .label { flex: 1; }
+  .row .val   { text-align: right; white-space: nowrap; }
+  .big    { font-size: 11pt; font-weight: bold; }
+  .status-lunas  { font-size: 10pt; font-weight: bold; letter-spacing: 2px; }
+  .status-hutang { font-size: 10pt; font-weight: bold; letter-spacing: 2px; }
+  @media print {
+    html, body { width: 58mm; }
+    button, .no-print { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="center bold" style="font-size:12pt;margin-bottom:2px;">${storeName.toUpperCase()}</div>
+  ${kasirName ? `<div class="center" style="font-size:8pt;">Kasir: ${kasirName}</div>` : ''}
+  <div class="center" style="font-size:8pt;">${waktuCetak}</div>
+  <div class="center" style="font-size:8pt;">No. ${t.id}</div>
+  <div class="dline"></div>
+
+  <!-- TIPE -->
+  <div class="center bold" style="font-size:8pt;margin:2px 0;">[${tipeLabel}]</div>
+  <div class="line"></div>
+
+  <!-- DETAIL PRODUK -->
+  <div class="bold" style="margin:2px 0;">${namaProduk}</div>
+  <div class="row" style="font-size:8pt;">
+    <span class="label">Pelanggan</span>
+    <span class="val">${t.pelanggan || 'Umum'}</span>
+  </div>
+  <div class="row" style="font-size:8pt;">
+    <span class="label">Tanggal Trx</span>
+    <span class="val">${t.tgl || '-'}</span>
+  </div>
+  <div class="line"></div>
+
+  <!-- RINCIAN EWALLET -->
+  ${t.tipe === 'ewallet' ? `
+  <div class="row"><span class="label">Nominal</span><span class="val">${rp(t.nominal)}</span></div>
+  <div class="row"><span class="label">Admin Bank</span><span class="val">${rp(t.adminBank)}</span></div>
+  <div class="row bold"><span class="label">Total Bayar</span><span class="val">${rp(t.jual)}</span></div>
+  <div class="row" style="font-size:8pt;"><span class="label">Keuntungan</span><span class="val">${rp(t.adminAgen)}</span></div>
+  ` : `
+  <div class="row"><span class="label">Harga Jual</span><span class="val">${rp(t.jual)}</span></div>
+  `}
+
+  <!-- DOMPET -->
+  ${wModal ? `<div class="row" style="font-size:8pt;"><span class="label">Modal dari</span><span class="val">${wModal}</span></div>` : ''}
+  ${wJual && isLunas ? `<div class="row" style="font-size:8pt;"><span class="label">Dana masuk</span><span class="val">${wJual}</span></div>` : ''}
+
+  <div class="dline"></div>
+
+  <!-- TOTAL -->
+  <div class="row big">
+    <span class="label">TOTAL</span>
+    <span class="val">${rp(t.jual)}</span>
+  </div>
+
+  <!-- STATUS -->
+  <div class="center" style="margin:4px 0;">
+    <span class="status-${isLunas ? 'lunas' : 'hutang'}">${isLunas ? '*** LUNAS ***' : '--- BELUM LUNAS ---'}</span>
+  </div>
+
+  <div class="dline"></div>
+
+  <!-- FOOTER -->
+  <div class="center" style="font-size:8pt;margin-top:4px;">Terima kasih atas kepercayaan Anda</div>
+  <div class="center" style="font-size:8pt;">Barang yang sudah dibeli</div>
+  <div class="center" style="font-size:8pt;">tidak dapat dikembalikan</div>
+  <div style="margin-top:6px;text-align:center;font-size:7pt;color:#666;">powered by KonterKU</div>
+
+  <!-- Tombol cetak (hanya di layar) -->
+  <div class="no-print" style="margin-top:10px;text-align:center;">
+    <button onclick="window.print()" style="padding:8px 24px;background:#0061C2;color:#fff;border:none;border-radius:8px;font-size:10pt;font-weight:bold;cursor:pointer;">
+      🖨️ Cetak Sekarang
+    </button>
+    <button onclick="window.close()" style="margin-left:8px;padding:8px 16px;background:#e2e8f0;color:#333;border:none;border-radius:8px;font-size:10pt;cursor:pointer;">
+      Tutup
+    </button>
+  </div>
+
+</body>
+</html>`;
+
+      // Buka window baru khusus struk
+      const win = window.open('', '_blank', 'width=320,height=600,scrollbars=yes');
+      if (!win) {
+        (_getMySwal()||Swal).fire('Gagal', 'Popup diblokir browser. Harap izinkan popup untuk mencetak struk.', 'warning');
+        return;
+      }
+      win.document.open();
+      win.document.write(struHTML);
+      win.document.close();
+      // Auto-print setelah konten siap
+      win.onload = () => { setTimeout(() => win.print(), 300); };
     }
 
     // ---- LOGOUT ----
