@@ -2632,28 +2632,97 @@
 
         <!-- Transaksi Terakhir -->
         <div>
-          <div class="flex justify-between items-center mb-4">
-            <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest">Transaksi Terakhir</h4>
+          <!-- Header premium dengan gradient -->
+          <div class="rounded-3xl mb-4 overflow-hidden" style="background:linear-gradient(135deg,#0a1628 0%,#0d2550 55%,#0061C2 100%);position:relative;">
+            <div class="absolute inset-0 pointer-events-none" style="background:radial-gradient(ellipse 65% 60% at 90% 0%,rgba(56,189,248,0.22) 0%,transparent 65%),radial-gradient(ellipse 40% 50% at 5% 100%,rgba(99,102,241,0.18) 0%,transparent 60%);"></div>
+            <div class="absolute top-0 left-0 w-full h-full pointer-events-none opacity-[0.035]" style="background-image:radial-gradient(circle,#fff 1px,transparent 1px);background-size:18px 18px;"></div>
+            <div class="px-5 pt-5 pb-4" style="position:relative;z-index:1;">
+              <!-- Title row -->
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:rgba(56,189,248,0.15);border:1px solid rgba(56,189,248,0.25);">
+                    <i class="fas fa-clock-rotate-left text-sky-300" style="font-size:13px;"></i>
+                  </div>
+                  <div>
+                    <p class="font-black text-white leading-tight" style="font-size:14px;">Riwayat Transaksi</p>
+                    <p style="font-size:8px;font-weight:900;color:rgba(56,189,248,0.75);letter-spacing:0.12em;text-transform:uppercase;">CATATAN PENJUALAN</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl" style="background:rgba(56,189,248,0.12);border:1px solid rgba(56,189,248,0.22);">
+                  <div class="w-1.5 h-1.5 rounded-full bg-sky-400" style="animation:pulse 2s infinite;"></div>
+                  <span style="font-size:8px;font-weight:900;color:#38BDF8;letter-spacing:0.08em;">LIVE</span>
+                </div>
+              </div>
+
+              <!-- Filter Kategori Layanan: icon pill buttons -->
+              <p style="font-size:7.5px;font-weight:900;color:rgba(255,255,255,0.35);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;">JENIS LAYANAN</p>
+              <div class="flex gap-2 mb-4 overflow-x-auto no-scrollbar">
+                <button onclick="setTrFilter('all')" id="fltr-all"
+                  class="flex items-center gap-1.5 px-3 py-2 rounded-2xl border-0 cursor-pointer transition-all whitespace-nowrap"
+                  style="background:linear-gradient(135deg,#0061C2,#38BDF8);color:white;font-size:9px;font-weight:900;letter-spacing:0.06em;box-shadow:0 4px 14px rgba(0,97,194,0.5);">
+                  <i class="fas fa-layer-group" style="font-size:9px;"></i> SEMUA
+                </button>
+                <button onclick="setTrFilter('DIG')" id="fltr-DIG"
+                  class="flex items-center gap-1.5 px-3 py-2 rounded-2xl border-0 cursor-pointer transition-all whitespace-nowrap"
+                  style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);font-size:9px;font-weight:900;letter-spacing:0.06em;border:1px solid rgba(255,255,255,0.1);">
+                  <i class="fas fa-bolt" style="font-size:9px;"></i> DIGITAL
+                </button>
+                <button onclick="setTrFilter('FIS')" id="fltr-FIS"
+                  class="flex items-center gap-1.5 px-3 py-2 rounded-2xl border-0 cursor-pointer transition-all whitespace-nowrap"
+                  style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);font-size:9px;font-weight:900;letter-spacing:0.06em;border:1px solid rgba(255,255,255,0.1);">
+                  <i class="fas fa-box" style="font-size:9px;"></i> FISIK
+                </button>
+                <button onclick="setTrFilter('EWL')" id="fltr-EWL"
+                  class="flex items-center gap-1.5 px-3 py-2 rounded-2xl border-0 cursor-pointer transition-all whitespace-nowrap"
+                  style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);font-size:9px;font-weight:900;letter-spacing:0.06em;border:1px solid rgba(255,255,255,0.1);">
+                  <i class="fas fa-mobile-screen-button" style="font-size:9px;"></i> E-WALLET
+                </button>
+              </div>
+
+              <!-- Filter Waktu: segmented control premium -->
+              <p style="font-size:7.5px;font-weight:900;color:rgba(255,255,255,0.35);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;">PERIODE WAKTU</p>
+              <div class="flex p-1 rounded-2xl gap-1" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);">
+                <button onclick="setTimeFilter('all')" id="time-fltr-all"
+                  class="flex-1 flex items-center justify-center gap-1 py-2 rounded-xl border-0 cursor-pointer transition-all"
+                  style="background:transparent;color:rgba(255,255,255,0.4);font-size:8px;font-weight:900;letter-spacing:0.04em;">
+                  <i class="fas fa-infinity" style="font-size:8px;"></i> SEMUA
+                </button>
+                <button onclick="setTimeFilter('today')" id="time-fltr-today"
+                  class="flex-1 flex items-center justify-center gap-1 py-2 rounded-xl border-0 cursor-pointer transition-all"
+                  style="background:linear-gradient(135deg,#0ea5e9,#38bdf8);color:white;font-size:8px;font-weight:900;letter-spacing:0.04em;box-shadow:0 3px 10px rgba(14,165,233,0.45);">
+                  <i class="fas fa-sun" style="font-size:8px;"></i> HARI INI
+                </button>
+                <button onclick="setTimeFilter('yesterday')" id="time-fltr-yesterday"
+                  class="flex-1 flex items-center justify-center gap-1 py-2 rounded-xl border-0 cursor-pointer transition-all"
+                  style="background:transparent;color:rgba(255,255,255,0.4);font-size:8px;font-weight:900;letter-spacing:0.04em;">
+                  <i class="fas fa-moon" style="font-size:8px;"></i> KEMARIN
+                </button>
+                <button onclick="setTimeFilter('week')" id="time-fltr-week"
+                  class="flex-1 flex items-center justify-center gap-1 py-2 rounded-xl border-0 cursor-pointer transition-all"
+                  style="background:transparent;color:rgba(255,255,255,0.4);font-size:8px;font-weight:900;letter-spacing:0.04em;">
+                  <i class="fas fa-calendar-week" style="font-size:8px;"></i> MINGGU
+                </button>
+              </div>
+            </div>
           </div>
-          <div class="flex gap-2 mb-2 overflow-x-auto no-scrollbar">
-            <button onclick="setTrFilter('all')" id="fltr-all" class="filter-chip active">SEMUA LAYANAN</button>
-            <button onclick="setTrFilter('DIG')" id="fltr-DIG" class="filter-chip">DIGITAL</button>
-            <button onclick="setTrFilter('FIS')" id="fltr-FIS" class="filter-chip">FISIK</button>
-          </div>
-          <div class="flex gap-2 mb-4 overflow-x-auto no-scrollbar">
-            <button onclick="setTimeFilter('all')" id="time-fltr-all" class="filter-chip">SEMUA WAKTU</button>
-            <button onclick="setTimeFilter('today')" id="time-fltr-today" class="filter-chip active">HARI INI</button>
-            <button onclick="setTimeFilter('yesterday')" id="time-fltr-yesterday" class="filter-chip">KEMARIN</button>
-            <button onclick="setTimeFilter('week')" id="time-fltr-week" class="filter-chip">MINGGU INI</button>
-          </div>
+
           <div id="recent-list" class="space-y-3"></div>
-          <div id="pagination-controls" class="flex justify-between items-center mt-6 bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
-            <button onclick="prevTrPage()" id="btn-prev-page" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 disabled:opacity-40 text-[10px] font-black text-slate-600 rounded-xl transition-all cursor-pointer border-0">
-              <i class="fas fa-chevron-left mr-1"></i> SEBELUMNYA
+
+          <!-- Pagination premium -->
+          <div id="pagination-controls" class="flex items-center gap-2 mt-5 rounded-2xl p-2" style="background:linear-gradient(135deg,#0a1628,#0d2550);border:1px solid rgba(255,255,255,0.08);">
+            <button onclick="prevTrPage()" id="btn-prev-page"
+              class="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border-0 cursor-pointer transition-all flex-shrink-0"
+              style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.6);font-size:9px;font-weight:900;letter-spacing:0.05em;">
+              <i class="fas fa-chevron-left" style="font-size:8px;"></i> PREV
             </button>
-            <p class="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider" id="page-indicator">Halaman 1 dari 1</p>
-            <button onclick="nextTrPage()" id="btn-next-page" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 disabled:opacity-40 text-[10px] font-black text-slate-600 rounded-xl transition-all cursor-pointer border-0">
-              BERIKUTNYA <i class="fas fa-chevron-right ml-1"></i>
+            <div class="flex-1 flex items-center justify-center gap-1.5">
+              <i class="fas fa-file-lines" style="font-size:9px;color:rgba(56,189,248,0.6);"></i>
+              <p style="font-size:9px;font-weight:900;color:rgba(255,255,255,0.55);letter-spacing:0.04em;" id="page-indicator">Halaman 1 dari 1</p>
+            </div>
+            <button onclick="nextTrPage()" id="btn-next-page"
+              class="flex items-center gap-1.5 px-3 py-2.5 rounded-xl border-0 cursor-pointer transition-all flex-shrink-0"
+              style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.6);font-size:9px;font-weight:900;letter-spacing:0.05em;">
+              NEXT <i class="fas fa-chevron-right" style="font-size:8px;"></i>
             </button>
           </div>
         </div>
@@ -3431,22 +3500,25 @@
               </div>
             </div>
           </div>
-          <!-- Tab Pills -->
-          <div class="flex px-4 pb-4 gap-2" style="position:relative;z-index:1;">
+          <!-- Tab Pills Premium -->
+          <div class="flex px-4 pb-4 gap-2" style="position:relative;z-index:1;background:rgba(0,0,0,0.15);border-radius:0 0 26px 26px;padding-top:10px;">
             <button onclick="setHutangTab('pelanggan')" id="btn-h-plg"
-              class="flex-1 py-2.5 rounded-2xl font-black border-0 cursor-pointer"
-              style="background:rgba(239,68,68,0.85);color:white;font-size:9px;letter-spacing:0.05em;box-shadow:0 4px 12px rgba(239,68,68,0.35);">
-              <i class="fas fa-user-clock mr-1"></i>PELANGGAN
+              class="flex-1 flex flex-col items-center gap-1 py-3 rounded-2xl font-black border-0 cursor-pointer transition-all"
+              style="background:rgba(239,68,68,0.85);color:white;font-size:8px;letter-spacing:0.05em;box-shadow:0 5px 16px rgba(239,68,68,0.45);">
+              <i class="fas fa-user-clock" style="font-size:13px;"></i>
+              PELANGGAN
             </button>
             <button onclick="setHutangTab('toko')" id="btn-h-toko"
-              class="flex-1 py-2.5 rounded-2xl font-black border-0 cursor-pointer"
-              style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);font-size:9px;letter-spacing:0.05em;">
-              <i class="fas fa-store mr-1"></i>TOKO
+              class="flex-1 flex flex-col items-center gap-1 py-3 rounded-2xl font-black border-0 cursor-pointer transition-all"
+              style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.4);font-size:8px;letter-spacing:0.05em;border:1px solid rgba(255,255,255,0.1);">
+              <i class="fas fa-store" style="font-size:13px;"></i>
+              TOKO
             </button>
             <button onclick="setHutangTab('riwayat')" id="btn-h-riwayat"
-              class="flex-1 py-2.5 rounded-2xl font-black border-0 cursor-pointer"
-              style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);font-size:9px;letter-spacing:0.05em;">
-              <i class="fas fa-history mr-1"></i>RIWAYAT
+              class="flex-1 flex flex-col items-center gap-1 py-3 rounded-2xl font-black border-0 cursor-pointer transition-all"
+              style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.4);font-size:8px;letter-spacing:0.05em;border:1px solid rgba(255,255,255,0.1);">
+              <i class="fas fa-clock-rotate-left" style="font-size:13px;"></i>
+              RIWAYAT
             </button>
           </div>
         </div>
@@ -3956,7 +4028,7 @@
       },
       pro: {
         color: '#10b981', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.2)',
-        label: 'PRO ⭐', price: 'Rp50K/bln',
+        label: 'PRO ⭐', price: 'Rp59K/bln',
         icon: 'fa-crown', iconColor: '#10b981',
         desc: 'Fitur lengkap untuk konter yang berkembang pesat.',
         fitur: ['Semua fitur Basic', 'Ekspor PDF & Laporan', 'Pantau Stok Realtime', 'Notifikasi Stok Menipis', 'Multi-Device Cloud Sync'],
@@ -3964,7 +4036,7 @@
       },
       unlimited: {
         color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', border: 'rgba(245,158,11,0.25)',
-        label: 'UNLIMITED 🔥', price: 'Rp499K/bln',
+        label: 'UNLIMITED 🔥', price: 'Rp99K/bln',
         icon: 'fa-fire', iconColor: '#f59e0b',
         desc: 'Untuk konter besar dengan kebutuhan bisnis penuh.',
         fitur: ['Semua Fitur Pro', 'Multi-Toko / Cabang', 'Laporan Bulanan Lanjutan', 'Ekspor Laporan PDF', 'Support Dedicated WA'],
@@ -4069,14 +4141,18 @@
     function setTrFilter(f) {
       currentTrFilter = f;
       currentTrPage = 1;
-      document.querySelectorAll('[id^="fltr-"]').forEach(c => c.classList.toggle('active', c.id === 'fltr-' + f));
+      const trAct = 'background:linear-gradient(135deg,#0061C2,#38BDF8);color:white;font-size:9px;font-weight:900;letter-spacing:0.06em;box-shadow:0 4px 14px rgba(0,97,194,0.5);';
+      const trInact = 'background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);font-size:9px;font-weight:900;letter-spacing:0.06em;border:1px solid rgba(255,255,255,0.1);box-shadow:none;';
+      document.querySelectorAll('[id^="fltr-"]').forEach(c => { c.style.cssText = (c.id === 'fltr-' + f) ? trAct : trInact; });
       renderDashboard();
     }
 
     function setTimeFilter(f) {
       currentTimeFilter = f;
       currentTrPage = 1;
-      document.querySelectorAll('[id^="time-fltr-"]').forEach(c => c.classList.toggle('active', c.id === 'time-fltr-' + f));
+      const tmAct = 'background:linear-gradient(135deg,#0ea5e9,#38bdf8);color:white;font-size:8px;font-weight:900;letter-spacing:0.04em;box-shadow:0 3px 10px rgba(14,165,233,0.45);';
+      const tmInact = 'background:transparent;color:rgba(255,255,255,0.4);font-size:8px;font-weight:900;letter-spacing:0.04em;box-shadow:none;';
+      document.querySelectorAll('[id^="time-fltr-"]').forEach(c => { c.style.cssText = (c.id === 'time-fltr-' + f) ? tmAct : tmInact; });
       renderDashboard();
     }
 
@@ -5249,9 +5325,9 @@
 
       // Update tab aktif style
       const tabCfg = {
-        pelanggan: { el:'btn-h-plg',     on:'background:rgba(239,68,68,0.85);color:white;font-size:9px;letter-spacing:0.05em;box-shadow:0 4px 12px rgba(239,68,68,0.35);',    off:'background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);font-size:9px;letter-spacing:0.05em;' },
-        toko:      { el:'btn-h-toko',    on:'background:rgba(245,158,11,0.85);color:white;font-size:9px;letter-spacing:0.05em;box-shadow:0 4px 12px rgba(245,158,11,0.35);',  off:'background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);font-size:9px;letter-spacing:0.05em;' },
-        riwayat:   { el:'btn-h-riwayat', on:'background:rgba(167,139,250,0.85);color:white;font-size:9px;letter-spacing:0.05em;box-shadow:0 4px 12px rgba(167,139,250,0.35);',off:'background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.45);font-size:9px;letter-spacing:0.05em;' },
+        pelanggan: { el:'btn-h-plg',     on:'background:rgba(239,68,68,0.9);color:white;font-size:8px;letter-spacing:0.05em;box-shadow:0 5px 16px rgba(239,68,68,0.45);border:none;',    off:'background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.4);font-size:8px;letter-spacing:0.05em;border:1px solid rgba(255,255,255,0.1);box-shadow:none;' },
+        toko:      { el:'btn-h-toko',    on:'background:rgba(245,158,11,0.9);color:white;font-size:8px;letter-spacing:0.05em;box-shadow:0 5px 16px rgba(245,158,11,0.45);border:none;',  off:'background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.4);font-size:8px;letter-spacing:0.05em;border:1px solid rgba(255,255,255,0.1);box-shadow:none;' },
+        riwayat:   { el:'btn-h-riwayat', on:'background:rgba(167,139,250,0.9);color:white;font-size:8px;letter-spacing:0.05em;box-shadow:0 5px 16px rgba(167,139,250,0.45);border:none;',off:'background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.4);font-size:8px;letter-spacing:0.05em;border:1px solid rgba(255,255,255,0.1);box-shadow:none;' },
       };
       Object.entries(tabCfg).forEach(([key, cfg]) => {
         const btn = document.getElementById(cfg.el);
