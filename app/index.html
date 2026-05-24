@@ -828,6 +828,7 @@
         gap: 12px;
       }
       .header-desktop-only { display: inline-flex !important; }
+      #sidebar-header-mobile { display: none !important; }  /* hidden di desktop */
       .desktop-topbar-title {
         font-size: 18px;
         font-weight: 900;
@@ -847,6 +848,7 @@
     }
     .desktop-topbar { display: none; }
     .header-desktop-only { display: none !important; }
+    #sidebar-header-mobile { display: block; }  /* tampil di mobile */
     .desktop-sidenav { display: none; }
   </style>
   <script>
@@ -871,6 +873,7 @@
         const btn  = document.getElementById('theme-toggle-btn');
         const label= document.getElementById('theme-label-sb');
 
+        // Desktop header knob
         if (knob) knob.textContent = isDark ? '🌙' : '☀️';
         if (knob) knob.style.background = isDark
           ? 'linear-gradient(135deg,#1e293b,#4c1d95)'
@@ -879,6 +882,17 @@
           ? '0 1px 6px rgba(99,102,241,0.5)'
           : '0 1px 6px rgba(0,97,194,0.5)';
         if (label) label.textContent = isDark ? 'GELAP' : 'TERANG';
+        // Mobile sidebar knob
+        const knobM  = document.getElementById('theme-toggle-knob-mobile');
+        const labelM = document.getElementById('theme-label-sb-mobile');
+        if (knobM) knobM.textContent = isDark ? '🌙' : '☀️';
+        if (knobM) knobM.style.background = isDark
+          ? 'linear-gradient(135deg,#1e293b,#4c1d95)'
+          : 'linear-gradient(135deg,#0061C2,#38bdf8)';
+        if (knobM) knobM.style.boxShadow = isDark
+          ? '0 1px 6px rgba(99,102,241,0.5)'
+          : '0 1px 6px rgba(0,97,194,0.5)';
+        if (labelM) labelM.textContent = isDark ? 'GELAP' : 'TERANG';
 
         // Login screen background
         const loginScreen = document.getElementById('login-screen');
@@ -2114,6 +2128,69 @@
     <!-- ===== SIDEBAR ===== -->
     <div id="sidebar-overlay" class="sidebar-overlay" onclick="closeSidebar(event)">
       <aside class="sidebar-panel" onclick="event.stopPropagation()">
+
+        <!-- Sidebar Header — hanya tampil di mobile, hidden di desktop via CSS -->
+        <div id="sidebar-header-mobile" class="relative overflow-hidden px-5 pb-5"
+          style="padding-top: env(safe-area-inset-top, 16px); padding-top: max(16px, env(safe-area-inset-top)); background:linear-gradient(160deg,#060e1f 0%,#0b1e42 60%,#0a3272 100%);">
+
+          <!-- Dot pattern bg -->
+          <div class="absolute inset-0 pointer-events-none" style="opacity:0.035;background-image:radial-gradient(circle,#7dd3fc 1px,transparent 1px);background-size:20px 20px;"></div>
+          <!-- Glow kanan atas -->
+          <div class="absolute right-0 top-0 w-32 h-32 pointer-events-none" style="background:radial-gradient(circle at 100% 0%,rgba(56,189,248,0.22) 0%,transparent 70%)"></div>
+          <!-- Glow kiri bawah -->
+          <div class="absolute left-0 bottom-0 w-24 h-24 pointer-events-none" style="background:radial-gradient(circle at 0% 100%,rgba(99,102,241,0.15) 0%,transparent 70%)"></div>
+
+          <!-- ── BARIS: Avatar + Nama Toko + (Toggle Tema atas, Jam Digital bawah) ── -->
+          <div class="flex items-center gap-3" style="position:relative;z-index:1;">
+            <!-- Avatar -->
+            <div class="rounded-2xl flex items-center justify-center flex-shrink-0"
+              style="width:48px;height:48px;background:linear-gradient(135deg,#0061C2,#38BDF8);box-shadow:0 4px 16px rgba(0,97,194,0.5);">
+              <i class="fas fa-store text-white" style="font-size:16px;"></i>
+            </div>
+            <!-- Nama Toko + Status -->
+            <div style="flex:1;min-width:0;">
+              <p class="font-black uppercase" style="font-size:8px;color:rgba(56,189,248,0.65);letter-spacing:0.15em;margin-bottom:2px;">NAMA TOKO</p>
+              <p id="sidebar-store-name" class="font-black text-white" style="font-size:16px;line-height:1.2;word-break:break-all;white-space:normal;overflow-wrap:anywhere;">DEMO</p>
+              <p id="sidebar-store-email" class="font-bold truncate" style="font-size:9px;color:rgba(255,255,255,0.35);margin-top:1px;margin-bottom:4px;"></p>
+              <div class="flex items-center gap-1.5" style="margin-top:2px;flex-wrap:wrap;">
+              <div id="sidebar-status" class="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg" style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.25);">
+                <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse" id="sidebar-dot"></span>
+                <span class="font-black" id="sidebar-status-text" style="font-size:8px;color:#6ee7b7;">ONLINE</span>
+              </div>
+              </div>
+            </div>
+            <!-- Kolom kanan: Toggle Tema (atas) + Jam Digital (bawah) -->
+            <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+              <!-- Toggle Tema -->
+              <button onclick="toggleAppTheme()" aria-label="Toggle tema"
+                style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px 4px 6px;
+                       border-radius:100px;border:1px solid rgba(255,255,255,0.15);cursor:pointer;
+                       background:rgba(0,0,0,0.28);backdrop-filter:blur(10px);
+                       transition:all 0.25s;flex-shrink:0;">
+                <span id="theme-toggle-knob-mobile"
+                  style="width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#0061C2,#38bdf8);
+                         box-shadow:0 1px 6px rgba(0,97,194,0.5);display:flex;align-items:center;justify-content:center;
+                         font-size:9px;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);flex-shrink:0;">☀️</span>
+                <span id="theme-label-sb-mobile" style="font-size:8px;font-weight:900;color:rgba(255,255,255,0.7);letter-spacing:0.06em;white-space:nowrap;">TERANG</span>
+              </button>
+              <!-- Jam Digital -->
+              <div style="background:rgba(0,0,0,0.28);border:1px solid rgba(56,189,248,0.14);border-radius:14px;padding:7px 10px;backdrop-filter:blur(10px);text-align:right;">
+                <div class="flex items-baseline justify-end" style="gap:1px;line-height:1;">
+                  <span id="sb-clock-h-mobile" class="font-black text-white" style="font-size:22px;letter-spacing:-1.5px;font-variant-numeric:tabular-nums;text-shadow:0 0 14px rgba(56,189,248,0.5);">00</span>
+                  <span class="font-black" style="font-size:17px;color:rgba(56,189,248,0.85);margin:0 1px 1px;">:</span>
+                  <span id="sb-clock-m-mobile" class="font-black text-white" style="font-size:22px;letter-spacing:-1.5px;font-variant-numeric:tabular-nums;text-shadow:0 0 14px rgba(56,189,248,0.5);">00</span>
+                  <span id="sb-clock-s-mobile" class="font-black" style="font-size:10px;color:rgba(56,189,248,0.7);font-variant-numeric:tabular-nums;align-self:flex-end;margin-bottom:2px;margin-left:2px;">00</span>
+                </div>
+                <div class="flex items-center justify-end" style="gap:4px;margin-top:3px;">
+                  <span id="sb-day-name-mobile" class="font-black uppercase" style="font-size:7px;color:rgba(255,255,255,0.4);letter-spacing:0.08em;">SENIN</span>
+                  <span style="font-size:7px;color:rgba(255,255,255,0.2);">·</span>
+                  <span class="font-black uppercase" style="font-size:7px;color:rgba(56,189,248,0.65);letter-spacing:0.1em;">WIB</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
 
         <!-- Menu Items -->
         <div class="flex-1 py-2">
@@ -8448,6 +8525,7 @@
       const mm    = String(wib.getMinutes()).padStart(2,'0');
       const ss    = String(wib.getSeconds()).padStart(2,'0');
 
+      // Desktop clock elements
       const elH = document.getElementById('sb-clock-h');
       const elM = document.getElementById('sb-clock-m');
       const elS = document.getElementById('sb-clock-s');
@@ -8458,6 +8536,13 @@
       // Titik dua berkedip setiap detik
       _colonVisible = !_colonVisible;
       if (elC) elC.style.opacity = _colonVisible ? '1' : '0.2';
+      // Mobile clock elements
+      const elHm = document.getElementById('sb-clock-h-mobile');
+      const elMm = document.getElementById('sb-clock-m-mobile');
+      const elSm = document.getElementById('sb-clock-s-mobile');
+      if (elHm) elHm.textContent = hh;
+      if (elMm) elMm.textContent = mm;
+      if (elSm) elSm.textContent = ss;
 
       // Tanggal & hari
       const days   = ['MINGGU','SENIN','SELASA','RABU','KAMIS','JUMAT','SABTU'];
@@ -8466,6 +8551,8 @@
       const elDate = document.getElementById('sb-date-full');
       const elWeek = document.getElementById('sb-week-num');
       if (elDay)  elDay.textContent  = days[wib.getDay()];
+      const elDayM = document.getElementById('sb-day-name-mobile');
+      if (elDayM) elDayM.textContent = days[wib.getDay()];
       if (elDate) elDate.textContent = `${wib.getDate()} ${months[wib.getMonth()]} ${wib.getFullYear()}`;
       // Hitung pekan ke- dalam tahun
       const startOfYear = new Date(wib.getFullYear(), 0, 1);
@@ -8481,6 +8568,31 @@
       tickSidebarClock();
       if (_clockInterval) clearInterval(_clockInterval);
       _clockInterval = setInterval(tickSidebarClock, 1000);
+
+      // Isi nama toko & email di header mobile
+      const sid       = localStorage.getItem('k_sid') || 'DEMO';
+      const email     = localStorage.getItem('k_email') || '';
+      const storeName = localStorage.getItem('k_store_name') || '';
+      const _displayName = storeName || (email ? email.split('@')[0].toUpperCase() : sid);
+      const snEl = document.getElementById('sidebar-store-name');
+      if (snEl) snEl.innerText = _displayName;
+      const seEl = document.getElementById('sidebar-store-email');
+      if (seEl) seEl.innerText = email || '';
+
+      // Status online di header mobile
+      const dot  = document.getElementById('sidebar-dot');
+      const stxt = document.getElementById('sidebar-status-text');
+      if (dot && stxt) {
+        if (navigator.onLine) {
+          dot.className  = 'w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse';
+          stxt.innerText = 'ONLINE';
+          stxt.style.color = '#6ee7b7';
+        } else {
+          dot.className  = 'w-1.5 h-1.5 bg-rose-400 rounded-full';
+          stxt.innerText = 'OFFLINE';
+          stxt.style.color = '#fca5a5';
+        }
+      }
 
       // Badge catatan
       const noteCount = (db.notes||[]).length;
