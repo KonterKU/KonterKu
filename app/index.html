@@ -714,6 +714,20 @@
         display: none !important;
       }
 
+      /* ── Card Saldo: tampil hanya di dashboard (desktop) ── */
+      #header-card-saldo {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        margin-bottom: 0 !important;
+        transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease, margin 0.3s ease;
+      }
+      #header-card-saldo.saldo-visible {
+        max-height: 200px;
+        opacity: 1;
+        margin-bottom: 0 !important;
+      }
+
       /* ── Scrollable main content ── */
       main {
         flex: 1;
@@ -3965,7 +3979,7 @@
       </div>
 
       <!-- CARD SALDO GLASS — floating di atas header biru -->
-      <div class="relative z-10 mx-4 mb-0">
+      <div id="header-card-saldo" class="relative z-10 mx-4 mb-0 saldo-visible">
         <div class="relative overflow-hidden rounded-[24px] p-5"
           style="background: linear-gradient(135deg, rgba(255,255,255,0.13) 0%, rgba(255,255,255,0.05) 100%);
                  border: 1px solid rgba(255,255,255,0.15);
@@ -5636,6 +5650,9 @@
       // Sync desktop sidenav
       _dsnSetActive(v);
       if (v === 'dashboard') renderProfitChart();
+      // Tampilkan card saldo hanya di dashboard (desktop)
+      const _cardSaldo = document.getElementById('header-card-saldo');
+      if (_cardSaldo) { if (v === 'dashboard') { _cardSaldo.classList.add('saldo-visible'); } else { _cardSaldo.classList.remove('saldo-visible'); } }
       if (v === 'stok') {
         renderStokKtgChips(activeStokTab);
         renderStok();
