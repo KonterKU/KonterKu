@@ -55,7 +55,68 @@
     _initFirebase();
   </script>
   <style>
-    :root { --primary: #0061C2; --bg: #F8FAFC; --slate-800: #1e293b; }
+    /* ===== TEMA SISTEM ===== */
+    :root {
+      --primary: #0061C2;
+      --bg: #F8FAFC;
+      --slate-800: #1e293b;
+      --sb-bg: #ffffff;
+      --sb-shadow: rgba(0,0,0,0.10);
+      --sb-border: #e2e8f0;
+      --sb-text-title: #1e293b;
+      --sb-text-sub: #64748b;
+      --sb-text-label: #94a3b8;
+      --sb-divider: #e2e8f0;
+      --sb-chevron: #cbd5e1;
+      --sb-hover: rgba(0,97,194,0.07);
+      --sb-danger-hover: rgba(239,68,68,0.08);
+      --login-bg: #050c1a;
+      --login-card-bg: rgba(255,255,255,0.04);
+      --login-card-border: rgba(255,255,255,0.10);
+      --login-input-bg: rgba(255,255,255,0.05);
+      --login-input-border: rgba(255,255,255,0.10);
+      --login-input-color: #ffffff;
+      --login-input-placeholder: rgba(255,255,255,0.28);
+      --login-text-primary: #ffffff;
+      --login-text-muted: rgba(255,255,255,0.28);
+      --login-divider: rgba(255,255,255,0.08);
+    }
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --sb-bg: #0F172A;
+      --sb-shadow: rgba(0,0,0,0.40);
+      --sb-border: rgba(255,255,255,0.06);
+      --sb-text-title: #e2e8f0;
+      --sb-text-sub: #64748b;
+      --sb-text-label: #334155;
+      --sb-divider: rgba(255,255,255,0.07);
+      --sb-chevron: #475569;
+      --sb-hover: rgba(255,255,255,0.06);
+      --sb-danger-hover: rgba(239,68,68,0.10);
+      --login-bg: #050c1a;
+      --login-card-bg: rgba(255,255,255,0.04);
+      --login-card-border: rgba(255,255,255,0.10);
+      --login-input-bg: rgba(255,255,255,0.05);
+      --login-input-border: rgba(255,255,255,0.10);
+      --login-input-color: #ffffff;
+      --login-input-placeholder: rgba(255,255,255,0.28);
+      --login-text-primary: #ffffff;
+      --login-text-muted: rgba(255,255,255,0.28);
+      --login-divider: rgba(255,255,255,0.08);
+    }
+    [data-theme="light"] {
+      --bg: #F8FAFC;
+      --login-bg: #EFF6FF;
+      --login-card-bg: rgba(255,255,255,0.92);
+      --login-card-border: #e2e8f0;
+      --login-input-bg: #F1F5F9;
+      --login-input-border: #e2e8f0;
+      --login-input-color: #1e293b;
+      --login-input-placeholder: #94a3b8;
+      --login-text-primary: #1e293b;
+      --login-text-muted: #94a3b8;
+      --login-divider: #e2e8f0;
+    }
 
     /* ===== SWEETALERT2 PREMIUM OVERRIDES ===== */
     /* Pastikan selalu di depan (z-index tertinggi) */
@@ -496,11 +557,11 @@
     .sidebar-panel {
       position: absolute; top: 0; left: 0; bottom: 0;
       width: 300px; max-width: 85vw;
-      background: #ffffff;
+      background: var(--sb-bg);
       display: flex; flex-direction: column;
       transform: translateX(-100%);
       transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-      box-shadow: 8px 0 40px rgba(0,0,0,0.15);
+      box-shadow: 8px 0 40px var(--sb-shadow);
       overflow-y: auto; overflow-x: hidden;
     }
     .sidebar-overlay.open .sidebar-panel {
@@ -512,30 +573,53 @@
       cursor: pointer; border: 0; background: transparent;
       transition: background 0.18s, transform 0.15s;
       text-align: left; width: calc(100% - 24px);
-      color: #475569;
+      color: var(--sb-text-sub);
     }
-    .sidebar-menu-item:hover { background: rgba(0,97,194,0.07); transform: translateX(3px); }
+    .sidebar-menu-item:hover { background: var(--sb-hover); transform: translateX(3px); }
     .sidebar-menu-item:active { transform: scale(0.97); }
     .sidebar-menu-item.danger { color: #ef4444; }
-    .sidebar-menu-item.danger:hover { background: rgba(239,68,68,0.08); }
+    .sidebar-menu-item.danger:hover { background: var(--sb-danger-hover); }
     .sidebar-icon-wrap {
       width: 40px; height: 40px; border-radius: 13px; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
       font-size: 15px;
     }
     .sidebar-divider {
-      height: 1px; background: #e2e8f0;
+      height: 1px; background: var(--sb-divider);
       margin: 8px 20px;
     }
     .sidebar-section-label {
-      font-size: 9px; font-weight: 900; color: #94a3b8;
+      font-size: 9px; font-weight: 900; color: var(--sb-text-label);
       text-transform: uppercase; letter-spacing: 0.12em;
       padding: 14px 24px 6px;
     }
-    /* Override: teks menu sidebar agar jelas di background putih */
-    .sidebar-panel .sidebar-menu-item .text-slate-800 { color: #1e293b !important; }
-    .sidebar-panel .sidebar-menu-item .text-slate-400 { color: #64748b !important; }
-    .sidebar-panel .sidebar-menu-item .text-slate-300 { color: #94a3b8 !important; }
+    /* ── Override: teks menu sidebar reaktif terhadap tema ── */
+    .sidebar-panel .sidebar-menu-item .text-slate-800 { color: var(--sb-text-title) !important; }
+    .sidebar-panel .sidebar-menu-item .text-slate-400 { color: var(--sb-text-sub) !important; }
+    .sidebar-panel .sidebar-menu-item .text-slate-300 { color: var(--sb-chevron) !important; }
+    /* Panduan: pakai var agar berubah di dark */
+    [data-theme="dark"] .sidebar-panel .sidebar-menu-item p[style*="#059669"] { color: #34d399 !important; }
+    [data-theme="dark"] .sidebar-panel .sidebar-menu-item p[style*="#6b7280"] { color: #64748b !important; }
+    [data-theme="dark"] .sidebar-panel .sidebar-menu-item i.text-emerald-700 { color: #34d399 !important; }
+    /* Dark mode sidebar section label */
+    [data-theme="dark"] .sidebar-section-label { color: #475569; }
+    /* Dark mode sidebar desktop sidenav */
+    [data-theme="dark"] .desktop-sidenav-item { color: #64748b; }
+    [data-theme="dark"] .desktop-sidenav-item:hover { background: rgba(255,255,255,0.06); color: #94a3b8; }
+    [data-theme="dark"] .desktop-sidenav-item.active { background: linear-gradient(135deg,rgba(0,97,194,0.3),rgba(56,189,248,0.15)); color: #38BDF8; border: 1px solid rgba(56,189,248,0.2); }
+    [data-theme="dark"] .desktop-sidenav-item .dsn-icon { background: rgba(255,255,255,0.06); color: #64748b; }
+    /* Light mode sidebar desktop sidenav */
+    [data-theme="light"] .desktop-sidenav-item:hover { background: rgba(0,97,194,0.07); color: #0061C2; }
+    [data-theme="light"] .desktop-sidenav-item.active { background: linear-gradient(135deg,rgba(0,97,194,0.12),rgba(56,189,248,0.08)); color: #0061C2; border: 1px solid rgba(0,97,194,0.2); }
+    [data-theme="light"] .desktop-sidenav-item .dsn-icon { background: #f1f5f9; color: #64748b; }
+    /* Login light mode orbs — reduksi opacity agar tidak terlalu gelap */
+    [data-theme="light"] #login-screen canvas { opacity: 0.08 !important; }
+    [data-theme="light"] #login-screen .absolute.pointer-events-none { opacity: 0.4; }
+    /* body background dynamic */
+    body { background-color: var(--bg); transition: background-color 0.4s; }
+    /* App content background dark */
+    [data-theme="dark"] #desktop-main { background: #0f172a !important; }
+    [data-theme="dark"] main { background: #0f172a !important; }
     @keyframes shimmer-sweep {
       0% { transform: translateX(-100%) skewX(-15deg); }
       100% { transform: translateX(300%) skewX(-15deg); }
@@ -591,8 +675,8 @@
         height: 100vh !important;
         overflow-y: auto;
         overflow-x: hidden;
-        box-shadow: 4px 0 32px rgba(0,0,0,0.08);
-        border-right: 1px solid #e2e8f0;
+        box-shadow: 4px 0 32px var(--sb-shadow);
+        border-right: 1px solid var(--sb-border);
       }
       /* Hide sidebar overlay backdrop on desktop */
       .sidebar-overlay::before { display: none; }
@@ -743,6 +827,101 @@
     .desktop-sidenav { display: none; }
   </style>
   <script>
+    // ===== TEMA SISTEM (DARK / LIGHT) =====
+    (function() {
+      const THEME_KEY = 'konterku_theme';
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem(THEME_KEY, theme);
+        const isDark = theme === 'dark';
+
+        // Update toggle knob
+        const knob = document.getElementById('theme-toggle-knob');
+        const btn  = document.getElementById('theme-toggle-btn');
+        const icon = document.getElementById('theme-icon-sb');
+        const label= document.getElementById('theme-label-sb');
+
+        if (knob) knob.style.transform = isDark ? 'translateX(20px)' : 'translateX(0px)';
+        if (knob) knob.textContent = isDark ? '🌙' : '☀️';
+        if (btn)  btn.style.background = isDark
+          ? 'linear-gradient(135deg,#1e293b,#334155)'
+          : 'linear-gradient(135deg,#0061C2,#38bdf8)';
+        if (btn)  btn.style.boxShadow = isDark
+          ? '0 2px 8px rgba(0,0,0,0.4)'
+          : '0 2px 8px rgba(0,97,194,0.35)';
+        if (icon) { icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun'; icon.style.color = isDark ? '#818cf8' : '#f59e0b'; }
+        if (label) label.textContent = isDark ? 'Mode Gelap' : 'Mode Terang';
+
+        // Login screen background
+        const loginScreen = document.getElementById('login-screen');
+        if (loginScreen) {
+          loginScreen.style.background = isDark ? '#050c1a' : '#EFF6FF';
+        }
+
+        // Login orb visibilities
+        const loginOrbs = loginScreen ? loginScreen.querySelectorAll('.absolute.pointer-events-none') : [];
+        loginOrbs.forEach(el => { el.style.opacity = isDark ? '' : '0.3'; });
+        const loginCanvas = document.getElementById('login-canvas');
+        if (loginCanvas) loginCanvas.style.opacity = isDark ? '0.5' : '0.07';
+
+        // ── Update elemen login hardcoded ──
+        // "atau" divider span
+        const dividerSpan = loginScreen ? loginScreen.querySelector('.login-divider span') : null;
+        if (dividerSpan) dividerSpan.style.color = isDark ? 'rgba(255,255,255,0.18)' : '#94a3b8';
+        // Tab kasir color (hardcoded inline)
+        const tabKasir = document.getElementById('tab-kasir');
+        if (tabKasir && !tabKasir.classList.contains('active')) {
+          tabKasir.style.color = isDark ? 'rgba(255,255,255,0.35)' : '#94a3b8';
+        }
+        // Pwd strength label
+        const pwdLabel = document.getElementById('pwd-strength-label');
+        if (pwdLabel) pwdLabel.style.color = isDark ? 'rgba(255,255,255,0.3)' : '#94a3b8';
+        // Strength bar background wrapper
+        const pwdBarBg = pwdLabel ? pwdLabel.previousElementSibling : null;
+        if (pwdBarBg) pwdBarBg.style.background = isDark ? 'rgba(255,255,255,0.07)' : '#e2e8f0';
+        // Bottom info text
+        const bottomInfo = loginScreen ? loginScreen.querySelector('.mt-5.text-center > p') : null;
+        if (bottomInfo) bottomInfo.style.color = isDark ? 'rgba(255,255,255,0.22)' : '#64748b';
+        // Glass card box shadow
+        const glassCard = loginScreen ? loginScreen.querySelector('[style*="var(--login-card-bg)"]') : null;
+        if (glassCard) glassCard.style.boxShadow = isDark
+          ? '0 24px 64px rgba(0,0,0,0.55)'
+          : '0 24px 64px rgba(0,97,194,0.10), 0 4px 20px rgba(0,0,0,0.08)';
+        // Sidebar menu item texts (force refresh via CSS var — no JS needed, handled by [data-theme])
+        // Sidebar panel background update via CSS var
+
+        // Login page toggle button
+        const loginIcon  = document.getElementById('login-theme-icon');
+        const loginLabel = document.getElementById('login-theme-label');
+        const loginThemeBtn = loginIcon ? loginIcon.closest('button') : null;
+        if (loginIcon)  loginIcon.textContent = isDark ? '🌙' : '☀️';
+        if (loginLabel) loginLabel.textContent = isDark ? 'GELAP' : 'TERANG';
+        if (loginLabel) loginLabel.style.color = isDark ? 'rgba(255,255,255,0.75)' : 'rgba(15,23,42,0.65)';
+        if (loginThemeBtn) {
+          loginThemeBtn.style.background = isDark ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.75)';
+          loginThemeBtn.style.border = isDark ? '1.5px solid rgba(255,255,255,0.15)' : '1.5px solid rgba(0,97,194,0.2)';
+          loginThemeBtn.style.boxShadow = isDark ? '' : '0 2px 12px rgba(0,97,194,0.12)';
+        }
+      }
+
+      window.toggleAppTheme = function() {
+        const current = document.documentElement.getAttribute('data-theme') || 'light';
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+      };
+
+      // Init: load saved theme
+      const saved = localStorage.getItem(THEME_KEY) || 'light';
+      applyTheme(saved);
+
+      // Re-apply on DOMContentLoaded so toggle UI elements exist
+      document.addEventListener('DOMContentLoaded', function() {
+        const saved2 = localStorage.getItem(THEME_KEY) || 'light';
+        applyTheme(saved2);
+      });
+    })();
+    // ===== END TEMA SISTEM =====
+
     // ===== MYSWAL — Global SweetAlert2 Mixin Premium =====
     document.addEventListener('DOMContentLoaded', function() {
       if (typeof Swal === 'undefined') return;
@@ -957,17 +1136,26 @@
   </div>
 
   <!-- ==================== LOGIN SCREEN ==================== -->
-  <div id="login-screen" class="fixed inset-0 z-[2000] overflow-hidden" style="background:#050c1a;">
+  <div id="login-screen" class="fixed inset-0 z-[2000] overflow-hidden" style="background:var(--login-bg);">
     <!-- Animated BG particles -->
     <canvas id="login-canvas" class="absolute inset-0 w-full h-full pointer-events-none" style="opacity:0.5;"></canvas>
+
+    <!-- ── TEMA TOGGLE LOGIN ── -->
+    <button onclick="toggleAppTheme()"
+      style="position:absolute;top:16px;right:16px;z-index:10;
+             background:rgba(255,255,255,0.1);border:1.5px solid rgba(255,255,255,0.15);
+             border-radius:100px;padding:8px 14px;cursor:pointer;display:flex;align-items:center;gap:7px;
+             backdrop-filter:blur(12px);transition:all 0.2s;font-family:'Plus Jakarta Sans',sans-serif;">
+      <span id="login-theme-icon" style="font-size:14px;">☀️</span>
+      <span id="login-theme-label" style="font-size:10px;font-weight:800;color:rgba(255,255,255,0.75);letter-spacing:0.05em;">TERANG</span>
+    </button>
 
     <!-- Glow orbs -->
     <div class="absolute pointer-events-none" style="top:-20%;left:-15%;width:60vw;height:60vw;background:radial-gradient(circle,rgba(0,97,194,0.4) 0%,transparent 70%);border-radius:50%;filter:blur(60px);animation:orbFloat1 9s ease-in-out infinite;"></div>
     <div class="absolute pointer-events-none" style="bottom:-15%;right:-10%;width:50vw;height:50vw;background:radial-gradient(circle,rgba(56,189,248,0.28) 0%,transparent 70%);border-radius:50%;filter:blur(70px);animation:orbFloat2 11s ease-in-out infinite;"></div>
     <div class="absolute pointer-events-none" style="top:35%;left:55%;width:35vw;height:35vw;background:radial-gradient(circle,rgba(255,120,0,0.15) 0%,transparent 70%);border-radius:50%;filter:blur(55px);animation:orbFloat3 13s ease-in-out infinite;"></div>
 
-    <!-- Dot grid bg -->
-    <div class="absolute inset-0 pointer-events-none" style="opacity:0.025;background-image:radial-gradient(circle,#7dd3fc 1px,transparent 1px);background-size:28px 28px;"></div>
+    <!-- Dot grid bg (dihapus) -->
 
     <style>
       @keyframes orbFloat1 { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(5%,10%) scale(1.12);} }
@@ -986,27 +1174,27 @@
       .firebase-icon-anim { animation: logoFloat 5s ease-in-out infinite, firebaseGlow 3s ease-in-out infinite; }
 
       /* Tab toggle */
-      .auth-tab-wrap { display:flex; background:rgba(255,255,255,0.05); border-radius:14px; padding:4px; gap:4px; border:1px solid rgba(255,255,255,0.08); }
+      .auth-tab-wrap { display:flex; background:var(--login-input-bg); border-radius:14px; padding:4px; gap:4px; border:1px solid var(--login-input-border); }
       .auth-tab { flex:1; padding:10px 0; border-radius:10px; font-size:10px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border:none; cursor:pointer; transition:all 0.25s cubic-bezier(0.34,1.2,0.64,1); font-family:'Plus Jakarta Sans',sans-serif; }
       .auth-tab.active { background:linear-gradient(135deg,#0061C2,#38bdf8); color:white; box-shadow:0 4px 16px rgba(0,97,194,0.55); }
-      .auth-tab.inactive { background:transparent; color:rgba(255,255,255,0.35); }
+      .auth-tab.inactive { background:transparent; color:var(--login-text-muted); }
 
       /* Inputs */
       .login-input-wrap { position:relative; }
       .login-input {
-        width:100%; background:rgba(255,255,255,0.05); border:1.5px solid rgba(255,255,255,0.1);
+        width:100%; background:var(--login-input-bg); border:1.5px solid var(--login-input-border);
         padding:14px 44px 14px 48px; border-radius:14px;
-        color:white; font-weight:600; outline:none; font-size:14px;
+        color:var(--login-input-color); font-weight:600; outline:none; font-size:14px;
         font-family:'Plus Jakarta Sans',sans-serif;
         transition:all 0.3s; backdrop-filter:blur(10px);
         box-sizing:border-box;
       }
-      .login-input::placeholder { color:rgba(255,255,255,0.28); font-weight:500; }
+      .login-input::placeholder { color:var(--login-input-placeholder); font-weight:500; }
       .login-input:focus { border-color:rgba(56,189,248,0.65); background:rgba(56,189,248,0.07); box-shadow:0 0 0 4px rgba(56,189,248,0.13), 0 8px 24px rgba(0,0,0,0.3); }
       .login-input.error { border-color:rgba(248,113,113,0.7)!important; background:rgba(248,113,113,0.06)!important; box-shadow:0 0 0 4px rgba(248,113,113,0.12)!important; }
-      .login-input-icon { position:absolute; left:16px; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:13px; pointer-events:none; transition:color 0.3s; }
+      .login-input-icon { position:absolute; left:16px; top:50%; transform:translateY(-50%); color:var(--login-text-muted); font-size:13px; pointer-events:none; transition:color 0.3s; }
       .login-input-wrap:focus-within .login-input-icon { color:rgba(56,189,248,0.85); }
-      .login-input-eye { position:absolute; right:14px; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.3); font-size:13px; cursor:pointer; transition:color 0.2s; border:none; background:transparent; padding:4px; }
+      .login-input-eye { position:absolute; right:14px; top:50%; transform:translateY(-50%); color:var(--login-text-muted); font-size:13px; cursor:pointer; transition:color 0.2s; border:none; background:transparent; padding:4px; }
       .login-input-eye:hover { color:rgba(56,189,248,0.85); }
 
       /* Main button */
@@ -1025,13 +1213,13 @@
 
       /* Demo button */
       .login-btn-ghost {
-        width:100%; border:1.5px solid rgba(255,255,255,0.1); cursor:pointer; border-radius:14px;
+        width:100%; border:1.5px solid var(--login-input-border); cursor:pointer; border-radius:14px;
         padding:13px 0; font-family:'Plus Jakarta Sans',sans-serif;
         font-size:11px; font-weight:900; letter-spacing:0.06em; text-transform:uppercase;
-        background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.5);
+        background:var(--login-input-bg); color:var(--login-text-muted);
         transition:all 0.2s; backdrop-filter:blur(8px);
       }
-      .login-btn-ghost:hover { background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.75); border-color:rgba(255,255,255,0.2); }
+      .login-btn-ghost:hover { background:var(--login-divider); color:var(--login-text-primary); border-color:var(--login-input-border); }
 
       /* Forgot pass link */
       .login-link { background:none; border:none; color:rgba(56,189,248,0.7); font-size:11px; font-weight:700; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; transition:color 0.2s; }
@@ -1039,23 +1227,125 @@
 
       /* Divider */
       .login-divider { display:flex; align-items:center; gap:12px; }
-      .login-divider::before, .login-divider::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.08); }
+      .login-divider::before, .login-divider::after { content:''; flex:1; height:1px; background:var(--login-divider); }
 
+      /* ── LIGHT MODE overrides untuk login ── */
+      [data-theme="light"] #login-screen {
+        background: #EFF6FF !important;
+      }
+      [data-theme="light"] .login-input {
+        color: #1e293b !important;
+        background: #F1F5F9 !important;
+        border-color: #e2e8f0 !important;
+      }
+      [data-theme="light"] .login-input::placeholder { color: #94a3b8 !important; }
+      [data-theme="light"] .login-input:focus {
+        border-color: #0061C2 !important;
+        background: white !important;
+        box-shadow: 0 0 0 4px rgba(0,97,194,0.12), 0 8px 24px rgba(0,0,0,0.08) !important;
+      }
+      [data-theme="light"] .auth-tab-wrap {
+        background: #F1F5F9 !important;
+        border-color: #e2e8f0 !important;
+      }
+      [data-theme="light"] .auth-tab.inactive { color: #94a3b8 !important; }
+      [data-theme="light"] .login-divider::before,
+      [data-theme="light"] .login-divider::after { background: #e2e8f0 !important; }
+      [data-theme="light"] .login-link { color: #0061C2 !important; }
+      [data-theme="light"] .login-link:hover { color: #0284c7 !important; }
+      [data-theme="light"] .login-btn-ghost {
+        background: #F1F5F9 !important;
+        color: #64748b !important;
+        border-color: #e2e8f0 !important;
+      }
+      [data-theme="light"] .login-btn-ghost:hover {
+        background: #e2e8f0 !important;
+        color: #1e293b !important;
+      }
+      [data-theme="light"] .login-input-icon { color: #94a3b8 !important; }
+      [data-theme="light"] .login-input-eye { color: #94a3b8 !important; }
+      [data-theme="light"] .login-input-wrap:focus-within .login-input-icon { color: #0061C2 !important; }
+
+      /* ── LIGHT MODE overrides untuk login ── */
+      [data-theme="light"] #login-screen {
+        background: #EFF6FF !important;
+      }
+      [data-theme="light"] .login-input {
+        color: #1e293b !important;
+        background: #F1F5F9 !important;
+        border-color: #e2e8f0 !important;
+      }
+      [data-theme="light"] .login-input::placeholder { color: #94a3b8 !important; }
+      [data-theme="light"] .login-input:focus {
+        border-color: #0061C2 !important;
+        background: white !important;
+        box-shadow: 0 0 0 4px rgba(0,97,194,0.12), 0 8px 24px rgba(0,0,0,0.08) !important;
+      }
+      [data-theme="light"] .auth-tab-wrap {
+        background: #F1F5F9 !important;
+        border-color: #e2e8f0 !important;
+      }
+      [data-theme="light"] .auth-tab.inactive { color: #64748b !important; }
+      [data-theme="light"] #tab-kasir { color: #94a3b8 !important; }
+      [data-theme="light"] .login-divider::before,
+      [data-theme="light"] .login-divider::after { background: #e2e8f0 !important; }
+      /* "atau" divider text */
+      [data-theme="light"] .login-divider span { color: #94a3b8 !important; }
+      [data-theme="light"] .login-link { color: #0061C2 !important; }
+      [data-theme="light"] .login-link:hover { color: #0284c7 !important; }
+      [data-theme="light"] .login-btn-ghost {
+        background: #F1F5F9 !important;
+        color: #64748b !important;
+        border-color: #e2e8f0 !important;
+      }
+      [data-theme="light"] .login-btn-ghost:hover {
+        background: #e2e8f0 !important;
+        color: #1e293b !important;
+      }
+      [data-theme="light"] .login-input-icon { color: #94a3b8 !important; }
+      [data-theme="light"] .login-input-eye { color: #94a3b8 !important; }
+      [data-theme="light"] .login-input-wrap:focus-within .login-input-icon { color: #0061C2 !important; }
+      /* Glass card login */
+      [data-theme="light"] #login-screen .login-card-anim > div > div[style*="var(--login-card-bg)"] {
+        box-shadow: 0 24px 64px rgba(0,97,194,0.10), 0 4px 20px rgba(0,0,0,0.08) !important;
+      }
+      /* Judul & subtitle */
+      [data-theme="light"] #login-screen h1 { color: #0f172a !important; text-shadow: none !important; }
+      [data-theme="light"] #login-screen p[style*="var(--login-text-muted)"] { color: #64748b !important; }
+      /* Bottom info text */
+      [data-theme="light"] #login-screen .mt-5.text-center p { color: #64748b !important; }
+      [data-theme="light"] #login-screen .mt-5.text-center a { 
+        background: rgba(37,211,102,0.08) !important; 
+        border-color: rgba(37,211,102,0.3) !important;
+      }
+      /* Password strength bar bg */
+      [data-theme="light"] #login-screen div[style*="rgba(255,255,255,0.07)"][style*="border-radius:999px"] {
+        background: #e2e8f0 !important;
+      }
+      /* Pwd strength label */
+      [data-theme="light"] #pwd-strength-label { color: #94a3b8 !important; }
+      /* Firebase badge */
+      [data-theme="light"] #login-screen .mt-5 div[style*="rgba(255,160,0"] span { color: rgba(180,100,0,0.8) !important; }
+      [data-theme="light"] #login-screen div[style*="rgba(255,255,255,0.07)"].h-px { background: linear-gradient(90deg,transparent,#e2e8f0) !important; }
+      [data-theme="light"] #login-screen div[style*="rgba(255,255,255,0.07)"].flex-1 { background: linear-gradient(90deg,#e2e8f0,transparent) !important; }
       /* Error message */
       .login-error-msg { display:none; padding:10px 14px; border-radius:12px; background:rgba(248,113,113,0.1); border:1px solid rgba(248,113,113,0.25); color:#fca5a5; font-size:11px; font-weight:700; }
+      [data-theme="light"] .login-error-msg { color: #ef4444 !important; background: rgba(239,68,68,0.08) !important; border-color: rgba(239,68,68,0.2) !important; }
       .login-error-msg.show { display:flex; align-items:center; gap:8px; animation:tabSlide 0.2s ease; }
-
       /* Loading dots */
       .loading-dots span { display:inline-block; width:6px; height:6px; background:#38bdf8; border-radius:50%; margin:0 2px; animation:dotPulse 1.4s infinite ease-in-out; }
       .loading-dots span:nth-child(2) { animation-delay:0.2s; }
       .loading-dots span:nth-child(3) { animation-delay:0.4s; }
-
       /* Password strength bar */
       .pwd-strength-bar { height:3px; border-radius:999px; transition:all 0.4s; }
-
       /* Form panel transition */
       .login-panel { transition:opacity 0.2s,transform 0.2s; }
       .login-panel.hidden-panel { display:none; }
+      /* Light mode sidebar background dark */
+      [data-theme="dark"] .sidebar-panel { background: #0F172A !important; }
+      /* Light mode body bg */
+      [data-theme="light"] body { background-color: #F8FAFC; }
+      [data-theme="dark"]  body { background-color: #0f172a; }
     </style>
 
     <!-- Main card -->
@@ -1081,16 +1371,16 @@
               <i class="fas fa-store text-white" style="font-size:13px;"></i>
             </div>
           </div>
-          <h1 class="font-black text-[28px] text-white mb-1 tracking-tight" style="text-shadow:0 2px 24px rgba(56,189,248,0.35);">
+          <h1 class="font-black text-[28px] mb-1 tracking-tight" style="color:var(--login-text-primary);text-shadow:0 2px 24px rgba(56,189,248,0.35);">
             KonterKU <span style="background:linear-gradient(90deg,#38bdf8,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Cloud</span>
           </h1>
-          <p class="text-[9px] font-black uppercase tracking-[0.22em]" style="color:rgba(255,255,255,0.28);">
+          <p class="text-[9px] font-black uppercase tracking-[0.22em]" style="color:var(--login-text-muted);">
             <span style="color:rgba(255,160,0,0.8);">🔥</span> Secured by Firebase Authentication
           </p>
         </div>
 
         <!-- ── GLASS CARD ── -->
-        <div style="background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.1);border-radius:28px;padding:24px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 24px 64px rgba(0,0,0,0.55);">
+        <div style="background:var(--login-card-bg);border:1.5px solid var(--login-card-border);border-radius:28px;padding:24px;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);box-shadow:0 24px 64px rgba(0,0,0,0.55);">
 
           <!-- Tab: Login / Daftar / Kasir -->
           <div class="auth-tab-wrap mb-6">
@@ -1960,6 +2250,27 @@
             Hutang
           </button>
           <div class="sidebar-divider" style="margin:8px 4px;"></div>
+        </div>
+
+        <!-- ── TOGGLE TEMA ── -->
+        <div class="sidebar-menu-item" style="cursor:default;">
+          <div class="sidebar-icon-wrap" style="background:rgba(245,158,11,0.12);">
+            <i id="theme-icon-sb" class="fas fa-sun" style="color:#f59e0b;"></i>
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-[12px] font-black" id="theme-label-sb" style="color:var(--sb-text-title);">Mode Terang</p>
+            <p class="text-[9px] font-bold" style="color:var(--sb-text-sub);">Tema tampilan aplikasi</p>
+          </div>
+          <!-- Toggle Switch -->
+          <button id="theme-toggle-btn" onclick="toggleAppTheme()" aria-label="Toggle tema"
+            style="width:44px;height:24px;border-radius:100px;border:none;cursor:pointer;position:relative;
+                   background:linear-gradient(135deg,#0061C2,#38bdf8);box-shadow:0 2px 8px rgba(0,97,194,0.35);
+                   transition:background 0.3s,box-shadow 0.3s;flex-shrink:0;padding:0;">
+            <span id="theme-toggle-knob"
+              style="position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:white;
+                     box-shadow:0 1px 4px rgba(0,0,0,0.25);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+                     display:flex;align-items:center;justify-content:center;font-size:9px;">☀️</span>
+          </button>
         </div>
 
         <button class="sidebar-menu-item danger mb-4" onclick="closeSidebar(); logout();">
