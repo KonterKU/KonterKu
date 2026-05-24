@@ -10832,7 +10832,7 @@
           </button>
         </div>
         <!-- Tab navigasi panduan -->
-        <div id="panduan-tabs" class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1" style="scrollbar-width:none;">
+        <div id="panduan-tabs" style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;">
           <button class="panduan-tab-btn active" onclick="showPanduanTab('login')" id="ptab-login">🔑 Login</button>
           <button class="panduan-tab-btn" onclick="showPanduanTab('dashboard')" id="ptab-dashboard">📊 Dashboard</button>
           <button class="panduan-tab-btn" onclick="showPanduanTab('kasir')" id="ptab-kasir">💳 Kasir</button>
@@ -11739,17 +11739,20 @@
     /* ===== PANDUAN STYLES ===== */
     .panduan-tab-btn {
       flex-shrink: 0;
-      padding: 7px 14px;
-      border-radius: 12px;
-      font-size: 10px;
+      padding: 6px 4px;
+      border-radius: 10px;
+      font-size: 9px;
       font-weight: 900;
       border: none;
       cursor: pointer;
-      white-space: nowrap;
+      white-space: normal;
+      word-break: keep-all;
+      text-align: center;
+      line-height: 1.3;
       background: rgba(255,255,255,0.08);
       color: rgba(255,255,255,0.5);
       transition: all 0.2s;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.02em;
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
     .panduan-tab-btn:hover {
