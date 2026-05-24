@@ -622,6 +622,20 @@
     [data-theme="dark"] .sidebar-panel .sidebar-menu-item i.text-emerald-700 { color: #34d399 !important; }
     /* Dark mode sidebar section label */
     [data-theme="dark"] .sidebar-section-label { color: #475569; }
+    /* Dark mode: hilangkan shadow putih pada card dashboard */
+    [data-theme="dark"] .stat-card-omset,
+    [data-theme="dark"] #view-dashboard .rounded-\[20px\] {
+      box-shadow: none !important;
+    }
+    /* Dark mode: shortcut card (Laporan, Pelanggan, dll) */
+    [data-theme="dark"] #view-dashboard .grid.grid-cols-2 button.bg-white,
+    [data-theme="dark"] #view-dashboard .grid.grid-cols-2 > button {
+      background: #1e293b !important;
+      border-color: rgba(255,255,255,0.08) !important;
+      box-shadow: none !important;
+    }
+    [data-theme="dark"] #view-dashboard .grid.grid-cols-2 button .text-slate-700 { color: #e2e8f0 !important; }
+    [data-theme="dark"] #view-dashboard .grid.grid-cols-2 button .text-slate-400 { color: #64748b !important; }
     /* Dark mode sidebar desktop sidenav */
     [data-theme="dark"] .desktop-sidenav-item { color: #64748b; }
     [data-theme="dark"] .desktop-sidenav-item:hover { background: rgba(255,255,255,0.06); color: #94a3b8; }
@@ -4339,7 +4353,7 @@
         <div class="flex flex-col gap-3">
 
           <!-- Card Omset — Full Width -->
-          <div class="stat-card-omset relative overflow-hidden rounded-[22px] p-5 bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-400 shadow-xl shadow-blue-200/60">
+          <div class="stat-card-omset relative overflow-hidden rounded-[22px] p-5 bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-400">
             <!-- Ornamen lingkaran -->
             <div class="absolute -right-6 -top-6 w-28 h-28 bg-white/10 rounded-full pointer-events-none"></div>
             <div class="absolute right-8 -bottom-8 w-20 h-20 bg-white/10 rounded-full pointer-events-none"></div>
@@ -4369,7 +4383,7 @@
           <div class="grid grid-cols-2 gap-3">
 
             <!-- Card Laba -->
-            <div class="relative overflow-hidden rounded-[20px] p-4 bg-gradient-to-br from-emerald-500 via-emerald-400 to-teal-400 shadow-lg shadow-emerald-200/60">
+            <div class="relative overflow-hidden rounded-[20px] p-4 bg-gradient-to-br from-emerald-500 via-emerald-400 to-teal-400">
               <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full pointer-events-none"></div>
               <div class="absolute right-2 top-2 w-10 h-10 bg-white/10 rounded-full pointer-events-none"></div>
               <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
@@ -4388,7 +4402,7 @@
             </div>
 
             <!-- Card TRX -->
-            <div class="relative overflow-hidden rounded-[20px] p-4 bg-gradient-to-br from-violet-600 via-violet-500 to-purple-500 shadow-lg shadow-violet-200/60">
+            <div class="relative overflow-hidden rounded-[20px] p-4 bg-gradient-to-br from-violet-600 via-violet-500 to-purple-500">
               <div class="absolute -right-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full pointer-events-none"></div>
               <div class="absolute right-2 top-2 w-10 h-10 bg-white/10 rounded-full pointer-events-none"></div>
               <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
