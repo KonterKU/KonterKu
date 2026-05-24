@@ -3353,11 +3353,26 @@
           </div>
         </div>
 
-        <!-- Status badge -->
-        <div id="connection-status"
-          class="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-white/10 border border-white/15 text-[9px] font-black text-emerald-300 transition-all">
-          <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" id="status-dot"></span>
-          <span id="status-text">ONLINE</span>
+        <!-- Status badge + Admin button -->
+        <div class="flex items-center gap-2">
+
+          <!-- Tombol Panel Admin — hanya muncul untuk akun admin -->
+          <button id="btn-admin-panel" onclick="openAdminPanel()"
+            class="hidden items-center gap-1.5 px-2.5 py-2 rounded-2xl border transition-all active:scale-90 cursor-pointer"
+            style="background:linear-gradient(135deg,rgba(251,191,36,0.18),rgba(245,158,11,0.10));border-color:rgba(251,191,36,0.35);"
+            title="Panel Admin">
+            <span style="position:relative;display:flex;align-items:center;justify-content:center;width:18px;height:18px;">
+              <i class="fas fa-shield-halved" style="font-size:13px;color:#fbbf24;"></i>
+              <span style="position:absolute;top:-3px;right:-3px;width:7px;height:7px;background:#ef4444;border-radius:50%;border:1.5px solid rgba(10,22,40,0.8);"></span>
+            </span>
+            <span style="font-size:9px;font-weight:900;color:#fcd34d;letter-spacing:0.04em;">ADMIN</span>
+          </button>
+
+          <div id="connection-status"
+            class="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-white/10 border border-white/15 text-[9px] font-black text-emerald-300 transition-all">
+            <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" id="status-dot"></span>
+            <span id="status-text">ONLINE</span>
+          </div>
         </div>
       </div>
 
@@ -8357,17 +8372,23 @@
     let _adminAllSubs = [];
     let _adminFilter  = 'all';
 
+    // Fungsi global untuk tombol header admin
+    window.openAdminPanel = function() {
+      if (!isAdminUser()) { (_getMySwal()||Swal).fire('Akses Ditolak','Anda tidak punya akses admin.','error'); return; }
+      openModal('modal-admin-panel');
+    };
+
     function checkAdminMenu() {
+      const isAdmin = isAdminUser();
+      // Sidebar section
       const section = document.getElementById('sidebar-admin-section');
-      if (section) section.classList.toggle('hidden', !isAdminUser());
+      if (section) section.classList.toggle('hidden', !isAdmin);
+      // Sidebar shortcut badge
       const shortcut = document.getElementById('sidebar-admin-shortcut');
-      if (shortcut) {
-        if (isAdminUser()) {
-          shortcut.style.display = 'inline-flex';
-        } else {
-          shortcut.style.display = 'none';
-        }
-      }
+      if (shortcut) shortcut.style.display = isAdmin ? 'inline-flex' : 'none';
+      // Header admin button
+      const btnAdmin = document.getElementById('btn-admin-panel');
+      if (btnAdmin) btnAdmin.style.display = isAdmin ? 'inline-flex' : 'none';
     }
 
     // Patch openSidebarMenu to handle 'admin'
