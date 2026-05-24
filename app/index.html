@@ -57,141 +57,6 @@
   <style>
     :root { --primary: #0061C2; --bg: #F8FAFC; --slate-800: #1e293b; }
 
-    /* ===== DARK MODE VARIABLES ===== */
-    html.dark-mode {
-      --bg: #0f172a;
-      --slate-800: #e2e8f0;
-    }
-    html.dark-mode body {
-      background-color: #0f172a;
-      color: #e2e8f0;
-    }
-    /* Cards & surfaces */
-    html.dark-mode .card-premium {
-      background: #1e293b !important;
-      border-color: #334155 !important;
-    }
-    html.dark-mode .modal-content {
-      background: #1e293b !important;
-      color: #e2e8f0 !important;
-    }
-    html.dark-mode .input-premium {
-      background: #0f172a !important;
-      color: #e2e8f0 !important;
-      border-color: #334155 !important;
-    }
-    html.dark-mode .input-premium:focus {
-      background: #1e293b !important;
-      border-color: #0061C2 !important;
-    }
-    /* Sidebar */
-    html.dark-mode #app-sidebar {
-      background: #0f172a !important;
-    }
-    html.dark-mode #app-sidebar .bg-white\/5 {
-      background: rgba(255,255,255,0.05) !important;
-    }
-    /* Bottom nav */
-    html.dark-mode .bottom-nav {
-      background: rgba(5, 8, 18, 0.98) !important;
-    }
-    /* View sections */
-    html.dark-mode .view-section {
-      color: #e2e8f0;
-    }
-    /* Text overrides */
-    html.dark-mode .text-slate-700,
-    html.dark-mode .text-slate-800 {
-      color: #cbd5e1 !important;
-    }
-    html.dark-mode .text-slate-500,
-    html.dark-mode .text-slate-600 {
-      color: #94a3b8 !important;
-    }
-    html.dark-mode .text-slate-400 {
-      color: #64748b !important;
-    }
-    /* Background overrides for white cards */
-    html.dark-mode .bg-white,
-    html.dark-mode [style*="background:white"],
-    html.dark-mode [style*="background: white"] {
-      background: #1e293b !important;
-    }
-    html.dark-mode .bg-slate-50,
-    html.dark-mode .bg-\[#F8FAFC\] {
-      background: #0f172a !important;
-    }
-    html.dark-mode .border-slate-100 {
-      border-color: #1e293b !important;
-    }
-    html.dark-mode .border-slate-200 {
-      border-color: #334155 !important;
-    }
-    /* Filter chips */
-    html.dark-mode .filter-chip {
-      background: #1e293b !important;
-      border-color: #334155 !important;
-      color: #94a3b8 !important;
-    }
-    html.dark-mode .filter-chip.active {
-      background: #0061C2 !important;
-      color: white !important;
-    }
-    /* Tab buttons */
-    html.dark-mode .tab-btn.inactive {
-      color: #475569 !important;
-    }
-    /* Labels */
-    html.dark-mode label {
-      color: #64748b !important;
-    }
-    /* Main content area */
-    html.dark-mode main {
-      background: #0f172a;
-    }
-    /* Stat cards text in dark */
-    html.dark-mode .bg-slate-50.rounded-2xl {
-      background: #1e293b !important;
-    }
-    /* Kasir field cards */
-    html.dark-mode .kasir-field-card,
-    html.dark-mode [class*="kasir-field"] {
-      background: #1e293b !important;
-      border-color: #334155 !important;
-    }
-    html.dark-mode .kasir-field-input {
-      color: #e2e8f0 !important;
-      background: transparent !important;
-    }
-    /* Theme toggle button */
-    #btn-theme-toggle {
-      width: 36px; height: 36px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.10);
-      border: 1px solid rgba(255,255,255,0.15);
-      cursor: pointer;
-      transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
-      position: relative;
-      overflow: hidden;
-    }
-    #btn-theme-toggle:hover {
-      background: rgba(255,255,255,0.18);
-      transform: scale(1.08);
-    }
-    #btn-theme-toggle:active { transform: scale(0.92); }
-    #btn-theme-toggle .icon-sun,
-    #btn-theme-toggle .icon-moon {
-      position: absolute;
-      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-      font-size: 13px;
-    }
-    #btn-theme-toggle .icon-sun  { color: #fbbf24; opacity: 1; transform: scale(1) rotate(0deg); }
-    #btn-theme-toggle .icon-moon { color: #93c5fd; opacity: 0; transform: scale(0.5) rotate(-90deg); }
-    html.dark-mode #btn-theme-toggle .icon-sun  { opacity: 0; transform: scale(0.5) rotate(90deg); }
-    html.dark-mode #btn-theme-toggle .icon-moon { opacity: 1; transform: scale(1) rotate(0deg); }
-    /* ===== END DARK MODE ===== */
-
     /* ===== SWEETALERT2 PREMIUM OVERRIDES ===== */
     /* Pastikan selalu di depan (z-index tertinggi) */
     .swal2-container { z-index: 99999 !important; }
@@ -631,11 +496,11 @@
     .sidebar-panel {
       position: absolute; top: 0; left: 0; bottom: 0;
       width: 300px; max-width: 85vw;
-      background: #0F172A;
+      background: #ffffff;
       display: flex; flex-direction: column;
       transform: translateX(-100%);
       transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-      box-shadow: 8px 0 40px rgba(0,0,0,0.4);
+      box-shadow: 8px 0 40px rgba(0,0,0,0.15);
       overflow-y: auto; overflow-x: hidden;
     }
     .sidebar-overlay.open .sidebar-panel {
@@ -647,26 +512,30 @@
       cursor: pointer; border: 0; background: transparent;
       transition: background 0.18s, transform 0.15s;
       text-align: left; width: calc(100% - 24px);
-      color: #94A3B8;
+      color: #475569;
     }
-    .sidebar-menu-item:hover { background: rgba(255,255,255,0.06); transform: translateX(3px); }
+    .sidebar-menu-item:hover { background: rgba(0,97,194,0.07); transform: translateX(3px); }
     .sidebar-menu-item:active { transform: scale(0.97); }
-    .sidebar-menu-item.danger { color: #f87171; }
-    .sidebar-menu-item.danger:hover { background: rgba(239,68,68,0.1); }
+    .sidebar-menu-item.danger { color: #ef4444; }
+    .sidebar-menu-item.danger:hover { background: rgba(239,68,68,0.08); }
     .sidebar-icon-wrap {
       width: 40px; height: 40px; border-radius: 13px; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
       font-size: 15px;
     }
     .sidebar-divider {
-      height: 1px; background: rgba(255,255,255,0.07);
+      height: 1px; background: #e2e8f0;
       margin: 8px 20px;
     }
     .sidebar-section-label {
-      font-size: 9px; font-weight: 900; color: #334155;
+      font-size: 9px; font-weight: 900; color: #94a3b8;
       text-transform: uppercase; letter-spacing: 0.12em;
       padding: 14px 24px 6px;
     }
+    /* Override: teks menu sidebar agar jelas di background putih */
+    .sidebar-panel .sidebar-menu-item .text-slate-800 { color: #1e293b !important; }
+    .sidebar-panel .sidebar-menu-item .text-slate-400 { color: #64748b !important; }
+    .sidebar-panel .sidebar-menu-item .text-slate-300 { color: #94a3b8 !important; }
     @keyframes shimmer-sweep {
       0% { transform: translateX(-100%) skewX(-15deg); }
       100% { transform: translateX(300%) skewX(-15deg); }
@@ -722,8 +591,8 @@
         height: 100vh !important;
         overflow-y: auto;
         overflow-x: hidden;
-        box-shadow: 4px 0 32px rgba(0,0,0,0.3);
-        border-right: 1px solid rgba(255,255,255,0.05);
+        box-shadow: 4px 0 32px rgba(0,0,0,0.08);
+        border-right: 1px solid #e2e8f0;
       }
       /* Hide sidebar overlay backdrop on desktop */
       .sidebar-overlay::before { display: none; }
@@ -792,17 +661,17 @@
         text-align: left;
         transition: all 0.18s;
       }
-      .desktop-sidenav-item:hover { background: rgba(255,255,255,0.06); color: #94a3b8; }
+      .desktop-sidenav-item:hover { background: rgba(0,97,194,0.07); color: #0061C2; }
       .desktop-sidenav-item.active {
-        background: linear-gradient(135deg, rgba(0,97,194,0.3), rgba(56,189,248,0.15));
-        color: #38BDF8;
-        border: 1px solid rgba(56,189,248,0.2);
+        background: linear-gradient(135deg, rgba(0,97,194,0.12), rgba(56,189,248,0.08));
+        color: #0061C2;
+        border: 1px solid rgba(0,97,194,0.2);
       }
       .desktop-sidenav-item .dsn-icon {
         width: 34px; height: 34px; border-radius: 11px;
         display: flex; align-items: center; justify-content: center;
         font-size: 13px; flex-shrink: 0;
-        background: rgba(255,255,255,0.06);
+        background: #f1f5f9;
         color: #64748b;
         transition: all 0.18s;
       }
@@ -1989,10 +1858,10 @@
               <i class="fas fa-user-circle text-blue-400"></i>
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-[12px] font-black text-slate-200">Akun Toko</p>
-              <p class="text-[9px] text-slate-500 font-bold">Info & pengaturan akun</p>
+              <p class="text-[12px] font-black text-slate-800">Akun Toko</p>
+              <p class="text-[9px] text-slate-400 font-bold">Info & pengaturan akun</p>
             </div>
-            <i class="fas fa-chevron-right text-slate-600 text-[9px]"></i>
+            <i class="fas fa-chevron-right text-slate-300 text-[9px]"></i>
           </button>
 
           <!-- ADMIN ONLY SECTION -->
@@ -2005,10 +1874,10 @@
               <i class="fas fa-users-gear text-violet-400"></i>
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-[12px] font-black text-slate-200">Kelola Kasir</p>
-              <p class="text-[9px] text-slate-500 font-bold">Tambah & atur akun kasir</p>
+              <p class="text-[12px] font-black text-slate-800">Kelola Kasir</p>
+              <p class="text-[9px] text-slate-400 font-bold">Tambah & atur akun kasir</p>
             </div>
-            <i class="fas fa-chevron-right text-slate-600 text-[9px]"></i>
+            <i class="fas fa-chevron-right text-slate-300 text-[9px]"></i>
           </button>
 
           <!-- Absensi Kasir -->
@@ -2017,11 +1886,11 @@
               <i class="fas fa-user-clock" style="color:#34d399;"></i>
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-[12px] font-black text-slate-200">Absensi Kasir</p>
-              <p class="text-[9px] text-slate-500 font-bold">Laporan shift & saldo kas</p>
+              <p class="text-[12px] font-black text-slate-800">Absensi Kasir</p>
+              <p class="text-[9px] text-slate-400 font-bold">Laporan shift & saldo kas</p>
             </div>
             <span id="absensi-plan-badge" class="px-1.5 py-0.5 rounded-md font-black mr-1" style="font-size:7px;background:rgba(5,150,105,0.15);color:#10b981;border:1px solid rgba(5,150,105,0.25);display:none;">PRO ⭐</span>
-            <i class="fas fa-chevron-right text-slate-600 text-[9px]"></i>
+            <i class="fas fa-chevron-right text-slate-300 text-[9px]"></i>
           </button>
 
           <!-- Backup & Restore -->
@@ -2030,10 +1899,10 @@
               <i class="fas fa-cloud-arrow-up text-emerald-400"></i>
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-[12px] font-black text-slate-200">Backup & Restore</p>
-              <p class="text-[9px] text-slate-500 font-bold">Sinkronisasi data cloud</p>
+              <p class="text-[12px] font-black text-slate-800">Backup & Restore</p>
+              <p class="text-[9px] text-slate-400 font-bold">Sinkronisasi data cloud</p>
             </div>
-            <i class="fas fa-chevron-right text-slate-600 text-[9px]"></i>
+            <i class="fas fa-chevron-right text-slate-300 text-[9px]"></i>
           </button>
 
           <p class="sidebar-section-label">LAINNYA</p>
@@ -2044,10 +1913,10 @@
               <i class="fas fa-circle-info text-violet-400"></i>
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-[12px] font-black text-slate-200">Tentang Aplikasi</p>
-              <p class="text-[9px] text-slate-500 font-bold">Versi, lisensi & kontak</p>
+              <p class="text-[12px] font-black text-slate-800">Tentang Aplikasi</p>
+              <p class="text-[9px] text-slate-400 font-bold">Versi, lisensi & kontak</p>
             </div>
-            <i class="fas fa-chevron-right text-slate-600 text-[9px]"></i>
+            <i class="fas fa-chevron-right text-slate-300 text-[9px]"></i>
           </button>
 
           <!-- Panduan -->
@@ -2056,8 +1925,8 @@
               <i class="fas fa-book-open" style="color:#34d399;"></i>
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-[12px] font-black" style="color:#6ee7b7;">Panduan Penggunaan</p>
-              <p class="text-[9px] font-bold" style="color:#047857;">Cara pakai semua fitur</p>
+              <p class="text-[12px] font-black" style="color:#059669;">Panduan Penggunaan</p>
+              <p class="text-[9px] font-bold" style="color:#6b7280;">Cara pakai semua fitur</p>
             </div>
             <i class="fas fa-chevron-right text-emerald-700 text-[9px]"></i>
           </button>
@@ -2099,7 +1968,7 @@
           </div>
           <div class="flex-1 min-w-0">
             <p class="text-[12px] font-black">Keluar</p>
-            <p class="text-[9px] text-red-300/60 font-bold">Logout dari akun ini</p>
+            <p class="text-[9px] text-red-400/80 font-bold">Logout dari akun ini</p>
           </div>
         </button>
 
@@ -3509,12 +3378,6 @@
             <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" id="status-dot"></span>
             <span id="status-text">ONLINE</span>
           </div>
-
-          <!-- Tombol Toggle Tema Gelap/Terang -->
-          <button id="btn-theme-toggle" onclick="toggleDarkMode()" title="Ganti Tema">
-            <i class="fas fa-sun icon-sun"></i>
-            <i class="fas fa-moon icon-moon"></i>
-          </button>
         </div>
       </div>
 
@@ -12615,38 +12478,6 @@
       100% { top: 5%; }
     }
   </style>
-
-  <script>
-  // ==================== DARK MODE ENGINE ====================
-  (function() {
-    // Terapkan tema tersimpan saat halaman dimuat (sebelum render)
-    const saved = localStorage.getItem('k_theme');
-    if (saved === 'dark') {
-      document.documentElement.classList.add('dark-mode');
-    }
-  })();
-
-  function toggleDarkMode() {
-    const html = document.documentElement;
-    const isDark = html.classList.toggle('dark-mode');
-    localStorage.setItem('k_theme', isDark ? 'dark' : 'light');
-
-    // Feedback toast
-    const label = isDark ? '🌙 Tema Gelap Aktif' : '☀️ Tema Terang Aktif';
-    try {
-      (_getMySwal && _getMySwal() || Swal).fire({
-        title: label,
-        toast: true,
-        position: 'top',
-        showConfirmButton: false,
-        timer: 1400,
-        timerProgressBar: true,
-        customClass: { popup: 'swal2-ku-toast' }
-      });
-    } catch(e) {}
-  }
-  // ==================== END DARK MODE ENGINE ====================
-  </script>
 
   <script>
   // ==================== BARCODE SCANNER ENGINE ====================
