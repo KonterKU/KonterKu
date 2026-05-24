@@ -8783,8 +8783,26 @@
         if (res.isConfirmed) {
           // Sign out dari Firebase Auth
           if (window._fbAuth) window._fbAuth.signOut().catch(()=>{});
-          localStorage.removeItem('k_logged');
-          localStorage.removeItem('k_token');
+
+          // ── Hapus SEMUA data sesi akun agar tidak bocor ke akun lain ──
+          const _keysToRemove = [
+            'k_logged', 'k_token', 'k_sid', 'k_email',
+            'k_store_name', 'k_plan', 'k_expired_date',
+            'k_active_store_id', 'k_sync_version', 'k_pending_sync', 'k_last_sync',
+            'k_kasir_mode', 'k_kasir_id', 'k_kasir_nama',
+            'k_kasir_username', 'k_kasir_izin',
+            'k_struk_alamat', 'k_struk_tagline', 'k_struk_logo'
+          ];
+          _keysToRemove.forEach(k => localStorage.removeItem(k));
+
+          // Hapus cache DB per-sid (konterku_db_* dan ktg_*)
+          const _allKeys = Object.keys(localStorage);
+          _allKeys.forEach(k => {
+            if (k.startsWith('konterku_db_') || k.startsWith('ktg_')) {
+              localStorage.removeItem(k);
+            }
+          });
+
           location.reload();
         }
       });
