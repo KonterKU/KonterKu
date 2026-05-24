@@ -592,7 +592,7 @@
 
     /* Floating section indicator */
     #section-indicator {
-      position: fixed; right: 24px; top: 50%; transform: translateY(-50%);
+      position: fixed; right: 16px; top: 50%; transform: translateY(-50%);
       z-index: 100; display: flex; flex-direction: column; gap: 8px;
     }
     .si-dot {
@@ -602,7 +602,7 @@
     }
     .si-dot.active { background: var(--cyan); border-color: var(--cyan); box-shadow: 0 0 8px rgba(6,182,212,0.6); transform: scale(1.4); }
     .si-dot:hover { background: rgba(255,255,255,0.5); }
-    @media (max-width: 768px) { #section-indicator { display: none; } }
+    @media (max-width: 1024px) { #section-indicator { display: none; } }
 
     /* Glow pulse on feat cards when visible */
     .feat-card.visible {
@@ -734,7 +734,7 @@
       <em>Lebih Modern,<br>Lebih Menguntungkan</em>
     </h1>
     <p class="hero-sub">
-      Kasir digital, manajemen stok real-time, laporan omset otomatis, multi-toko &amp; monitor cabang — semua dari HP, dari mana saja.
+      Kasir digital, fisik &amp; e-wallet, manajemen stok real-time, multi-dompet, absensi kasir, laporan otomatis, multi-toko &amp; monitor cabang — semua dari HP atau PC, dari mana saja.
     </p>
     <div class="hero-actions">
       <a href="https://www.agscellpos.my.id/app/" class="btn-primary">
@@ -816,7 +816,8 @@
         <div class="ph-nav-item act"><i class="fas fa-house ni"></i><span>Beranda</span></div>
         <div class="ph-nav-item"><i class="fas fa-cash-register ni"></i><span>Kasir</span></div>
         <div class="ph-nav-item"><i class="fas fa-boxes-stacked ni"></i><span>Stok</span></div>
-        <div class="ph-nav-item"><i class="fas fa-chart-bar ni"></i><span>Laporan</span></div>
+        <div class="ph-nav-item"><i class="fas fa-wallet ni"></i><span>Dompet</span></div>
+        <div class="ph-nav-item"><i class="fas fa-file-invoice-dollar ni"></i><span>Hutang</span></div>
       </div>
     </div>
     <div class="float-pill fp1">
@@ -841,7 +842,11 @@
   <div class="marquee-track">
     <div class="marquee-item"><i class="fas fa-cash-register"></i> Kasir Digital</div>
     <div class="marquee-dot"></div>
+    <div class="marquee-item"><i class="fas fa-mobile-screen-button"></i> Kasir E-Wallet</div>
+    <div class="marquee-dot"></div>
     <div class="marquee-item"><i class="fas fa-boxes-stacked"></i> Stok Real-Time</div>
+    <div class="marquee-dot"></div>
+    <div class="marquee-item"><i class="fas fa-barcode"></i> Barcode Scanner</div>
     <div class="marquee-dot"></div>
     <div class="marquee-item"><i class="fas fa-chart-line"></i> Laporan Otomatis</div>
     <div class="marquee-dot"></div>
@@ -849,18 +854,28 @@
     <div class="marquee-dot"></div>
     <div class="marquee-item"><i class="fas fa-cloud"></i> Cloud Firebase</div>
     <div class="marquee-dot"></div>
+    <div class="marquee-item"><i class="fas fa-wallet"></i> Multi-Dompet</div>
+    <div class="marquee-dot"></div>
     <div class="marquee-item"><i class="fas fa-hand-holding-dollar"></i> Hutang & Piutang</div>
     <div class="marquee-dot"></div>
-    <div class="marquee-item"><i class="fab fa-whatsapp"></i> Support WA</div>
+    <div class="marquee-item"><i class="fas fa-user-clock"></i> Absensi Kasir</div>
+    <div class="marquee-dot"></div>
+    <div class="marquee-item"><i class="fas fa-print"></i> Cetak Thermal</div>
     <div class="marquee-dot"></div>
     <div class="marquee-item"><i class="fas fa-users"></i> Multi-Kasir</div>
     <div class="marquee-dot"></div>
     <div class="marquee-item"><i class="fas fa-chart-column"></i> Monitor Cabang</div>
+    <div class="marquee-dot"></div>
+    <div class="marquee-item"><i class="fas fa-desktop"></i> Responsif PC & HP</div>
     <div class="marquee-dot"></div>
     <!-- Duplicate for seamless loop -->
     <div class="marquee-item"><i class="fas fa-cash-register"></i> Kasir Digital</div>
     <div class="marquee-dot"></div>
+    <div class="marquee-item"><i class="fas fa-mobile-screen-button"></i> Kasir E-Wallet</div>
+    <div class="marquee-dot"></div>
     <div class="marquee-item"><i class="fas fa-boxes-stacked"></i> Stok Real-Time</div>
+    <div class="marquee-dot"></div>
+    <div class="marquee-item"><i class="fas fa-barcode"></i> Barcode Scanner</div>
     <div class="marquee-dot"></div>
     <div class="marquee-item"><i class="fas fa-chart-line"></i> Laporan Otomatis</div>
     <div class="marquee-dot"></div>
@@ -868,13 +883,19 @@
     <div class="marquee-dot"></div>
     <div class="marquee-item"><i class="fas fa-cloud"></i> Cloud Firebase</div>
     <div class="marquee-dot"></div>
+    <div class="marquee-item"><i class="fas fa-wallet"></i> Multi-Dompet</div>
+    <div class="marquee-dot"></div>
     <div class="marquee-item"><i class="fas fa-hand-holding-dollar"></i> Hutang & Piutang</div>
     <div class="marquee-dot"></div>
-    <div class="marquee-item"><i class="fab fa-whatsapp"></i> Support WA</div>
+    <div class="marquee-item"><i class="fas fa-user-clock"></i> Absensi Kasir</div>
+    <div class="marquee-dot"></div>
+    <div class="marquee-item"><i class="fas fa-print"></i> Cetak Thermal</div>
     <div class="marquee-dot"></div>
     <div class="marquee-item"><i class="fas fa-users"></i> Multi-Kasir</div>
     <div class="marquee-dot"></div>
     <div class="marquee-item"><i class="fas fa-chart-column"></i> Monitor Cabang</div>
+    <div class="marquee-dot"></div>
+    <div class="marquee-item"><i class="fas fa-desktop"></i> Responsif PC & HP</div>
     <div class="marquee-dot"></div>
   </div>
 </div>
@@ -889,64 +910,112 @@
     </div>
     <div class="feat-grid stagger-children">
 
+      <!-- Kasir Digital + Fisik + E-Wallet -->
       <div class="feat-card reveal">
         <div class="feat-icon" style="background:linear-gradient(135deg,rgba(29,110,245,0.15),rgba(6,182,212,0.1));border:1px solid rgba(6,182,212,0.18);">
           <i class="fas fa-cash-register" style="color:var(--cyan);"></i>
         </div>
-        <div class="feat-name">Kasir Digital</div>
-        <div class="feat-desc">Catat transaksi produk digital (pulsa, paket data, e-wallet) dan produk fisik dalam satu tampilan yang intuitif dan super cepat.</div>
+        <div class="feat-name">Kasir 3-Mode</div>
+        <div class="feat-desc">Tiga mode kasir dalam satu tampilan: Produk Digital (pulsa, paket data), Produk Fisik (HP, aksesoris), dan E-Wallet (transfer/top-up). Cetak struk thermal 58mm langsung dari HP.</div>
         <div class="feat-tags">
-          <span class="feat-tag">Produk Digital</span>
-          <span class="feat-tag">Produk Fisik</span>
+          <span class="feat-tag">Kasir Digital</span>
+          <span class="feat-tag">Kasir Fisik</span>
+          <span class="feat-tag">E-Wallet</span>
           <span class="feat-tag">Cetak Struk</span>
         </div>
       </div>
 
+      <!-- Barcode Scanner -->
+      <div class="feat-card reveal">
+        <div class="feat-icon" style="background:linear-gradient(135deg,rgba(124,58,237,0.15),rgba(167,139,250,0.08));border:1px solid rgba(124,58,237,0.2);">
+          <i class="fas fa-barcode" style="color:#c4b5fd;"></i>
+        </div>
+        <div class="feat-name">Barcode Scanner</div>
+        <div class="feat-desc">Scan barcode produk fisik langsung dari kamera HP untuk pencarian instan di kasir dan pengelolaan stok. Mendukung hampir semua format barcode umum, plus input manual sebagai fallback.</div>
+        <div class="feat-tags">
+          <span class="feat-tag">Scan Kamera</span>
+          <span class="feat-tag">Cari Produk</span>
+          <span class="feat-tag">Input Manual</span>
+        </div>
+      </div>
+
+      <!-- Manajemen Stok -->
       <div class="feat-card reveal">
         <div class="feat-icon" style="background:linear-gradient(135deg,rgba(34,197,94,0.12),rgba(20,184,166,0.08));border:1px solid rgba(34,197,94,0.2);">
           <i class="fas fa-boxes-stacked" style="color:#86efac;"></i>
         </div>
         <div class="feat-name">Manajemen Stok</div>
-        <div class="feat-desc">Pantau stok secara real-time, terima notifikasi saat stok menipis, dan kelola harga beli/jual dengan mudah tanpa ribet.</div>
+        <div class="feat-desc">Pantau stok digital dan fisik secara real-time. Terima notifikasi saat stok menipis atau habis, kelola harga beli/jual, dan pantau semua produk dari satu dashboard.</div>
         <div class="feat-tags">
           <span class="feat-tag">Stok Real-Time</span>
           <span class="feat-tag">Alert Minimum</span>
-          <span class="feat-tag">Multi Kategori</span>
+          <span class="feat-tag">Digital & Fisik</span>
         </div>
       </div>
 
+      <!-- Laporan & Analitik -->
       <div class="feat-card reveal">
         <div class="feat-icon" style="background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(251,191,36,0.06));border:1px solid rgba(245,158,11,0.2);">
           <i class="fas fa-chart-line" style="color:var(--amber);"></i>
         </div>
         <div class="feat-name">Laporan & Analitik</div>
-        <div class="feat-desc">Lihat omset harian, laba bersih, dan tren penjualan. Ekspor laporan ke Google Sheets atau PDF kapan pun dibutuhkan.</div>
+        <div class="feat-desc">Lihat omset harian, laba bersih, tren penjualan 7 hari, dan grafik interaktif. Ekspor laporan ke PDF kapan pun dibutuhkan — harian, mingguan, atau bulanan.</div>
         <div class="feat-tags">
-          <span class="feat-tag">Omset Harian</span>
           <span class="feat-tag">Grafik Visual</span>
           <span class="feat-tag">Ekspor PDF</span>
+          <span class="feat-tag">Tren 7 Hari</span>
         </div>
       </div>
 
+      <!-- Multi-Dompet / E-Wallet -->
       <div class="feat-card reveal">
-        <div class="feat-icon" style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(167,139,250,0.06));border:1px solid rgba(139,92,246,0.2);">
-          <i class="fas fa-hand-holding-dollar" style="color:#c4b5fd;"></i>
+        <div class="feat-icon" style="background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(99,102,241,0.08));border:1px solid rgba(139,92,246,0.2);">
+          <i class="fas fa-wallet" style="color:#a78bfa;"></i>
+        </div>
+        <div class="feat-name">Multi-Dompet</div>
+        <div class="feat-desc">Kelola saldo berbagai dompet sekaligus — kas tunai, Dana, OVO, GoPay, dan rekening bank. Pantau mutasi setiap dompet dan lacak aliran uang masuk/keluar secara detail.</div>
+        <div class="feat-tags">
+          <span class="feat-tag">Kas Tunai</span>
+          <span class="feat-tag">Dana/OVO/GoPay</span>
+          <span class="feat-tag">Mutasi Saldo</span>
+        </div>
+      </div>
+
+      <!-- Hutang & Piutang -->
+      <div class="feat-card reveal">
+        <div class="feat-icon" style="background:linear-gradient(135deg,rgba(239,68,68,0.1),rgba(190,18,60,0.06));border:1px solid rgba(239,68,68,0.18);">
+          <i class="fas fa-file-invoice-dollar" style="color:#fca5a5;"></i>
         </div>
         <div class="feat-name">Hutang & Piutang</div>
-        <div class="feat-desc">Catat pelanggan yang belum bayar, pantau status hutang, dan kirim pengingat otomatis. Tidak ada transaksi yang terlewat.</div>
+        <div class="feat-desc">Catat piutang pelanggan dan hutang toko ke supplier secara terpisah. Pantau cicilan, lakukan pelunasan sebagian, dan lihat riwayat lengkap per nama pelanggan.</div>
         <div class="feat-tags">
-          <span class="feat-tag">Catat Hutang</span>
-          <span class="feat-tag">Riwayat</span>
-          <span class="feat-tag">Pengingat</span>
+          <span class="feat-tag">Piutang Pelanggan</span>
+          <span class="feat-tag">Hutang Toko</span>
+          <span class="feat-tag">Cicilan</span>
         </div>
       </div>
 
+      <!-- Absensi Kasir -->
+      <div class="feat-card reveal">
+        <div class="feat-icon" style="background:linear-gradient(135deg,rgba(16,185,129,0.12),rgba(5,150,105,0.06));border:1px solid rgba(16,185,129,0.2);">
+          <i class="fas fa-user-clock" style="color:#6ee7b7;"></i>
+        </div>
+        <div class="feat-name">Absensi Kasir</div>
+        <div class="feat-desc">Kasir buka dan tutup shift dengan mencatat saldo kas awal/akhir. Pemilik bisa pantau laporan shift, total transaksi per kasir, dan selisih saldo secara otomatis.</div>
+        <div class="feat-tags">
+          <span class="feat-tag">Buka Shift</span>
+          <span class="feat-tag">Tutup Shift</span>
+          <span class="feat-tag">Laporan Shift</span>
+        </div>
+      </div>
+
+      <!-- Cloud & Multi-Device -->
       <div class="feat-card reveal">
         <div class="feat-icon" style="background:linear-gradient(135deg,rgba(6,182,212,0.12),rgba(20,184,166,0.08));border:1px solid rgba(6,182,212,0.2);">
-          <i class="fas fa-cloud" style="color:var(--cyan);"></i>
+          <i class="fas fa-cloud-arrow-up" style="color:var(--cyan);"></i>
         </div>
         <div class="feat-name">Cloud & Multi-Device</div>
-        <div class="feat-desc">Data tersimpan otomatis di cloud Firebase. Akses dari HP, tablet, atau laptop kapan saja. Ganti HP, data tetap aman.</div>
+        <div class="feat-desc">Data tersimpan otomatis di cloud Firebase. Akses dari HP, tablet, atau laptop kapan saja. Ganti HP, data tetap aman. Backup dan restore data dengan satu klik.</div>
         <div class="feat-tags">
           <span class="feat-tag">Firebase Cloud</span>
           <span class="feat-tag">Real-Time Sync</span>
@@ -954,19 +1023,7 @@
         </div>
       </div>
 
-      <div class="feat-card reveal">
-        <div class="feat-icon" style="background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(16,185,129,0.06));border:1px solid rgba(34,197,94,0.18);">
-          <i class="fab fa-google" style="color:#86efac;"></i>
-        </div>
-        <div class="feat-name">Integrasi Google Sheets</div>
-        <div class="feat-desc">Seluruh data transaksi bisa langsung tersinkron ke Google Sheets milik Anda. Analisis lebih lanjut dengan alat yang sudah familiar.</div>
-        <div class="feat-tags">
-          <span class="feat-tag">Auto Sync</span>
-          <span class="feat-tag">Google Drive</span>
-          <span class="feat-tag">Template Siap</span>
-        </div>
-      </div>
-
+      <!-- Multi-Toko & Cabang -->
       <div class="feat-card reveal" style="border-color:rgba(0,97,194,0.3);background:linear-gradient(145deg,rgba(0,97,194,0.06),rgba(56,189,248,0.04));">
         <div class="feat-icon" style="background:linear-gradient(135deg,rgba(0,97,194,0.18),rgba(56,189,248,0.1));border:1px solid rgba(56,189,248,0.25);">
           <i class="fas fa-store" style="color:#38bdf8;"></i>
@@ -975,7 +1032,7 @@
           Multi-Toko &amp; Cabang
           <span style="font-size:9px;font-weight:800;background:linear-gradient(135deg,#0061C2,#38bdf8);color:white;padding:2px 8px;border-radius:100px;text-transform:uppercase;letter-spacing:0.06em;">Baru</span>
         </div>
-        <div class="feat-desc">Kelola beberapa toko atau cabang dari satu akun. Berpindah toko dalam satu klik, data tetap terpisah dan aman per cabang.</div>
+        <div class="feat-desc">Kelola beberapa toko atau cabang dari satu akun. Berpindah toko dalam satu klik, data tetap terpisah dan aman per cabang. Tambah cabang baru kapan pun dibutuhkan.</div>
         <div class="feat-tags">
           <span class="feat-tag">Multi-Cabang</span>
           <span class="feat-tag">Pindah Toko</span>
@@ -983,6 +1040,7 @@
         </div>
       </div>
 
+      <!-- Monitor Cabang Live -->
       <div class="feat-card reveal" style="border-color:rgba(139,92,246,0.25);background:linear-gradient(145deg,rgba(139,92,246,0.05),rgba(99,102,241,0.03));">
         <div class="feat-icon" style="background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(99,102,241,0.08));border:1px solid rgba(139,92,246,0.25);">
           <i class="fas fa-chart-column" style="color:#a78bfa;"></i>
@@ -991,7 +1049,7 @@
           Monitor Cabang Live
           <span style="font-size:9px;font-weight:800;background:linear-gradient(135deg,#7c3aed,#a855f7);color:white;padding:2px 8px;border-radius:100px;text-transform:uppercase;letter-spacing:0.06em;">Baru</span>
         </div>
-        <div class="feat-desc">Pantau omset, laba, stok, dan piutang semua cabang sekaligus dari satu dashboard. Data real-time, tidak perlu tanya karyawan.</div>
+        <div class="feat-desc">Pantau omset, laba, stok, dan piutang semua cabang sekaligus dari satu dashboard. Data real-time, tidak perlu tanya karyawan atau datang ke toko.</div>
         <div class="feat-tags">
           <span class="feat-tag">Dashboard Terpusat</span>
           <span class="feat-tag">Real-Time</span>
@@ -999,16 +1057,45 @@
         </div>
       </div>
 
+      <!-- Multi-Kasir & Kelola Akses -->
       <div class="feat-card reveal" style="border-color:rgba(245,158,11,0.22);">
         <div class="feat-icon" style="background:linear-gradient(135deg,rgba(245,158,11,0.12),rgba(251,191,36,0.06));border:1px solid rgba(245,158,11,0.2);">
-          <i class="fas fa-users" style="color:var(--amber);"></i>
+          <i class="fas fa-users-gear" style="color:var(--amber);"></i>
         </div>
-        <div class="feat-name">Multi-Kasir &amp; Akses</div>
-        <div class="feat-desc">Tambahkan akun kasir per toko dengan akses terbatas sesuai izin pemilik. Cocok untuk toko dengan beberapa karyawan atau shift jaga.</div>
+        <div class="feat-name">Multi-Kasir &amp; Izin Akses</div>
+        <div class="feat-desc">Tambahkan akun kasir per toko dengan izin akses granular — kasir bisa diizinkan hanya input transaksi tertentu, melihat stok, atau riwayat penjualan. Cocok untuk toko multi-shift.</div>
         <div class="feat-tags">
           <span class="feat-tag">Akun Kasir</span>
-          <span class="feat-tag">Izin Akses</span>
+          <span class="feat-tag">Izin Custom</span>
           <span class="feat-tag">Multi-Shift</span>
+        </div>
+      </div>
+
+      <!-- Pelanggan & Catatan -->
+      <div class="feat-card reveal">
+        <div class="feat-icon" style="background:linear-gradient(135deg,rgba(244,63,94,0.12),rgba(251,113,133,0.06));border:1px solid rgba(244,63,94,0.2);">
+          <i class="fas fa-users" style="color:#fda4af;"></i>
+        </div>
+        <div class="feat-name">Pelanggan &amp; Catatan</div>
+        <div class="feat-desc">Simpan database pelanggan untuk referensi hutang dan riwayat transaksi. Tambahkan catatan bisnis penting seperti info kulakan, jadwal pembayaran, atau pengingat operasional toko.</div>
+        <div class="feat-tags">
+          <span class="feat-tag">Database Pelanggan</span>
+          <span class="feat-tag">Catatan Bisnis</span>
+          <span class="feat-tag">Riwayat Lengkap</span>
+        </div>
+      </div>
+
+      <!-- Responsif PC & HP -->
+      <div class="feat-card reveal">
+        <div class="feat-icon" style="background:linear-gradient(135deg,rgba(71,85,105,0.15),rgba(100,116,139,0.08));border:1px solid rgba(71,85,105,0.2);">
+          <i class="fas fa-desktop" style="color:#94a3b8;"></i>
+        </div>
+        <div class="feat-name">Responsif PC &amp; HP</div>
+        <div class="feat-desc">Tampilan menyesuaikan otomatis — di HP muncul bottom navigation, di layar PC/laptop muncul sidebar navigasi penuh. Nyaman dipakai dari mana pun tanpa instal aplikasi.</div>
+        <div class="feat-tags">
+          <span class="feat-tag">Sidebar Desktop</span>
+          <span class="feat-tag">Bottom Nav HP</span>
+          <span class="feat-tag">Tanpa Instal</span>
         </div>
       </div>
 
@@ -1223,18 +1310,21 @@
       <div class="plan plan-free reveal">
         <div class="plan-name" style="color:var(--gray2);">Trial</div>
         <div class="plan-price">Gratis <span class="plan-period">/ 7 hari</span></div>
-        <div class="plan-tagline">Coba semua fitur Pro tanpa bayar dulu.</div>
+        <div class="plan-tagline">Coba semua fitur tanpa bayar dulu.</div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
-          <li class="ok"><i class="fas fa-check ic"></i>Kasir Digital</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Kasir Digital, Fisik &amp; E-Wallet</li>
           <li class="ok"><i class="fas fa-check ic"></i>Manajemen Stok</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Barcode Scanner</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Multi-Dompet</li>
           <li class="ok"><i class="fas fa-check ic"></i>Laporan Harian</li>
           <li class="ok"><i class="fas fa-check ic"></i>1 Toko</li>
-          <li class="ok"><i class="fas fa-check ic"></i>Maks. 100 Produk (Fisik &amp; Digital)</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Maks. 100 Produk</li>
           <li class="ok"><i class="fas fa-check ic"></i>Maks. 20 Dompet</li>
           <li class="ok"><i class="fas fa-check ic"></i>Transaksi Unlimited</li>
-          <li class="no"><i class="fas fa-xmark ic"></i>Ekspor PDF/Sheets</li>
+          <li class="no"><i class="fas fa-xmark ic"></i>Ekspor PDF</li>
           <li class="no"><i class="fas fa-xmark ic"></i>Hutang Piutang</li>
+          <li class="no"><i class="fas fa-xmark ic"></i>Absensi Kasir</li>
         </ul>
         <a href="https://www.agscellpos.my.id/app/" class="plan-btn pb-ghost">Mulai Trial Gratis</a>
       </div>
@@ -1246,15 +1336,18 @@
         <div class="plan-tagline">Untuk konter kecil yang ingin mulai tertata.</div>
         <div class="plan-divider"></div>
         <ul class="plan-features">
-          <li class="ok"><i class="fas fa-check ic"></i>Kasir Digital</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Kasir Digital, Fisik &amp; E-Wallet</li>
           <li class="ok"><i class="fas fa-check ic"></i>Manajemen Stok</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Barcode Scanner</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Multi-Dompet</li>
           <li class="ok"><i class="fas fa-check ic"></i>Laporan Harian</li>
           <li class="ok"><i class="fas fa-check ic"></i>Hutang Piutang</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Pelanggan &amp; Catatan</li>
           <li class="ok"><i class="fas fa-check ic"></i>1 Toko</li>
-          <li class="ok"><i class="fas fa-check ic"></i>Maks. 100 Produk (Fisik &amp; Digital)</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Maks. 100 Produk</li>
           <li class="ok"><i class="fas fa-check ic"></i>Maks. 20 Dompet</li>
           <li class="ok"><i class="fas fa-check ic"></i>Transaksi Unlimited</li>
-          <li class="no"><i class="fas fa-xmark ic"></i>Ekspor PDF/Sheets</li>
+          <li class="no"><i class="fas fa-xmark ic"></i>Ekspor PDF</li>
           <li class="no"><i class="fas fa-xmark ic"></i>Kasir Karyawan</li>
           <li class="no"><i class="fas fa-xmark ic"></i>Absensi Kasir</li>
         </ul>
@@ -1269,17 +1362,18 @@
         <div class="plan-tagline">Fitur lengkap untuk konter yang berkembang pesat.</div>
         <div class="plan-divider" style="background:rgba(6,182,212,0.2);"></div>
         <ul class="plan-features">
-          <li class="ok"><i class="fas fa-check ic"></i>Kasir Digital</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Kasir Digital, Fisik &amp; E-Wallet</li>
           <li class="ok"><i class="fas fa-check ic"></i>Manajemen Stok</li>
-          <li class="ok"><i class="fas fa-check ic"></i>Laporan Harian</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Barcode Scanner</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Multi-Dompet</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Laporan + Ekspor PDF</li>
           <li class="ok"><i class="fas fa-check ic"></i>Hutang Piutang</li>
-          <li class="ok"><i class="fas fa-check ic"></i>Ekspor PDF &amp; Google Sheets</li>
-          <li class="ok"><i class="fas fa-check ic"></i>Multi-Device Cloud Sync</li>
-          <li class="ok"><i class="fas fa-check ic"></i>Notifikasi Stok Menipis</li>
-          <li class="ok"><i class="fas fa-check ic"></i>Kasir Karyawan</li>
-          <li class="ok"><i class="fas fa-check ic"></i>Absensi Kasir Karyawan</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Pelanggan &amp; Catatan</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Cetak Struk Thermal</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Kasir Karyawan + Izin Akses</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Absensi Kasir (Shift Buka/Tutup)</li>
           <li class="ok"><i class="fas fa-check ic" style="color:#38bdf8;"></i><span style="color:#38bdf8;font-weight:700;">Hingga 3 Toko / Cabang</span></li>
-          <li class="ok"><i class="fas fa-check ic"></i>Maks. 300 Produk (Fisik &amp; Digital)</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Maks. 300 Produk</li>
           <li class="ok"><i class="fas fa-check ic"></i>Maks. 50 Dompet</li>
           <li class="ok"><i class="fas fa-check ic"></i>Transaksi Unlimited</li>
         </ul>
@@ -1294,11 +1388,11 @@
         <div class="plan-divider" style="background:rgba(245,158,11,0.2);"></div>
         <ul class="plan-features">
           <li class="ok"><i class="fas fa-check ic"></i>Semua Fitur Pro</li>
-          <li class="ok"><i class="fas fa-check ic"></i>Kasir Karyawan</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Kasir Karyawan + Izin Akses</li>
           <li class="ok"><i class="fas fa-check ic"></i>Absensi Kasir Karyawan</li>
           <li class="ok"><i class="fas fa-check ic" style="color:var(--amber);"></i><span style="color:var(--amber);font-weight:700;">Hingga 10 Toko / Cabang</span></li>
           <li class="ok"><i class="fas fa-check ic" style="color:var(--amber);"></i><span style="color:var(--amber);font-weight:700;">Monitor Semua Cabang Real-Time</span></li>
-          <li class="ok"><i class="fas fa-check ic"></i>Maks. 1.000 Produk (Fisik &amp; Digital)</li>
+          <li class="ok"><i class="fas fa-check ic"></i>Maks. 1.000 Produk</li>
           <li class="ok"><i class="fas fa-check ic"></i>Maks. 100 Dompet</li>
           <li class="ok"><i class="fas fa-check ic"></i>Transaksi Unlimited</li>
           <li class="ok"><i class="fas fa-check ic"></i>Laporan Bulanan Lanjutan</li>
@@ -1337,7 +1431,7 @@
       </div>
       <div class="testi-card reveal">
         <div class="testi-stars">★★★★★</div>
-        <div class="testi-quote">"Fitur catat hutang piutangnya sangat berguna. Dulu sering lupa siapa yang belum bayar, sekarang tinggal cek di aplikasi. Simpel banget tampilannya."</div>
+        <div class="testi-quote">"Fitur absensi kasirnya sangat membantu. Karyawan buka dan tutup shift sendiri, saya bisa pantau selisih saldo kas dari HP tanpa harus selalu ada di toko."</div>
         <div class="testi-author">
           <div class="testi-av" style="background:linear-gradient(135deg,#059669,#34d399);">R</div>
           <div>
@@ -1348,7 +1442,7 @@
       </div>
       <div class="testi-card reveal">
         <div class="testi-stars">★★★★★</div>
-        <div class="testi-quote">"Paling suka fitur cloud-nya. Meski ganti HP, data toko tetap aman. Admin juga responsif banget kalau ada pertanyaan. Recommended!"</div>
+        <div class="testi-quote">"Kasir e-wallet-nya sangat berguna untuk toko saya yang banyak transaksi Dana dan GoPay. Multi-dompet langsung kelihatan saldo masuk keluar. Paling suka fitur monitor cabangnya juga!"</div>
         <div class="testi-author">
           <div class="testi-av" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);">D</div>
           <div>
