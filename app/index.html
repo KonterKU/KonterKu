@@ -1904,6 +1904,18 @@
             <i class="fas fa-chevron-right text-slate-600 text-[9px]"></i>
           </button>
 
+          <!-- Panduan -->
+          <button class="sidebar-menu-item" onclick="openPanduanModal()">
+            <div class="sidebar-icon-wrap">
+              <i class="fas fa-book-open" style="color:#34d399;"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-[12px] font-black" style="color:#6ee7b7;">Panduan Penggunaan</p>
+              <p class="text-[9px] font-bold" style="color:#047857;">Cara pakai semua fitur</p>
+            </div>
+            <i class="fas fa-chevron-right text-emerald-700 text-[9px]"></i>
+          </button>
+
         </div>
 
         <!-- Sidebar Footer -->
@@ -2069,6 +2081,103 @@
             </div>
           </div>
           <!-- END MONITOR CABANG SECTION -->
+
+          <!-- ===== SETTING STRUK THERMAL ===== -->
+          <div class="rounded-2xl overflow-hidden border border-violet-100" style="background:linear-gradient(135deg,#faf5ff,#f5f3ff);">
+            <div class="px-4 pt-4 pb-3 flex items-center gap-3 border-b border-violet-100">
+              <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                style="background:linear-gradient(135deg,#7c3aed,#a855f7);box-shadow:0 4px 12px rgba(124,58,237,0.3);">
+                <i class="fas fa-print text-white" style="font-size:13px;"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-[11px] font-black text-slate-800">Setting Struk Thermal</p>
+                <p class="text-[8px] font-bold text-slate-400">Logo &amp; alamat tampil di struk 58mm</p>
+              </div>
+              <!-- Badge paket -->
+              <span class="px-2 py-1 rounded-full font-black text-white flex-shrink-0"
+                style="font-size:7px;background:linear-gradient(135deg,#7c3aed,#a855f7);letter-spacing:0.06em;">PRO+</span>
+            </div>
+
+            <!-- LOCK OVERLAY (tampil jika bukan pro/unlimited) -->
+            <div id="struk-setting-lock"
+              style="display:none;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;gap:10px;background:linear-gradient(135deg,#faf5ff,#f5f3ff);">
+              <div class="w-14 h-14 rounded-2xl flex items-center justify-center"
+                style="background:rgba(124,58,237,0.1);border:1.5px solid rgba(124,58,237,0.2);">
+                <i class="fas fa-lock" style="color:#7c3aed;font-size:22px;"></i>
+              </div>
+              <p class="font-black text-slate-700 text-center" style="font-size:12px;">Fitur Terkunci 🔒</p>
+              <p class="font-bold text-slate-400 text-center" style="font-size:10px;line-height:1.5;">
+                Setting Struk Thermal hanya tersedia<br>untuk paket <strong style="color:#7c3aed;">Pro</strong> &amp; <strong style="color:#f59e0b;">Unlimited</strong>
+              </p>
+              <button onclick="showUpgradeModal('setting_struk','pro')"
+                class="mt-1 px-5 py-2.5 rounded-2xl font-black text-[11px] text-white border-0 cursor-pointer"
+                style="background:linear-gradient(135deg,#7c3aed,#a855f7);box-shadow:0 4px 14px rgba(124,58,237,0.4);">
+                <i class="fas fa-crown mr-1.5"></i> Upgrade ke Pro
+              </button>
+            </div>
+
+            <!-- FORM BODY (tampil jika pro/unlimited) -->
+            <div id="struk-setting-body" class="p-4 space-y-4">
+
+              <!-- Upload Logo -->
+              <div>
+                <label style="font-size:9px;font-weight:900;color:#7c3aed;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:8px;">
+                  <i class="fas fa-image mr-1"></i>Logo Toko
+                </label>
+                <div class="flex items-center gap-3 mb-3">
+                  <div id="logo-preview-wrap"
+                    class="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden border-2"
+                    style="background:#f1f5f9;border-color:#e2e8f0;">
+                    <img id="logo-preview-img" src="" alt="" class="w-full h-full object-contain hidden">
+                    <i id="logo-preview-icon" class="fas fa-store text-slate-300 text-2xl"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-[9px] font-bold text-slate-500 mb-2">Format: JPG, PNG, WebP<br>Maks 200KB · Ukuran ideal 200×200px</p>
+                    <div class="flex gap-2">
+                      <label for="logo-file-input"
+                        class="flex items-center gap-1.5 px-3 py-2 rounded-xl font-black text-[9px] cursor-pointer border-0 text-white"
+                        style="background:linear-gradient(135deg,#7c3aed,#a855f7);">
+                        <i class="fas fa-upload" style="font-size:8px;"></i> Upload
+                      </label>
+                      <button onclick="hapusLogoToko()"
+                        class="flex items-center gap-1.5 px-3 py-2 rounded-xl font-black text-[9px] cursor-pointer border-0"
+                        style="background:#fee2e2;color:#dc2626;">
+                        <i class="fas fa-trash" style="font-size:8px;"></i> Hapus
+                      </button>
+                    </div>
+                    <input type="file" id="logo-file-input" accept="image/*" class="hidden" onchange="previewLogoToko(event)">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Alamat Toko -->
+              <div>
+                <label style="font-size:9px;font-weight:900;color:#7c3aed;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:6px;">
+                  <i class="fas fa-location-dot mr-1"></i>Alamat Toko
+                </label>
+                <textarea id="struk-alamat-input" rows="2" placeholder="Jl. Contoh No. 1, Kota, Provinsi&#10;Telp: 08xx-xxxx-xxxx"
+                  class="input-premium resize-none"
+                  style="font-size:11px;line-height:1.5;border-radius:14px;"></textarea>
+              </div>
+
+              <!-- Tagline / Slogan -->
+              <div>
+                <label style="font-size:9px;font-weight:900;color:#7c3aed;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:6px;">
+                  <i class="fas fa-quote-right mr-1"></i>Tagline / Footer Struk
+                </label>
+                <input type="text" id="struk-tagline-input" placeholder="Terima kasih sudah berbelanja!"
+                  class="input-premium" style="font-size:11px;">
+              </div>
+
+              <!-- Tombol Simpan -->
+              <button onclick="simpanSettingStruk()"
+                class="w-full py-3 rounded-2xl font-black text-[12px] border-0 cursor-pointer text-white flex items-center justify-center gap-2 transition-all"
+                style="background:linear-gradient(135deg,#7c3aed,#a855f7);box-shadow:0 6px 18px rgba(124,58,237,0.35);">
+                <i class="fas fa-save"></i> Simpan Setting Struk
+              </button>
+            </div>
+          </div>
+          <!-- END SETTING STRUK THERMAL -->
 
           <button onclick="closeModal('modal-sidebar-akun'); logout();" class="w-full py-3.5 bg-red-50 text-red-600 rounded-2xl font-black text-sm border-0 cursor-pointer flex items-center justify-center gap-2 hover:bg-red-100 transition-all">
             <i class="fas fa-right-from-bracket"></i> Keluar dari Akun
@@ -4854,6 +4963,7 @@
       absensi: 'Absensi Kasir',
       limit_produk: 'Tambah Produk',
       limit_dompet: 'Tambah Dompet',
+      setting_struk: 'Setting Struk Thermal',
     };
 
     function showUpgradeModal(featureKey, minPlan, onUnlock) {
@@ -7221,6 +7331,101 @@
       });
     }
 
+    // ---- SETTING STRUK THERMAL ----
+
+    function _isPlanPro() {
+      const PLAN_RANK = { trial: 0, basic: 1, pro: 2, unlimited: 3 };
+      return (PLAN_RANK[localStorage.getItem('k_plan') || 'trial'] ?? 0) >= 2;
+    }
+
+    function _loadSettingStrukToForm() {
+      const wrap = document.getElementById('struk-setting-body');
+      const lockEl = document.getElementById('struk-setting-lock');
+
+      if (!_isPlanPro()) {
+        // Tampilkan overlay kunci, sembunyikan form
+        if (wrap)   wrap.style.display = 'none';
+        if (lockEl) lockEl.style.display = 'flex';
+        return;
+      }
+
+      // Akses diizinkan — tampilkan form
+      if (wrap)   wrap.style.display = 'block';
+      if (lockEl) lockEl.style.display = 'none';
+
+      const alamat  = localStorage.getItem('k_struk_alamat')  || '';
+      const tagline = localStorage.getItem('k_struk_tagline') || '';
+      const el_al = document.getElementById('struk-alamat-input');
+      const el_tg = document.getElementById('struk-tagline-input');
+      if (el_al) el_al.value = alamat;
+      if (el_tg) el_tg.value = tagline;
+      _applyLogoPreview(localStorage.getItem('k_struk_logo') || '');
+    }
+
+    function _applyLogoPreview(base64) {
+      const img  = document.getElementById('logo-preview-img');
+      const icon = document.getElementById('logo-preview-icon');
+      const wrap = document.getElementById('logo-preview-wrap');
+      if (!img) return;
+      if (base64) {
+        img.src = base64;
+        img.classList.remove('hidden');
+        if (icon) icon.classList.add('hidden');
+        if (wrap) wrap.style.borderColor = '#a855f7';
+      } else {
+        img.src = '';
+        img.classList.add('hidden');
+        if (icon) icon.classList.remove('hidden');
+        if (wrap) wrap.style.borderColor = '#e2e8f0';
+      }
+    }
+
+    function previewLogoToko(event) {
+      if (!_isPlanPro()) { showUpgradeModal('setting_struk', 'pro'); return; }
+      const file = event.target.files[0];
+      if (!file) return;
+      if (file.size > 204800) {
+        (_getMySwal()||Swal).fire('File Terlalu Besar', 'Ukuran logo maksimal 200KB. Kompres dulu sebelum upload.', 'warning');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        _applyLogoPreview(e.target.result);
+        document.getElementById('logo-file-input')._pendingBase64 = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function hapusLogoToko() {
+      if (!_isPlanPro()) { showUpgradeModal('setting_struk', 'pro'); return; }
+      localStorage.removeItem('k_struk_logo');
+      _applyLogoPreview('');
+      const inp = document.getElementById('logo-file-input');
+      if (inp) { inp.value = ''; inp._pendingBase64 = ''; }
+    }
+
+    function simpanSettingStruk() {
+      if (!_isPlanPro()) { showUpgradeModal('setting_struk', 'pro'); return; }
+      const alamat  = (document.getElementById('struk-alamat-input')?.value  || '').trim();
+      const tagline = (document.getElementById('struk-tagline-input')?.value || '').trim();
+      const inp     = document.getElementById('logo-file-input');
+      const pending = inp?._pendingBase64;
+
+      localStorage.setItem('k_struk_alamat',  alamat);
+      localStorage.setItem('k_struk_tagline', tagline);
+      if (pending) {
+        localStorage.setItem('k_struk_logo', pending);
+        inp._pendingBase64 = '';
+      }
+
+      (_getMySwal()||Swal).fire({
+        icon: 'success', title: 'Tersimpan!',
+        text: 'Setting struk berhasil disimpan. Akan tampil di cetak thermal.',
+        timer: 2000, showConfirmButton: false,
+        customClass: { popup: 'swal2-ku' }
+      });
+    }
+
     // ---- CETAK STRUK THERMAL 58mm ----
     function cetakThermal(id) {
       const t = db.transaksi.find(x => x.id === id);
@@ -7228,25 +7433,17 @@
 
       const storeName = localStorage.getItem('k_store_name') || 'KONTERKU';
       const kasirName = localStorage.getItem('k_kasir_nama') || localStorage.getItem('k_email') || '';
+      const logoB64   = localStorage.getItem('k_struk_logo')    || '';
+      const alamat    = localStorage.getItem('k_struk_alamat')  || '';
+      const tagline   = localStorage.getItem('k_struk_tagline') || 'Terima kasih atas kepercayaan Anda';
 
       // Hitung nilai-nilai transaksi
-      const laba = (t.jual || 0) - (t.modal || 0);
       const isLunas = t.status === 'Lunas';
       const tipeLabel = t.tipe === 'ewallet' ? 'E-WALLET/TRANSFER' : t.tipe === 'digital' ? 'DIGITAL' : 'FISIK';
-
-      // Nama produk bersih (hapus prefix DIG:/FIS:/EWL:)
       const namaProduk = (t.produk || '-').replace(/^(DIG:|FIS:|EWL:)\s*/i, '');
-
-      // Info dompet
       const wModal = t.walletModal ? (db.dompet.find(w => w.id === t.walletModal)?.nama || '') : '';
       const wJual  = t.walletJual  ? (db.dompet.find(w => w.id === t.walletJual)?.nama  || '') : '';
-
-      // Format angka
       const rp = (n) => 'Rp ' + new Intl.NumberFormat('id-ID').format(Number(n) || 0);
-
-      // Garis pemisah thermal (32 karakter ~ lebar 58mm)
-      const line  = '--------------------------------';
-      const dline = '================================';
 
       // Waktu cetak WIB
       const now = new Date();
@@ -7255,7 +7452,16 @@
       const pad = (x) => String(x).padStart(2,'0');
       const waktuCetak = `${wib.getDate()}/${pad(wib.getMonth()+1)}/${wib.getFullYear()} ${pad(wib.getHours())}:${pad(wib.getMinutes())}`;
 
-      // Bangun HTML struk
+      // Baris logo HTML
+      const logoHTML = logoB64
+        ? `<div style="text-align:center;margin-bottom:4px;">
+             <img src="${logoB64}" style="max-width:48mm;max-height:20mm;object-fit:contain;" alt="logo">
+           </div>`
+        : '';
+
+      // Baris alamat HTML
+      const alamatLines = alamat ? alamat.split('\n').map(l => `<div class="center" style="font-size:7.5pt;">${l}</div>`).join('') : '';
+
       const struHTML = `<!DOCTYPE html>
 <html lang="id">
 <head>
@@ -7293,8 +7499,12 @@
 </head>
 <body>
 
+  <!-- LOGO -->
+  ${logoHTML}
+
   <!-- HEADER -->
-  <div class="center bold" style="font-size:12pt;margin-bottom:2px;">${storeName.toUpperCase()}</div>
+  <div class="center bold" style="font-size:12pt;margin-bottom:1px;">${storeName.toUpperCase()}</div>
+  ${alamatLines}
   ${kasirName ? `<div class="center" style="font-size:8pt;">Kasir: ${kasirName}</div>` : ''}
   <div class="center" style="font-size:8pt;">${waktuCetak}</div>
   <div class="center" style="font-size:8pt;">No. ${t.id}</div>
@@ -7326,7 +7536,6 @@
   <div class="row"><span class="label">Harga Jual</span><span class="val">${rp(t.jual)}</span></div>
   `}
 
-  <!-- DOMPET -->
   ${wModal ? `<div class="row" style="font-size:8pt;"><span class="label">Modal dari</span><span class="val">${wModal}</span></div>` : ''}
   ${wJual && isLunas ? `<div class="row" style="font-size:8pt;"><span class="label">Dana masuk</span><span class="val">${wJual}</span></div>` : ''}
 
@@ -7345,11 +7554,11 @@
 
   <div class="dline"></div>
 
-  <!-- FOOTER -->
-  <div class="center" style="font-size:8pt;margin-top:4px;">Terima kasih atas kepercayaan Anda</div>
+  <!-- FOOTER / TAGLINE -->
+  <div class="center" style="font-size:8pt;margin-top:4px;">${tagline}</div>
   <div class="center" style="font-size:8pt;">Barang yang sudah dibeli</div>
   <div class="center" style="font-size:8pt;">tidak dapat dikembalikan</div>
-  <div style="margin-top:6px;text-align:center;font-size:7pt;color:#666;">powered by KonterKU</div>
+  <div style="margin-top:6px;text-align:center;font-size:7pt;color:#666;">powered by KonterPro</div>
 
   <!-- Tombol cetak (hanya di layar) -->
   <div class="no-print" style="margin-top:10px;text-align:center;">
@@ -7364,7 +7573,6 @@
 </body>
 </html>`;
 
-      // Buka window baru khusus struk
       const win = window.open('', '_blank', 'width=320,height=600,scrollbars=yes');
       if (!win) {
         (_getMySwal()||Swal).fire('Gagal', 'Popup diblokir browser. Harap izinkan popup untuk mencetak struk.', 'warning');
@@ -7373,7 +7581,6 @@
       win.document.open();
       win.document.write(struHTML);
       win.document.close();
-      // Auto-print setelah konten siap
       win.onload = () => { setTimeout(() => win.print(), 300); };
     }
 
@@ -7626,6 +7833,8 @@
         setTimeout(function() {
           if (typeof renderMultiTokoSection === 'function') renderMultiTokoSection();
         }, 150);
+        // Load setting struk
+        _loadSettingStrukToForm();
       }
 
       else if (menu === 'catatan') {
@@ -10600,6 +10809,1089 @@
   });
 
   console.log('[MonitorCabang] Modul monitor cabang v1 dimuat.');
+  </script>
+
+  <!-- ==================== MODAL PANDUAN PENGGUNAAN ==================== -->
+  <div id="modal-panduan" class="modal-overlay" style="z-index:3500;align-items:flex-end;">
+    <div class="modal-content" style="border-radius:32px 32px 0 0;padding:0;overflow:hidden;max-height:92vh;">
+
+      <!-- Header sticky -->
+      <div style="position:sticky;top:0;z-index:10;background:linear-gradient(135deg,#060e1f 0%,#0b1e42 60%,#0a3272 100%);padding:20px 20px 16px;border-radius:32px 32px 0 0;">
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-3">
+            <div style="width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg,#059669,#34d399);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(5,150,105,0.45);">
+              <i class="fas fa-book-open text-white" style="font-size:16px;"></i>
+            </div>
+            <div>
+              <h4 class="font-black text-white" style="font-size:16px;line-height:1.1;">Panduan Penggunaan</h4>
+              <p style="font-size:9px;color:rgba(52,211,153,0.8);font-weight:800;letter-spacing:0.1em;text-transform:uppercase;">KonterKU Cloud · Panduan Lengkap</p>
+            </div>
+          </div>
+          <button onclick="closeModal('modal-panduan')" style="width:36px;height:36px;border-radius:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.6);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <!-- Tab navigasi panduan -->
+        <div id="panduan-tabs" class="flex gap-1.5 overflow-x-auto no-scrollbar pb-1" style="scrollbar-width:none;">
+          <button class="panduan-tab-btn active" onclick="showPanduanTab('login')" id="ptab-login">🔑 Login</button>
+          <button class="panduan-tab-btn" onclick="showPanduanTab('dashboard')" id="ptab-dashboard">📊 Dashboard</button>
+          <button class="panduan-tab-btn" onclick="showPanduanTab('kasir')" id="ptab-kasir">💳 Kasir</button>
+          <button class="panduan-tab-btn" onclick="showPanduanTab('stok')" id="ptab-stok">📦 Stok</button>
+          <button class="panduan-tab-btn" onclick="showPanduanTab('dompet')" id="ptab-dompet">👛 Dompet</button>
+          <button class="panduan-tab-btn" onclick="showPanduanTab('hutang')" id="ptab-hutang">📋 Hutang</button>
+          <button class="panduan-tab-btn" onclick="showPanduanTab('toko')" id="ptab-toko">🏪 Multi-Toko</button>
+          <button class="panduan-tab-btn" onclick="showPanduanTab('kasirstaff')" id="ptab-kasirstaff">👥 Kasir Staff</button>
+          <button class="panduan-tab-btn" onclick="showPanduanTab('absensi')" id="ptab-absensi">🕐 Absensi</button>
+          <button class="panduan-tab-btn" onclick="showPanduanTab('backup')" id="ptab-backup">☁️ Backup</button>
+          <button class="panduan-tab-btn" onclick="showPanduanTab('tips')" id="ptab-tips">💡 Tips</button>
+        </div>
+      </div>
+
+      <!-- Body panduan -->
+      <div style="overflow-y:auto;padding:20px;background:#f8fafc;" id="panduan-body">
+
+        <!-- ===== TAB: LOGIN ===== -->
+        <div id="panduan-login" class="panduan-tab-content">
+          <div class="panduan-section-title">🔑 Login & Registrasi Akun</div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">1</div>
+              <p class="panduan-step-title">Membuat Akun Baru (Daftar)</p>
+            </div>
+            <div class="panduan-step-body">
+              <p class="panduan-text">Jika belum punya akun, pilih tab <strong>Daftar</strong> di halaman login.</p>
+              <ul class="panduan-list">
+                <li>Masukkan <strong>email aktif</strong> yang valid</li>
+                <li>Buat <strong>password minimal 6 karakter</strong> (kombinasi huruf &amp; angka disarankan)</li>
+                <li>Masukkan <strong>Nama Toko</strong> Anda</li>
+                <li>Klik tombol <strong>DAFTAR SEKARANG</strong></li>
+                <li>Akun otomatis mendapat <strong>trial 7 hari gratis</strong></li>
+              </ul>
+              <div class="panduan-info">💡 Simpan email &amp; password Anda dengan aman. Gunakan fitur <em>Lupa Password</em> jika lupa.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">2</div>
+              <p class="panduan-step-title">Login Akun Pemilik Toko</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Pilih tab <strong>Masuk</strong></li>
+                <li>Masukkan <strong>email</strong> dan <strong>password</strong></li>
+                <li>Klik <strong>MASUK SEKARANG</strong></li>
+                <li>Tunggu animasi loading — aplikasi akan memuat data toko Anda</li>
+              </ul>
+              <div class="panduan-warning">⚠️ Jika muncul error "terlalu banyak percobaan", tunggu beberapa menit sebelum mencoba lagi.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">3</div>
+              <p class="panduan-step-title">Login sebagai Kasir</p>
+            </div>
+            <div class="panduan-step-body">
+              <p class="panduan-text">Kasir tidak menggunakan email/password sendiri, melainkan menggunakan <strong>PIN</strong> yang dibuat oleh pemilik toko.</p>
+              <ul class="panduan-list">
+                <li>Pilih tab <strong>Kasir</strong> di halaman login</li>
+                <li>Masukkan <strong>Kode Toko</strong> (diberikan oleh pemilik)</li>
+                <li>Masukkan <strong>PIN 4 digit</strong> kasir</li>
+                <li>Klik <strong>MASUK SEBAGAI KASIR</strong></li>
+              </ul>
+              <div class="panduan-info">💡 Akun kasir hanya bisa akses fitur Kasir saja. Fitur laporan &amp; pengaturan toko tidak tersedia untuk kasir.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">4</div>
+              <p class="panduan-step-title">Lupa Password</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Di tab <strong>Masuk</strong>, klik link <em>Lupa password?</em></li>
+                <li>Masukkan email yang terdaftar</li>
+                <li>Cek inbox email Anda — klik link reset dari Firebase</li>
+                <li>Buat password baru dan login kembali</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">5</div>
+              <p class="panduan-step-title">Mode Demo (Tanpa Akun)</p>
+            </div>
+            <div class="panduan-step-body">
+              <p class="panduan-text">Coba semua fitur tanpa daftar menggunakan mode Demo.</p>
+              <ul class="panduan-list">
+                <li>Klik tombol <strong>COBA MODE DEMO</strong></li>
+                <li>Data demo bersifat lokal dan tidak tersimpan ke cloud</li>
+                <li>Cocok untuk belajar sebelum mendaftar akun resmi</li>
+              </ul>
+              <div class="panduan-warning">⚠️ Data mode demo akan hilang saat halaman ditutup atau di-refresh.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TAB: DASHBOARD ===== -->
+        <div id="panduan-dashboard" class="panduan-tab-content hidden">
+          <div class="panduan-section-title">📊 Dashboard — Ringkasan Bisnis</div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">1</div>
+              <p class="panduan-step-title">Memahami Kartu Statistik</p>
+            </div>
+            <div class="panduan-step-body">
+              <p class="panduan-text">Dashboard menampilkan 4 kartu utama di bagian atas:</p>
+              <ul class="panduan-list">
+                <li><strong>💙 Omset Hari Ini</strong> — Total penjualan hari ini (harga jual × jumlah)</li>
+                <li><strong>💚 Laba Bersih Hari Ini</strong> — Omset dikurangi modal hari ini</li>
+                <li><strong>🟡 Total Saldo Dompet</strong> — Jumlah saldo semua dompet yang terdaftar</li>
+                <li><strong>🔴 Piutang Pelanggan</strong> — Total hutang pelanggan yang belum lunas</li>
+              </ul>
+              <div class="panduan-info">💡 Tap kartu untuk melihat detail lebih lanjut.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">2</div>
+              <p class="panduan-step-title">Grafik Omset &amp; Laba</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Grafik batang menampilkan omset vs laba per hari (7 atau 30 hari terakhir)</li>
+                <li>Tap tombol <strong>7H</strong> / <strong>30H</strong> untuk mengganti rentang waktu</li>
+                <li>Angka di bawah grafik menunjukkan total omset dan laba keseluruhan</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">3</div>
+              <p class="panduan-step-title">Shortcut / Tombol Cepat</p>
+            </div>
+            <div class="panduan-step-body">
+              <p class="panduan-text">Baris shortcut di dashboard memberikan akses cepat ke fitur-fitur penting:</p>
+              <ul class="panduan-list">
+                <li><strong>📝 Catatan</strong> — Buka daftar catatan bisnis Anda</li>
+                <li><strong>👥 Pelanggan</strong> — Kelola data pelanggan</li>
+                <li><strong>📦 Stok Alert</strong> — Lihat produk yang stok hampir habis</li>
+                <li><strong>🏪 Cabang</strong> — Pantau dan pindah ke toko cabang</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">4</div>
+              <p class="panduan-step-title">Riwayat Transaksi Terbaru</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Menampilkan 10–20 transaksi terakhir dari semua jenis</li>
+                <li>Badge hijau = <strong>Lunas</strong>, badge oranye = <strong>Hutang</strong></li>
+                <li>Tap ikon edit (pensil) untuk mengedit transaksi</li>
+                <li>Tap ikon hapus (tempat sampah) untuk menghapus transaksi</li>
+                <li>Tap ikon struk (printer) untuk cetak/bagikan struk WhatsApp</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">5</div>
+              <p class="panduan-step-title">Filter &amp; Cari Transaksi</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Gunakan chip filter <strong>Semua / Digital / Fisik / E-Wallet</strong> untuk memfilter jenis transaksi</li>
+                <li>Gunakan kolom pencarian untuk cari berdasarkan nama produk atau pelanggan</li>
+                <li>Gunakan filter tanggal untuk melihat transaksi periode tertentu</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TAB: KASIR ===== -->
+        <div id="panduan-kasir" class="panduan-tab-content hidden">
+          <div class="panduan-section-title">💳 Kasir — Catat Transaksi Penjualan</div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">1</div>
+              <p class="panduan-step-title">Memilih Jenis Transaksi</p>
+            </div>
+            <div class="panduan-step-body">
+              <p class="panduan-text">Kasir memiliki <strong>3 tab</strong> jenis transaksi:</p>
+              <ul class="panduan-list">
+                <li><strong>⚡ Digital</strong> — Untuk penjualan produk digital: pulsa, paket data, token listrik, voucher game, dll. Tidak memotong stok.</li>
+                <li><strong>📦 Fisik</strong> — Untuk penjualan produk fisik dari stok. Stok otomatis berkurang saat transaksi berhasil.</li>
+                <li><strong>💜 E-Wallet</strong> — Untuk transaksi dompet digital (top-up DANA, OVO, GoPay, dll). Memiliki kolom dompet sumber dan tujuan.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">2</div>
+              <p class="panduan-step-title">Transaksi Digital (Pulsa, Data, Token)</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Pilih tab <strong>⚡ Digital</strong></li>
+                <li>Ketik nama produk (contoh: <em>Pulsa Telkomsel 50rb</em>) di kolom <strong>Produk</strong></li>
+                <li>Isi <strong>Modal</strong> — harga beli / biaya kulakan</li>
+                <li>Isi <strong>Jual</strong> — harga jual ke pelanggan</li>
+                <li>Estimasi laba akan muncul otomatis di bawah</li>
+                <li>Pilih <strong>Tanggal</strong> transaksi</li>
+                <li>Pilih <strong>Pelanggan</strong> (opsional)</li>
+                <li>Pilih <strong>Dompet Modal Keluar</strong> — dana dari mana</li>
+                <li>Pilih <strong>Dana Masuk ke</strong> — uang hasil jual masuk ke dompet mana</li>
+                <li>Pilih <strong>Status</strong>: Lunas atau Hutang</li>
+                <li>Isi <strong>Keterangan</strong>: nomor HP, SN, atau catatan lain (opsional)</li>
+                <li>Klik <strong>PROSES TRANSAKSI DIGITAL</strong></li>
+              </ul>
+              <div class="panduan-info">💡 Jika status Hutang, transaksi otomatis tercatat di menu Hutang &gt; Piutang Pelanggan.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">3</div>
+              <p class="panduan-step-title">Transaksi Fisik (Barang dari Stok)</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Pilih tab <strong>📦 Fisik</strong></li>
+                <li>Pilih <strong>Produk Fisik</strong> dari dropdown — hanya menampilkan produk yang ada di stok</li>
+                <li>Harga Modal otomatis terisi dari data stok</li>
+                <li>Ubah <strong>Harga Jual</strong> jika diperlukan</li>
+                <li>Isi detail transaksi (tanggal, pelanggan, keterangan)</li>
+                <li>Klik <strong>PROSES TRANSAKSI FISIK</strong></li>
+              </ul>
+              <div class="panduan-warning">⚠️ Stok produk fisik akan otomatis berkurang 1 unit setiap transaksi berhasil diproses.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">4</div>
+              <p class="panduan-step-title">Transaksi E-Wallet / Top-Up</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Pilih tab <strong>💜 E-Wallet</strong></li>
+                <li>Isi nama layanan (contoh: <em>Top-up DANA</em>)</li>
+                <li>Isi <strong>Nominal</strong> top-up yang diminta pelanggan</li>
+                <li>Isi <strong>Biaya Layanan</strong> (keuntungan Anda)</li>
+                <li>Pilih <strong>Dompet Sumber</strong> — dari mana dana diambil</li>
+                <li>Isi keterangan (nomor HP tujuan, dll)</li>
+                <li>Klik <strong>PROSES TRANSAKSI E-WALLET</strong></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">5</div>
+              <p class="panduan-step-title">Cetak &amp; Bagikan Struk</p>
+            </div>
+            <div class="panduan-step-body">
+              <p class="panduan-text">Setelah transaksi berhasil, struk digital tampil otomatis.</p>
+              <ul class="panduan-list">
+                <li>Tap <strong>Kirim via WhatsApp</strong> untuk berbagi struk ke pelanggan</li>
+                <li>Tap <strong>Cetak 58mm</strong> untuk mencetak ke printer thermal (Pro)</li>
+                <li>Tap <strong>Screenshot</strong> untuk menyimpan sebagai gambar</li>
+              </ul>
+              <div class="panduan-info">💡 Atur logo dan alamat toko di Sidebar &gt; Akun Toko &gt; Setting Struk Thermal (fitur Pro).</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TAB: STOK ===== -->
+        <div id="panduan-stok" class="panduan-tab-content hidden">
+          <div class="panduan-section-title">📦 Stok — Manajemen Produk</div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">1</div>
+              <p class="panduan-step-title">Memahami Jenis Produk</p>
+            </div>
+            <div class="panduan-step-body">
+              <p class="panduan-text">Stok terbagi menjadi 2 tab:</p>
+              <ul class="panduan-list">
+                <li><strong>⚡ Digital</strong> — Produk tanpa stok fisik: pulsa, paket data, voucher. Tidak ada batas jumlah.</li>
+                <li><strong>📦 Fisik</strong> — Produk dengan stok terbatas yang harus dipantau (HP, aksesoris, dll).</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">2</div>
+              <p class="panduan-step-title">Tambah Produk Baru</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Tap tombol <strong>＋</strong> di pojok kanan atas halaman Stok</li>
+                <li>Pilih <strong>Tipe</strong>: Digital atau Fisik</li>
+                <li>Isi <strong>Nama Produk</strong></li>
+                <li>Isi <strong>Harga Modal</strong> (harga beli/kulakan)</li>
+                <li>Isi <strong>Harga Jual</strong> (harga untuk pelanggan)</li>
+                <li>Untuk produk <strong>Fisik</strong>: isi <strong>Stok Awal</strong> dan <strong>Batas Stok</strong> (untuk alert)</li>
+                <li>Tap <strong>SIMPAN PRODUK</strong></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">3</div>
+              <p class="panduan-step-title">Edit &amp; Hapus Produk</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Tap kartu produk untuk membuka opsi</li>
+                <li>Tap ikon <strong>✏️ Edit</strong> untuk mengubah nama, harga, atau stok</li>
+                <li>Tap ikon <strong>🗑️ Hapus</strong> untuk menghapus produk</li>
+              </ul>
+              <div class="panduan-warning">⚠️ Produk yang dihapus tidak dapat dikembalikan. Data transaksi yang sudah ada tidak akan terpengaruh.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">4</div>
+              <p class="panduan-step-title">Pantau Stok (Alert Stok)</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Tap panel <strong>Pantau Stok</strong> di bagian atas halaman Stok untuk membuka ringkasan</li>
+                <li><strong>Hijau = Aman</strong> — stok di atas batas aman</li>
+                <li><strong>Kuning = Menipis</strong> — stok ≤ batas stok yang ditentukan</li>
+                <li><strong>Merah = Habis</strong> — stok = 0</li>
+                <li>Panel update otomatis setiap 30 detik</li>
+              </ul>
+              <div class="panduan-info">💡 Atur nilai <em>Batas Stok</em> saat tambah/edit produk agar alert muncul lebih awal.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">5</div>
+              <p class="panduan-step-title">Tambah Stok (Restock)</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Tap kartu produk fisik yang ingin di-restock</li>
+                <li>Tap tombol <strong>+ Tambah Stok</strong></li>
+                <li>Masukkan jumlah stok yang ditambahkan</li>
+                <li>Konfirmasi — stok otomatis bertambah</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TAB: DOMPET ===== -->
+        <div id="panduan-dompet" class="panduan-tab-content hidden">
+          <div class="panduan-section-title">👛 Dompet — Kelola Kas &amp; Saldo</div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">1</div>
+              <p class="panduan-step-title">Menambah Dompet Baru</p>
+            </div>
+            <div class="panduan-step-body">
+              <p class="panduan-text">Dompet adalah wadah saldo yang bisa berupa Kas Tunai, Rekening Bank, atau dompet digital.</p>
+              <ul class="panduan-list">
+                <li>Tap tombol <strong>＋ Tambah Dompet</strong></li>
+                <li>Beri nama dompet (contoh: <em>Kas Tunai</em>, <em>BCA</em>, <em>GoPay Toko</em>)</li>
+                <li>Pilih <strong>Tipe</strong>: Kas Tunai atau Bank/Digital</li>
+                <li>Isi <strong>Saldo Awal</strong></li>
+                <li>Tap <strong>SIMPAN</strong></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">2</div>
+              <p class="panduan-step-title">Transfer Saldo Antar Dompet</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Tap ikon <strong>⇄ Transfer</strong> di halaman Dompet</li>
+                <li>Pilih <strong>Dompet Asal</strong> (sumber dana)</li>
+                <li>Pilih <strong>Dompet Tujuan</strong></li>
+                <li>Masukkan <strong>Jumlah Transfer</strong></li>
+                <li>Tap <strong>PROSES TRANSFER</strong></li>
+              </ul>
+              <div class="panduan-info">💡 Transfer digunakan misalnya saat Anda memindahkan uang dari Kas ke rekening bank.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">3</div>
+              <p class="panduan-step-title">Penyesuaian Saldo Manual</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Tap ikon <strong>⚙️ Penyesuaian</strong> (slider icon) di halaman Dompet</li>
+                <li>Pilih dompet yang akan disesuaikan</li>
+                <li>Pilih jenis: <strong>Tambah</strong> atau <strong>Kurangi</strong></li>
+                <li>Masukkan jumlah dan keterangan</li>
+                <li>Tap <strong>SIMPAN PENYESUAIAN</strong></li>
+              </ul>
+              <div class="panduan-warning">⚠️ Gunakan fitur ini hanya untuk koreksi saldo, bukan untuk mencatat penjualan.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">4</div>
+              <p class="panduan-step-title">Lihat Riwayat Mutasi Dompet</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Tap kartu dompet untuk melihat detail</li>
+                <li>Riwayat mutasi menampilkan semua transaksi yang mempengaruhi dompet tersebut</li>
+                <li>Tanda <strong>+</strong> (hijau) = pemasukan, tanda <strong>-</strong> (merah) = pengeluaran</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TAB: HUTANG ===== -->
+        <div id="panduan-hutang" class="panduan-tab-content hidden">
+          <div class="panduan-section-title">📋 Hutang — Piutang &amp; Hutang Toko</div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">1</div>
+              <p class="panduan-step-title">Memahami Jenis Hutang</p>
+            </div>
+            <div class="panduan-step-body">
+              <p class="panduan-text">Menu Hutang memiliki 3 tab:</p>
+              <ul class="panduan-list">
+                <li><strong>👤 Pelanggan</strong> — Piutang yang harus dibayar pelanggan ke toko Anda (pelanggan belum bayar)</li>
+                <li><strong>🏪 Toko</strong> — Hutang toko Anda ke supplier/distributor</li>
+                <li><strong>🕐 Riwayat</strong> — Semua hutang yang sudah lunas</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">2</div>
+              <p class="panduan-step-title">Hutang Otomatis dari Kasir</p>
+            </div>
+            <div class="panduan-step-body">
+              <p class="panduan-text">Hutang pelanggan terbentuk otomatis saat transaksi di Kasir dengan status <strong>Hutang</strong>.</p>
+              <ul class="panduan-list">
+                <li>Tidak perlu input manual untuk transaksi dari Kasir</li>
+                <li>Hutang otomatis masuk ke tab <strong>Pelanggan</strong></li>
+                <li>Nama pelanggan, nominal, dan tanggal tercatat otomatis</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">3</div>
+              <p class="panduan-step-title">Input Hutang Manual</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Tap tombol <strong>＋ Tambah Hutang</strong></li>
+                <li>Pilih tipe: <strong>Piutang Pelanggan</strong> atau <strong>Hutang Toko</strong></li>
+                <li>Pilih atau ketik nama pelanggan/supplier</li>
+                <li>Masukkan jumlah hutang</li>
+                <li>Pilih dompet terkait</li>
+                <li>Isi keterangan (opsional)</li>
+                <li>Tap <strong>SIMPAN</strong></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">4</div>
+              <p class="panduan-step-title">Bayar / Cicil Hutang</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Tap kartu hutang yang ingin dibayar</li>
+                <li>Tap tombol <strong>Bayar</strong></li>
+                <li>Masukkan jumlah pembayaran (bisa cicilan, tidak harus lunas)</li>
+                <li>Pilih dompet sumber/tujuan pembayaran</li>
+                <li>Tap <strong>PROSES PEMBAYARAN</strong></li>
+                <li>Jika hutang lunas, otomatis pindah ke tab <strong>Riwayat</strong></li>
+              </ul>
+              <div class="panduan-info">💡 Saldo dompet otomatis berubah saat pembayaran diproses.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TAB: MULTI-TOKO ===== -->
+        <div id="panduan-toko" class="panduan-tab-content hidden">
+          <div class="panduan-section-title">🏪 Multi-Toko — Kelola Banyak Cabang</div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">1</div>
+              <p class="panduan-step-title">Apa itu Multi-Toko?</p>
+            </div>
+            <div class="panduan-step-body">
+              <p class="panduan-text">Fitur Multi-Toko memungkinkan Anda mengelola beberapa toko/cabang dengan <strong>satu akun</strong>. Setiap toko memiliki data terpisah (kasir, produk, transaksi, dompet).</p>
+              <ul class="panduan-list">
+                <li>Paket <strong>Trial / Basic</strong>: 1 toko</li>
+                <li>Paket <strong>Pro</strong>: hingga 3 toko</li>
+                <li>Paket <strong>Unlimited</strong>: toko tidak terbatas</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">2</div>
+              <p class="panduan-step-title">Tambah Toko Baru</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Buka Sidebar &gt; tap <strong>Akun Toko</strong></li>
+                <li>Gulir ke bagian <strong>Kelola Toko Saya</strong></li>
+                <li>Tap tombol <strong>＋ Tambah Toko Baru</strong></li>
+                <li>Masukkan nama toko baru</li>
+                <li>Tap <strong>BUAT TOKO BARU</strong></li>
+                <li>Toko baru langsung aktif dan siap digunakan</li>
+              </ul>
+              <div class="panduan-warning">⚠️ Slot toko sesuai paket langganan Anda. Upgrade paket untuk menambah lebih banyak toko.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">3</div>
+              <p class="panduan-step-title">Pindah Antar Toko</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Buka Sidebar &gt; tap <strong>Akun Toko</strong></li>
+                <li>Di bagian <strong>Kelola Toko Saya</strong>, tap toko yang ingin diaktifkan</li>
+                <li>Tap tombol <strong>PINDAH KE TOKO INI</strong></li>
+                <li>Aplikasi akan memuat ulang data toko yang dipilih</li>
+              </ul>
+              <div class="panduan-info">💡 Nama toko yang sedang aktif terlihat di bagian atas sidebar dan header aplikasi.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">4</div>
+              <p class="panduan-step-title">Monitor Semua Cabang</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Tap shortcut <strong>Cabang</strong> di Dashboard</li>
+                <li>Lihat ringkasan omset, laba, piutang, dan stok masing-masing toko</li>
+                <li>Badge <strong>● AKTIF</strong> menunjukkan toko yang sedang Anda gunakan</li>
+                <li>Panel menampilkan 5 transaksi terakhir per toko</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TAB: KASIR STAFF ===== -->
+        <div id="panduan-kasirstaff" class="panduan-tab-content hidden">
+          <div class="panduan-section-title">👥 Kasir Staff — Atur Akun Karyawan</div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">1</div>
+              <p class="panduan-step-title">Tambah Akun Kasir</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Buka Sidebar &gt; tap <strong>Kelola Kasir</strong></li>
+                <li>Tap tombol <strong>＋ Tambah Kasir</strong></li>
+                <li>Masukkan <strong>Nama Kasir</strong></li>
+                <li>Buat <strong>PIN 4 digit</strong> untuk kasir</li>
+                <li>Tap <strong>SIMPAN</strong></li>
+                <li>Bagikan <strong>Kode Toko</strong> dan <strong>PIN</strong> ke karyawan</li>
+              </ul>
+              <div class="panduan-info">💡 Satu toko bisa memiliki beberapa akun kasir dengan PIN berbeda.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">2</div>
+              <p class="panduan-step-title">Hak Akses Kasir</p>
+            </div>
+            <div class="panduan-step-body">
+              <p class="panduan-text">Kasir hanya bisa mengakses fitur terbatas:</p>
+              <ul class="panduan-list">
+                <li>✅ Bisa: Input transaksi di Kasir (Digital, Fisik, E-Wallet)</li>
+                <li>✅ Bisa: Melihat daftar produk untuk input transaksi</li>
+                <li>❌ Tidak bisa: Melihat laporan keuangan &amp; grafik</li>
+                <li>❌ Tidak bisa: Mengubah data stok/produk</li>
+                <li>❌ Tidak bisa: Mengakses pengaturan toko</li>
+                <li>❌ Tidak bisa: Melihat saldo dompet</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">3</div>
+              <p class="panduan-step-title">Absensi &amp; Laporan Shift Kasir</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Buka Sidebar &gt; tap <strong>Absensi Kasir</strong></li>
+                <li>Lihat daftar absensi per hari berdasarkan jam login/logout kasir</li>
+                <li>Cek <strong>total transaksi</strong> per kasir per shift</li>
+                <li>Laporan bisa difilter per tanggal dan per nama kasir</li>
+              </ul>
+              <div class="panduan-warning">⚠️ Fitur Absensi Kasir tersedia untuk paket <strong>Pro</strong> ke atas.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">4</div>
+              <p class="panduan-step-title">Reset PIN / Hapus Kasir</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Buka Sidebar &gt; <strong>Kelola Kasir</strong></li>
+                <li>Tap kasir yang ingin diubah</li>
+                <li>Tap <strong>Edit</strong> untuk mengubah nama atau PIN</li>
+                <li>Tap <strong>Hapus</strong> untuk menonaktifkan akun kasir</li>
+              </ul>
+              <div class="panduan-info">💡 Setelah PIN diubah, kasir harus login ulang menggunakan PIN baru.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TAB: BACKUP ===== -->
+        <div id="panduan-backup" class="panduan-tab-content hidden">
+          <div class="panduan-section-title">☁️ Backup &amp; Restore Data</div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">1</div>
+              <p class="panduan-step-title">Backup Otomatis ke Cloud</p>
+            </div>
+            <div class="panduan-step-body">
+              <p class="panduan-text">Semua data Anda tersimpan otomatis ke <strong>Firebase (Google Cloud)</strong> secara real-time.</p>
+              <ul class="panduan-list">
+                <li>Setiap perubahan data langsung tersinkronisasi ke cloud</li>
+                <li>Indikator <strong>SYNC</strong> di bagian atas menunjukkan status sinkronisasi</li>
+                <li>Data aman meskipun HP hilang atau rusak</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">2</div>
+              <p class="panduan-step-title">Export Data ke JSON</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Buka Sidebar &gt; tap <strong>Backup &amp; Restore</strong></li>
+                <li>Tap tombol <strong>Export / Download Backup</strong></li>
+                <li>File JSON berisi semua data: transaksi, produk, dompet, hutang, pelanggan</li>
+                <li>Simpan file backup di tempat yang aman (Google Drive, email, dll)</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">3</div>
+              <p class="panduan-step-title">Restore dari File Backup</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Buka Sidebar &gt; tap <strong>Backup &amp; Restore</strong></li>
+                <li>Tap tombol <strong>Restore / Upload Backup</strong></li>
+                <li>Pilih file JSON backup yang pernah didownload</li>
+                <li>Konfirmasi — data akan diimpor ke akun Anda</li>
+              </ul>
+              <div class="panduan-warning">⚠️ Restore akan menimpa data yang ada saat ini. Pastikan Anda sudah backup data terbaru sebelum restore.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">4</div>
+              <p class="panduan-step-title">Sinkronisasi Manual</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Buka Sidebar &gt; <strong>Backup &amp; Restore</strong></li>
+                <li>Tap <strong>Sync Sekarang</strong> untuk memaksa sinkronisasi data ke cloud</li>
+                <li>Berguna saat koneksi internet sempat terputus</li>
+                <li>Pastikan koneksi internet aktif saat melakukan sync</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TAB: TIPS ===== -->
+        <div id="panduan-tips" class="panduan-tab-content hidden">
+          <div class="panduan-section-title">💡 Tips &amp; Trik Penggunaan</div>
+
+          <div class="panduan-card" style="border-left:4px solid #0061C2;">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num" style="background:linear-gradient(135deg,#0061C2,#38BDF8);">💡</div>
+              <p class="panduan-step-title">Tips Efisiensi Kasir</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Tambahkan semua produk yang sering dijual ke <strong>Stok Digital</strong> terlebih dahulu agar bisa dipilih cepat saat transaksi</li>
+                <li>Selalu isi kolom <strong>Keterangan</strong> dengan nomor HP pelanggan untuk referensi mudah</li>
+                <li>Buat minimal 2 dompet: <em>Kas Tunai</em> dan <em>Transfer</em> agar mutasi lebih rapi</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card" style="border-left:4px solid #10b981;">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num" style="background:linear-gradient(135deg,#059669,#34d399);">🏪</div>
+              <p class="panduan-step-title">Tips Manajemen Stok</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Atur <strong>Batas Stok</strong> produk fisik sesuai kebiasaan kulakan Anda. Misal: jika biasa beli setiap stok sisa 5, set batas = 5.</li>
+                <li>Lakukan <strong>restock</strong> segera saat muncul alert stok menipis</li>
+                <li>Cek panel <strong>Pantau Stok</strong> setiap pagi sebelum buka toko</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card" style="border-left:4px solid #f59e0b;">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num" style="background:linear-gradient(135deg,#d97706,#fbbf24);">💰</div>
+              <p class="panduan-step-title">Tips Kelola Keuangan</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Selalu pilih dompet yang tepat saat transaksi agar saldo akurat</li>
+                <li>Cek <strong>Piutang Pelanggan</strong> setiap minggu dan ingatkan pelanggan yang sudah lama</li>
+                <li>Gunakan <strong>Catatan</strong> di Dashboard untuk menulis pengingat penting</li>
+                <li>Lakukan <strong>penyesuaian saldo</strong> saat ada selisih antara fisik dan sistem</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card" style="border-left:4px solid #8b5cf6;">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);">🔒</div>
+              <p class="panduan-step-title">Tips Keamanan Akun</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Gunakan password yang kuat (minimal 8 karakter, campuran huruf besar, kecil, angka)</li>
+                <li>Jangan bagikan email &amp; password pemilik ke kasir — buatkan akun kasir terpisah</li>
+                <li>Ganti PIN kasir secara berkala atau saat ada pergantian karyawan</li>
+                <li>Lakukan <strong>export backup</strong> minimal sekali seminggu</li>
+                <li>Logout dari perangkat yang tidak digunakan lagi</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="panduan-card" style="border-left:4px solid #ef4444;">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num" style="background:linear-gradient(135deg,#dc2626,#f87171);">❓</div>
+              <p class="panduan-step-title">Masalah Umum &amp; Solusi</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li><strong>Data tidak muncul?</strong> — Cek koneksi internet, lalu tap Sync Manual</li>
+                <li><strong>Saldo dompet tidak sesuai?</strong> — Cek riwayat mutasi dompet, gunakan penyesuaian jika perlu</li>
+                <li><strong>Kasir tidak bisa login?</strong> — Pastikan Kode Toko dan PIN benar (perhatikan huruf kapital)</li>
+                <li><strong>Stok tidak berkurang?</strong> — Pastikan memilih tab Fisik saat transaksi dan produk fisik sudah terdaftar</li>
+                <li><strong>Lupa password?</strong> — Gunakan fitur <em>Lupa Password</em> di halaman login</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== TAB: ABSENSI ===== -->
+        <div id="panduan-absensi" class="panduan-tab-content hidden">
+          <div class="panduan-section-title">🕐 Absensi Karyawan</div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">1</div>
+              <p class="panduan-step-title">Apa itu Fitur Absensi?</p>
+            </div>
+            <div class="panduan-step-body">
+              <p class="panduan-text">Fitur Absensi memudahkan pemilik toko memantau kehadiran karyawan / kasir secara digital langsung dari aplikasi.</p>
+              <ul class="panduan-list">
+                <li>Karyawan melakukan <strong>Check-In</strong> saat mulai bekerja dan <strong>Check-Out</strong> saat selesai</li>
+                <li>Data absensi tersimpan otomatis ke cloud dan bisa dilihat kapan saja</li>
+                <li>Pemilik dapat memantau riwayat absensi seluruh karyawan dari semua cabang</li>
+              </ul>
+              <div class="panduan-info">💡 Fitur Absensi hanya tersedia untuk akun dengan langganan aktif.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">2</div>
+              <p class="panduan-step-title">Cara Check-In (Mulai Kerja)</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Kasir login menggunakan <strong>Kode Toko</strong> dan <strong>PIN</strong></li>
+                <li>Di halaman kasir, tap tombol <strong>🕐 Check-In</strong></li>
+                <li>Sistem otomatis mencatat waktu dan tanggal masuk</li>
+                <li>Status berubah menjadi <strong>Sedang Bertugas</strong></li>
+              </ul>
+              <div class="panduan-info">💡 Check-In hanya bisa dilakukan satu kali per hari per akun kasir.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">3</div>
+              <p class="panduan-step-title">Cara Check-Out (Selesai Kerja)</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Tap tombol <strong>🚪 Check-Out</strong> di halaman kasir</li>
+                <li>Sistem mencatat jam selesai bekerja</li>
+                <li>Durasi kerja dihitung otomatis dari jam Check-In sampai Check-Out</li>
+                <li>Data absensi hari itu dianggap selesai</li>
+              </ul>
+              <div class="panduan-warning">⚠️ Pastikan kasir selalu Check-Out sebelum menutup aplikasi agar data jam kerja tercatat dengan benar.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">4</div>
+              <p class="panduan-step-title">Melihat Riwayat Absensi (Pemilik)</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Buka <strong>Sidebar</strong> &gt; tap menu <strong>Absensi Karyawan</strong></li>
+                <li>Pilih <strong>nama karyawan</strong> atau lihat semua sekaligus</li>
+                <li>Filter berdasarkan <strong>tanggal</strong> atau <strong>bulan</strong></li>
+                <li>Data menampilkan: nama kasir, jam masuk, jam keluar, dan total durasi kerja</li>
+              </ul>
+              <div class="panduan-info">💡 Data absensi dapat di-export ke file untuk keperluan penggajian atau laporan.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num">5</div>
+              <p class="panduan-step-title">Mengelola Data Absensi</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Pemilik bisa <strong>mengedit</strong> jam absensi jika terjadi kesalahan pencatatan</li>
+                <li>Tambah catatan absensi manual jika kasir lupa Check-In / Check-Out</li>
+                <li>Hapus data absensi yang tidak valid</li>
+                <li>Rekap absensi bulanan tersedia untuk memudahkan penghitungan gaji</li>
+              </ul>
+              <div class="panduan-warning">⚠️ Pengeditan data absensi hanya bisa dilakukan oleh akun pemilik, bukan kasir.</div>
+            </div>
+          </div>
+
+          <div class="panduan-card" style="border-left:4px solid #f59e0b;">
+            <div class="panduan-step-header">
+              <div class="panduan-step-num" style="background:linear-gradient(135deg,#d97706,#fbbf24);">💡</div>
+              <p class="panduan-step-title">Tips Penggunaan Absensi</p>
+            </div>
+            <div class="panduan-step-body">
+              <ul class="panduan-list">
+                <li>Biasakan karyawan untuk selalu <strong>Check-In</strong> sebelum mulai melayani pelanggan</li>
+                <li>Gunakan fitur absensi sebagai acuan <strong>perhitungan gaji harian / jam</strong></li>
+                <li>Pantau konsistensi kehadiran karyawan dari rekap bulanan</li>
+                <li>Lakukan <strong>export data absensi</strong> setiap akhir bulan sebagai backup</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- end panduan-body -->
+
+    </div>
+  </div>
+  <!-- end MODAL PANDUAN -->
+
+  <style>
+    /* ===== PANDUAN STYLES ===== */
+    .panduan-tab-btn {
+      flex-shrink: 0;
+      padding: 7px 14px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 900;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.5);
+      transition: all 0.2s;
+      letter-spacing: 0.03em;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .panduan-tab-btn:hover {
+      background: rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.8);
+    }
+    .panduan-tab-btn.active {
+      background: linear-gradient(135deg, #059669, #34d399);
+      color: white;
+      box-shadow: 0 4px 12px rgba(5,150,105,0.45);
+    }
+    .panduan-section-title {
+      font-size: 15px;
+      font-weight: 900;
+      color: #0f172a;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .panduan-card {
+      background: white;
+      border-radius: 18px;
+      border: 1px solid #f1f5f9;
+      margin-bottom: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+    .panduan-step-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px 10px;
+    }
+    .panduan-step-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0061C2, #38BDF8);
+      color: white;
+      font-size: 12px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .panduan-step-title {
+      font-size: 13px;
+      font-weight: 900;
+      color: #1e293b;
+      flex: 1;
+    }
+    .panduan-step-body {
+      padding: 0 16px 14px;
+    }
+    .panduan-text {
+      font-size: 12px;
+      color: #475569;
+      font-weight: 600;
+      margin-bottom: 10px;
+      line-height: 1.6;
+    }
+    .panduan-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .panduan-list li {
+      font-size: 12px;
+      color: #475569;
+      font-weight: 600;
+      padding-left: 18px;
+      position: relative;
+      line-height: 1.5;
+    }
+    .panduan-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: #0061C2;
+      font-weight: 900;
+    }
+    .panduan-info {
+      margin-top: 10px;
+      background: rgba(0,97,194,0.07);
+      border: 1px solid rgba(0,97,194,0.15);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 11px;
+      color: #1e4d8c;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+    .panduan-warning {
+      margin-top: 10px;
+      background: rgba(245,158,11,0.08);
+      border: 1px solid rgba(245,158,11,0.2);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 11px;
+      color: #92400e;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+    .panduan-tab-content.hidden { display: none; }
+  </style>
+
+  <script>
+    // ===== PANDUAN MODAL FUNCTIONS =====
+    function openPanduanModal() {
+      closeSidebar();
+      setTimeout(() => {
+        openModal('modal-panduan');
+        showPanduanTab('login');
+      }, 200);
+    }
+
+    function showPanduanTab(tab) {
+      // Sembunyikan semua konten tab
+      document.querySelectorAll('.panduan-tab-content').forEach(el => {
+        el.classList.add('hidden');
+      });
+      // Nonaktifkan semua tombol tab
+      document.querySelectorAll('.panduan-tab-btn').forEach(el => {
+        el.classList.remove('active');
+      });
+      // Tampilkan konten yang dipilih
+      const content = document.getElementById('panduan-' + tab);
+      const btn = document.getElementById('ptab-' + tab);
+      if (content) content.classList.remove('hidden');
+      if (btn) {
+        btn.classList.add('active');
+        // Scroll tombol ke tampilan
+        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+      // Scroll body panduan ke atas
+      const body = document.getElementById('panduan-body');
+      if (body) body.scrollTop = 0;
+    }
   </script>
 </body>
 </html>
