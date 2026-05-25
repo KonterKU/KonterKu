@@ -4577,43 +4577,43 @@
         <!-- Shortcut Menu -->
         <div class="grid grid-cols-2 gap-3">
           <!-- Laporan -->
-          <button onclick="openSidebarMenu('laporan'); setTimeout(()=>setPdfPeriode('harian'),150);" class="flex items-center gap-3 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm active:scale-95 transition-all cursor-pointer text-left w-full">
-            <div class="w-10 h-10 rounded-xl bg-cyan-50 flex items-center justify-center flex-shrink-0">
+          <button onclick="openSidebarMenu('laporan'); setTimeout(()=>setPdfPeriode('harian'),150);" class="flex items-center gap-3 p-4 rounded-2xl active:scale-95 transition-all cursor-pointer text-left w-full border-0" style="background:var(--sb-bg);border:1px solid var(--sb-border);box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(6,182,212,0.12);">
               <i class="fas fa-chart-line text-cyan-500 text-sm"></i>
             </div>
             <div>
-              <p class="text-[11px] font-black text-slate-700">Laporan</p>
-              <p class="text-[8px] text-slate-400 font-bold">Grafik & analisis</p>
+              <p class="text-[11px] font-black" style="color:var(--sb-text-title);">Laporan</p>
+              <p class="text-[8px] font-bold" style="color:var(--sb-text-sub);">Grafik & analisis</p>
             </div>
           </button>
           <!-- Pelanggan -->
-          <button onclick="openSidebarMenu('pelanggan')" class="flex items-center gap-3 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm active:scale-95 transition-all cursor-pointer text-left w-full">
-            <div class="w-10 h-10 rounded-xl bg-rose-50 flex items-center justify-center flex-shrink-0">
+          <button onclick="openSidebarMenu('pelanggan')" class="flex items-center gap-3 p-4 rounded-2xl active:scale-95 transition-all cursor-pointer text-left w-full border-0" style="background:var(--sb-bg);border:1px solid var(--sb-border);box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(244,63,94,0.12);">
               <i class="fas fa-users text-rose-500 text-sm"></i>
             </div>
             <div>
-              <p class="text-[11px] font-black text-slate-700">Pelanggan</p>
-              <p class="text-[8px] text-slate-400 font-bold" id="customer-count-label">0 terdaftar</p>
+              <p class="text-[11px] font-black" style="color:var(--sb-text-title);">Pelanggan</p>
+              <p class="text-[8px] font-bold" style="color:var(--sb-text-sub);" id="customer-count-label">0 terdaftar</p>
             </div>
           </button>
           <!-- Catatan -->
-          <button onclick="openSidebarMenu('catatan')" class="flex items-center gap-3 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm active:scale-95 transition-all cursor-pointer text-left w-full">
-            <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0">
+          <button onclick="openSidebarMenu('catatan')" class="flex items-center gap-3 p-4 rounded-2xl active:scale-95 transition-all cursor-pointer text-left w-full border-0" style="background:var(--sb-bg);border:1px solid var(--sb-border);box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(245,158,11,0.12);">
               <i class="fas fa-sticky-note text-amber-500 text-sm"></i>
             </div>
             <div>
-              <p class="text-[11px] font-black text-slate-700">Catatan</p>
-              <p class="text-[8px] text-slate-400 font-bold" id="note-count-label-dash">0 catatan</p>
+              <p class="text-[11px] font-black" style="color:var(--sb-text-title);">Catatan</p>
+              <p class="text-[8px] font-bold" style="color:var(--sb-text-sub);" id="note-count-label-dash">0 catatan</p>
             </div>
           </button>
           <!-- Cabang (hanya tampil untuk pemilik/admin, bukan kasir) -->
-          <button id="shortcut-cabang" onclick="openMonitorCabang()" class="flex items-center gap-3 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm active:scale-95 transition-all cursor-pointer text-left w-full" style="background:linear-gradient(135deg,#eff6ff,#f0f9ff);border-color:#bfdbfe;">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,rgba(0,97,194,0.12),rgba(56,189,248,0.1));">
+          <button id="shortcut-cabang" onclick="openMonitorCabang()" class="flex items-center gap-3 p-4 rounded-2xl active:scale-95 transition-all cursor-pointer text-left w-full border-0" style="background:linear-gradient(135deg,rgba(0,97,194,0.10),rgba(56,189,248,0.08));border:1px solid rgba(0,97,194,0.2);box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(0,97,194,0.15);">
               <i class="fas fa-store text-blue-500 text-sm"></i>
             </div>
             <div>
-              <p class="text-[11px] font-black text-blue-700">Cabang</p>
-              <p class="text-[8px] text-blue-400 font-bold" id="cabang-count-label">Monitor toko</p>
+              <p class="text-[11px] font-black text-blue-500">Cabang</p>
+              <p class="text-[8px] font-bold text-blue-400" id="cabang-count-label">Monitor toko</p>
             </div>
           </button>
         </div>
@@ -7224,7 +7224,7 @@
         const avatarGrad   = avatarColors[(t.pelanggan||'U').charCodeAt(0) % avatarColors.length];
 
         return `
-          <div class="bg-white rounded-[22px] border border-slate-100 shadow-sm overflow-hidden hover:shadow-md transition-all duration-200">
+          <div class="trx-card rounded-[22px] overflow-hidden" style="border:1px solid var(--sb-border);background:var(--sb-bg);box-shadow:0 2px 12px rgba(0,0,0,0.07);">
 
             <!-- TOP STRIPE warna tipe -->
             <div class="h-1 w-full ${isDig ? 'bg-gradient-to-r from-blue-400 to-cyan-400' : isAdj ? 'bg-gradient-to-r from-amber-400 to-orange-400' : 'bg-gradient-to-r from-emerald-400 to-teal-400'}"></div>
@@ -7245,82 +7245,85 @@
                       <i class="fas ${badgeInfo.icon} text-[6px]"></i>${badgeInfo.label}
                     </span>
                     <!-- Badge status bayar -->
-                    <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[7px] font-black uppercase ${isLunas ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-500'}">
+                    <span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[7px] font-black uppercase" style="${isLunas ? 'background:rgba(16,185,129,0.12);color:#10b981;' : 'background:rgba(239,68,68,0.12);color:#ef4444;'}">
                       <i class="fas ${isLunas ? 'fa-check-circle' : 'fa-clock'} text-[6px]"></i>
                       ${isLunas ? 'LUNAS' : 'HUTANG'}
                     </span>
                   </div>
-                  <p class="text-[12px] font-black text-slate-800 leading-snug truncate">${namaProduk}</p>
-                  <p class="text-[9px] font-bold text-slate-400 mt-0.5">${t.pelanggan||'Umum'}</p>
+                  <p class="text-[12px] font-black leading-snug truncate" style="color:var(--sb-text-title);">${namaProduk}</p>
+                  <p class="text-[9px] font-bold mt-0.5" style="color:var(--sb-text-sub);">${t.pelanggan||'Umum'}</p>
                 </div>
 
                 <!-- Harga jual kanan -->
                 <div class="text-right flex-shrink-0">
-                  <p class="text-[9px] font-black text-slate-400 uppercase mb-0.5">JUAL</p>
-                  <p class="text-[15px] font-black text-blue-600 leading-none">Rp ${fmt(t.jual)}</p>
+                  <p class="text-[9px] font-black uppercase mb-0.5" style="color:var(--sb-text-label);">JUAL</p>
+                  <p class="text-[15px] font-black text-blue-500 leading-none">Rp ${fmt(t.jual)}</p>
                 </div>
               </div>
 
               <!-- ROW 2: Info keuangan (modal, laba, tanggal) -->
               <div class="grid grid-cols-3 gap-2">
-                <div class="bg-slate-50 rounded-xl p-2.5 flex flex-col gap-0.5">
-                  <p class="text-[7px] font-black text-slate-400 uppercase tracking-wide">Modal</p>
-                  <p class="text-[10px] font-black text-slate-700">Rp ${fmt(t.modal||0)}</p>
+                <div class="rounded-xl p-2.5 flex flex-col gap-0.5" style="background:rgba(100,116,139,0.08);">
+                  <p class="text-[7px] font-black uppercase tracking-wide" style="color:var(--sb-text-label);">Modal</p>
+                  <p class="text-[10px] font-black" style="color:var(--sb-text-title);">Rp ${fmt(t.modal||0)}</p>
                 </div>
-                <div class="${profitPos ? 'bg-emerald-50' : 'bg-red-50'} rounded-xl p-2.5 flex flex-col gap-0.5">
-                  <p class="text-[7px] font-black ${profitPos ? 'text-emerald-500' : 'text-red-400'} uppercase tracking-wide">Laba</p>
-                  <p class="text-[10px] font-black ${profitPos ? 'text-emerald-600' : 'text-red-500'}">${profitPos ? '+' : ''}Rp ${fmt(profit)}</p>
+                <div class="rounded-xl p-2.5 flex flex-col gap-0.5" style="background:${profitPos ? 'rgba(16,185,129,0.10)' : 'rgba(239,68,68,0.10)'};">
+                  <p class="text-[7px] font-black uppercase tracking-wide" style="color:${profitPos ? '#10b981' : '#ef4444'};">Laba</p>
+                  <p class="text-[10px] font-black" style="color:${profitPos ? '#10b981' : '#ef4444'};">${profitPos ? '+' : ''}Rp ${fmt(profit)}</p>
                 </div>
-                <div class="bg-slate-50 rounded-xl p-2.5 flex flex-col gap-0.5">
-                  <p class="text-[7px] font-black text-slate-400 uppercase tracking-wide">Tanggal</p>
-                  <p class="text-[10px] font-black text-slate-700">${t.tgl||'—'}</p>
+                <div class="rounded-xl p-2.5 flex flex-col gap-0.5" style="background:rgba(100,116,139,0.08);">
+                  <p class="text-[7px] font-black uppercase tracking-wide" style="color:var(--sb-text-label);">Tanggal</p>
+                  <p class="text-[10px] font-black" style="color:var(--sb-text-title);">${t.tgl||'—'}</p>
                 </div>
               </div>
 
               <!-- ROW 3: Info Dompet -->
               <div class="flex gap-2 flex-wrap">
                 ${wModal ? `
-                  <div class="flex items-center gap-1.5 bg-orange-50 border border-orange-100 px-2.5 py-1.5 rounded-xl flex-1 min-w-0">
-                    <div class="w-5 h-5 rounded-lg bg-orange-100 flex items-center justify-center flex-shrink-0">
-                      <i class="fas fa-arrow-up-from-bracket text-orange-500 text-[8px]"></i>
+                  <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl flex-1 min-w-0" style="background:rgba(249,115,22,0.10);border:1px solid rgba(249,115,22,0.18);">
+                    <div class="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(249,115,22,0.15);">
+                      <i class="fas fa-arrow-up-from-bracket text-[8px]" style="color:#f97316;"></i>
                     </div>
                     <div class="min-w-0">
-                      <p class="text-[6.5px] font-black text-orange-400 uppercase tracking-wide leading-none">Modal dari</p>
-                      <p class="text-[9px] font-black text-orange-700 truncate">${wModal}</p>
+                      <p class="text-[6.5px] font-black uppercase tracking-wide leading-none" style="color:#fb923c;">Modal dari</p>
+                      <p class="text-[9px] font-black truncate" style="color:#f97316;">${wModal}</p>
                     </div>
                   </div>
                 ` : ''}
                 ${wJual && isLunas ? `
-                  <div class="flex items-center gap-1.5 bg-blue-50 border border-blue-100 px-2.5 py-1.5 rounded-xl flex-1 min-w-0">
-                    <div class="w-5 h-5 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
-                      <i class="fas fa-arrow-down-to-bracket text-blue-500 text-[8px]"></i>
+                  <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl flex-1 min-w-0" style="background:rgba(59,130,246,0.10);border:1px solid rgba(59,130,246,0.18);">
+                    <div class="w-5 h-5 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(59,130,246,0.15);">
+                      <i class="fas fa-arrow-down-to-bracket text-[8px]" style="color:#3b82f6;"></i>
                     </div>
                     <div class="min-w-0">
-                      <p class="text-[6.5px] font-black text-blue-400 uppercase tracking-wide leading-none">Dana masuk ke</p>
-                      <p class="text-[9px] font-black text-blue-700 truncate">${wJual}</p>
+                      <p class="text-[6.5px] font-black uppercase tracking-wide leading-none" style="color:#60a5fa;">Dana masuk ke</p>
+                      <p class="text-[9px] font-black truncate" style="color:#3b82f6;">${wJual}</p>
                     </div>
                   </div>
                 ` : ''}
                 ${!wModal && !wJual ? `
-                  <div class="flex items-center gap-1.5 bg-slate-50 border border-slate-100 px-2.5 py-1.5 rounded-xl">
-                    <i class="fas fa-wallet text-slate-300 text-[9px]"></i>
-                    <p class="text-[9px] font-bold text-slate-400">Info dompet tidak tersedia</p>
+                  <div class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl" style="background:rgba(100,116,139,0.08);border:1px solid var(--sb-border);">
+                    <i class="fas fa-wallet text-[9px]" style="color:var(--sb-text-label);"></i>
+                    <p class="text-[9px] font-bold" style="color:var(--sb-text-sub);">Info dompet tidak tersedia</p>
                   </div>
                 ` : ''}
               </div>
 
               <!-- ROW 4: Tombol aksi -->
-              <div class="flex gap-2 pt-1 border-t border-slate-50">
+              <div class="flex gap-2 pt-1" style="border-top:1px solid var(--sb-border);">
                 <button onclick="editTr('${t.id}')"
-                  class="flex-1 py-2 bg-blue-50 hover:bg-blue-100 text-blue-600 text-[9px] font-black rounded-xl flex items-center justify-center gap-1.5 cursor-pointer border-0 transition-all">
+                  class="flex-1 py-2 text-[9px] font-black rounded-xl flex items-center justify-center gap-1.5 cursor-pointer border-0 transition-all"
+                  style="background:rgba(59,130,246,0.10);color:#3b82f6;">
                   <i class="fas fa-edit text-[8px]"></i> EDIT
                 </button>
                 <button onclick="cetakThermal('${t.id}')"
-                  class="flex-1 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 text-[9px] font-black rounded-xl flex items-center justify-center gap-1.5 cursor-pointer border-0 transition-all">
+                  class="flex-1 py-2 text-[9px] font-black rounded-xl flex items-center justify-center gap-1.5 cursor-pointer border-0 transition-all"
+                  style="background:rgba(16,185,129,0.10);color:#10b981;">
                   <i class="fas fa-print text-[8px]"></i> STRUK
                 </button>
                 <button onclick="deleteTr('${t.id}')"
-                  class="flex-1 py-2 bg-red-50 hover:bg-red-100 text-red-500 text-[9px] font-black rounded-xl flex items-center justify-center gap-1.5 cursor-pointer border-0 transition-all">
+                  class="flex-1 py-2 text-[9px] font-black rounded-xl flex items-center justify-center gap-1.5 cursor-pointer border-0 transition-all"
+                  style="background:rgba(239,68,68,0.10);color:#ef4444;">
                   <i class="fas fa-rotate-left text-[8px]"></i> REFUND
                 </button>
               </div>
