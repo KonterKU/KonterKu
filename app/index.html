@@ -356,6 +356,57 @@
     .view-section { display: none; }
     .view-section.active { display: block; animation: fadeIn 0.2s ease; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ===== KASIR CART (TRANSAKSI BERULANG) ===== */
+    .kasir-cart-wrap {
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1.5px solid rgba(0,97,194,0.18);
+      background: linear-gradient(135deg,#f0f7ff,#e8f4ff);
+      margin-top: 4px;
+    }
+    .kasir-cart-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px;
+      background: linear-gradient(135deg,#0061C2,#0284c7);
+    }
+    .kasir-cart-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(0,97,194,0.1);
+      background: white;
+      transition: background 0.15s;
+      animation: fadeIn 0.2s ease;
+    }
+    .kasir-cart-item:last-child { border-bottom: none; }
+    .kasir-cart-item:hover { background: #f8fafc; }
+    .kasir-cart-total {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px;
+      background: linear-gradient(135deg,#0a1628,#0d2550);
+    }
+    .kasir-add-btn {
+      width: 100%; padding: 13px; border-radius: 14px; border: 2px dashed rgba(0,97,194,0.4);
+      background: rgba(0,97,194,0.05); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: 'Plus Jakarta Sans',sans-serif;
+      font-size: 12px; font-weight: 900; color: #0061C2;
+      transition: all 0.2s; margin-top: 4px;
+    }
+    .kasir-add-btn:hover { background: rgba(0,97,194,0.1); border-color: rgba(0,97,194,0.6); transform: scale(1.01); }
+    .kasir-add-btn:active { transform: scale(0.98); }
+    .kasir-process-all-btn {
+      width: 100%; padding: 15px; border-radius: 16px; border: none; cursor: pointer;
+      background: linear-gradient(135deg,#059669,#10b981);
+      box-shadow: 0 6px 20px rgba(5,150,105,0.4);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      font-family: 'Plus Jakarta Sans',sans-serif;
+      font-size: 13px; font-weight: 900; color: white; letter-spacing: 0.04em;
+      transition: all 0.2s; margin-top: 8px;
+    }
+    .kasir-process-all-btn:hover { filter: brightness(1.07); transform: translateY(-1px); }
+    .kasir-process-all-btn:active { transform: translateY(0); }
+    /* ===== END KASIR CART ===== */
     .input-premium { width: 100%; background: #F1F5F9; border: 2px solid transparent; padding: 12px 16px; border-radius: 14px; font-weight: 600; outline: none; font-size: 14px; color: var(--slate-800); font-family: 'Plus Jakarta Sans', sans-serif; }
     .input-premium:focus { border-color: var(--primary); background: white; }
     .tab-btn { padding: 10px 16px; border-radius: 12px; font-size: 10px; font-weight: 800; transition: 0.3s; flex: 1; text-align: center; cursor: pointer; border: none; }
@@ -4983,7 +5034,42 @@
             </div>
           </div>
 
-          <!-- Submit -->
+          <!-- Tombol Tambah ke Keranjang -->
+          <button onclick="tambahKeKeranjang('digital')" class="kasir-add-btn">
+            <i class="fas fa-plus-circle"></i> TAMBAH KE DAFTAR TRANSAKSI
+          </button>
+
+          <!-- Keranjang Transaksi Digital -->
+          <div id="cart-digital-wrap" class="kasir-cart-wrap hidden">
+            <div class="kasir-cart-header">
+              <div class="flex items-center gap-2">
+                <i class="fas fa-list-check text-white text-[12px]"></i>
+                <span style="font-size:11px;font-weight:900;color:white;letter-spacing:0.06em;">DAFTAR TRANSAKSI</span>
+                <span id="cart-digital-count" style="padding:2px 8px;border-radius:100px;background:rgba(255,255,255,0.2);font-size:9px;font-weight:900;color:white;">0 item</span>
+              </div>
+              <button onclick="clearKeranjang('digital')" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:4px 10px;cursor:pointer;">
+                <span style="font-size:9px;font-weight:900;color:rgba(255,255,255,0.8);">HAPUS SEMUA</span>
+              </button>
+            </div>
+            <div id="cart-digital-items"></div>
+            <div class="kasir-cart-total">
+              <div>
+                <p style="font-size:8px;font-weight:900;color:rgba(255,255,255,0.45);letter-spacing:0.1em;text-transform:uppercase;">TOTAL JUAL</p>
+                <p id="cart-digital-total-jual" style="font-size:16px;font-weight:900;color:#38BDF8;">Rp 0</p>
+              </div>
+              <div class="text-right">
+                <p style="font-size:8px;font-weight:900;color:rgba(255,255,255,0.45);letter-spacing:0.1em;text-transform:uppercase;">TOTAL LABA</p>
+                <p id="cart-digital-total-laba" style="font-size:16px;font-weight:900;color:#34d399;">Rp 0</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tombol Proses Semua (muncul saat ada item di keranjang) -->
+          <button id="btn-proses-all-digital" onclick="prosesSemuaKeranjang('digital')" class="kasir-process-all-btn hidden">
+            <i class="fas fa-check-double"></i> PROSES SEMUA TRANSAKSI DIGITAL
+          </button>
+
+          <!-- Submit single (asli) -->
           <button onclick="prosesKasir('digital')" class="kasir-submit-btn kasir-submit-dig mt-1">
             <i class="fas fa-bolt mr-2"></i>PROSES TRANSAKSI DIGITAL
           </button>
@@ -5145,7 +5231,42 @@
             </div>
           </div>
 
-          <!-- Submit -->
+          <!-- Tombol Tambah ke Keranjang Fisik -->
+          <button onclick="tambahKeKeranjang('fisik')" class="kasir-add-btn" style="border-color:rgba(124,58,237,0.4);color:#7c3aed;background:rgba(124,58,237,0.05);">
+            <i class="fas fa-plus-circle" style="color:#7c3aed;"></i> TAMBAH KE DAFTAR TRANSAKSI
+          </button>
+
+          <!-- Keranjang Transaksi Fisik -->
+          <div id="cart-fisik-wrap" class="kasir-cart-wrap hidden" style="border-color:rgba(124,58,237,0.2);background:linear-gradient(135deg,#faf5ff,#f5f3ff);">
+            <div class="kasir-cart-header" style="background:linear-gradient(135deg,#7c3aed,#a855f7);">
+              <div class="flex items-center gap-2">
+                <i class="fas fa-list-check text-white text-[12px]"></i>
+                <span style="font-size:11px;font-weight:900;color:white;letter-spacing:0.06em;">DAFTAR TRANSAKSI</span>
+                <span id="cart-fisik-count" style="padding:2px 8px;border-radius:100px;background:rgba(255,255,255,0.2);font-size:9px;font-weight:900;color:white;">0 item</span>
+              </div>
+              <button onclick="clearKeranjang('fisik')" style="background:rgba(255,255,255,0.15);border:none;border-radius:8px;padding:4px 10px;cursor:pointer;">
+                <span style="font-size:9px;font-weight:900;color:rgba(255,255,255,0.8);">HAPUS SEMUA</span>
+              </button>
+            </div>
+            <div id="cart-fisik-items"></div>
+            <div class="kasir-cart-total" style="background:linear-gradient(135deg,#1e1040,#2d1278);">
+              <div>
+                <p style="font-size:8px;font-weight:900;color:rgba(255,255,255,0.45);letter-spacing:0.1em;text-transform:uppercase;">TOTAL JUAL</p>
+                <p id="cart-fisik-total-jual" style="font-size:16px;font-weight:900;color:#c4b5fd;">Rp 0</p>
+              </div>
+              <div class="text-right">
+                <p style="font-size:8px;font-weight:900;color:rgba(255,255,255,0.45);letter-spacing:0.1em;text-transform:uppercase;">TOTAL LABA</p>
+                <p id="cart-fisik-total-laba" style="font-size:16px;font-weight:900;color:#34d399;">Rp 0</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tombol Proses Semua Fisik -->
+          <button id="btn-proses-all-fisik" onclick="prosesSemuaKeranjang('fisik')" class="kasir-process-all-btn hidden" style="background:linear-gradient(135deg,#7c3aed,#a855f7);box-shadow:0 6px 20px rgba(124,58,237,0.4);">
+            <i class="fas fa-check-double"></i> PROSES SEMUA TRANSAKSI FISIK
+          </button>
+
+          <!-- Submit single (asli) -->
           <button onclick="prosesKasir('fisik')" class="kasir-submit-btn kasir-submit-fis mt-1">
             <i class="fas fa-box mr-2"></i>PROSES TRANSAKSI FISIK
           </button>
@@ -6968,6 +7089,206 @@
         if (!skipCloudFetch) setTimeout(fetchCloudData, 500);
       }
     }
+
+    // ============================================================
+    // KASIR CART — TRANSAKSI BERULANG (MULTI-ITEM)
+    // ============================================================
+
+    // Keranjang per tipe: digital & fisik
+    window._kasirCart = { digital: [], fisik: [] };
+
+    function tambahKeKeranjang(tipe) {
+      const isDig = tipe === 'digital';
+
+      let produkNama = '', modal = 0, jual = 0, produkId = null, isManual = false;
+
+      if (isDig) {
+        const selVal = document.getElementById('kd-produk').value;
+        isManual = selVal === 'manual';
+        modal = Number(document.getElementById('kd-modal').value) || 0;
+        jual  = Number(document.getElementById('kd-jual').value)  || 0;
+        if (isManual) {
+          produkNama = (document.getElementById('kd-produk-manual')?.value || '').trim();
+          if (!produkNama) { (_getMySwal()||Swal).fire('Peringatan','Nama produk manual harus diisi!','warning'); return; }
+        } else {
+          const item = db.inventory.find(p => p.id === selVal);
+          if (!item) { (_getMySwal()||Swal).fire('Peringatan','Silakan pilih produk terlebih dahulu!','warning'); return; }
+          produkNama = item.nama;
+          produkId = selVal;
+        }
+        if (jual <= 0) { (_getMySwal()||Swal).fire('Peringatan','Harga jual harus diisi!','warning'); return; }
+      } else {
+        const pid = document.getElementById('kf-produk').value;
+        const pIdx = db.inventory.findIndex(p => p.id === pid);
+        if (pIdx === -1) { (_getMySwal()||Swal).fire('Peringatan','Silakan pilih produk fisik!','warning'); return; }
+        jual = Number(document.getElementById('kf-jual').value) || 0;
+        if (jual <= 0) { (_getMySwal()||Swal).fire('Peringatan','Harga jual harus diisi!','warning'); return; }
+        produkNama = db.inventory[pIdx].nama;
+        modal = db.inventory[pIdx].modal;
+        produkId = pid;
+      }
+
+      const item = {
+        id: 'C-' + Date.now() + '-' + Math.random().toString(36).slice(2,6),
+        produkNama, modal, jual, produkId, isManual
+      };
+
+      window._kasirCart[tipe].push(item);
+      renderKeranjang(tipe);
+
+      // Bersihkan field produk & harga (tapi tidak tanggal/pelanggan/dompet)
+      if (isDig) {
+        document.getElementById('kd-modal').value = '';
+        document.getElementById('kd-jual').value  = '';
+        const laba = document.getElementById('kd-laba-row'); if(laba) laba.style.display='none';
+        const prev = document.getElementById('kasir-laba-preview'); if(prev) prev.classList.add('hidden');
+      } else {
+        document.getElementById('kf-jual').value  = '';
+        const laba = document.getElementById('kf-laba-row'); if(laba) laba.style.display='none';
+      }
+
+      // Feedback singkat
+      (_getMySwal()||Swal).fire({
+        toast: true, position: 'top-end', icon: 'success',
+        title: `✅ ${produkNama} ditambahkan`, showConfirmButton: false, timer: 1200,
+        customClass: { popup: 'swal2-ku-toast' }
+      });
+    }
+
+    function hapusItemKeranjang(tipe, itemId) {
+      window._kasirCart[tipe] = window._kasirCart[tipe].filter(i => i.id !== itemId);
+      renderKeranjang(tipe);
+    }
+
+    function clearKeranjang(tipe) {
+      window._kasirCart[tipe] = [];
+      renderKeranjang(tipe);
+    }
+
+    function renderKeranjang(tipe) {
+      const items = window._kasirCart[tipe];
+      const wrap  = document.getElementById('cart-' + tipe + '-wrap');
+      const countEl = document.getElementById('cart-' + tipe + '-count');
+      const listEl  = document.getElementById('cart-' + tipe + '-items');
+      const totalJualEl = document.getElementById('cart-' + tipe + '-total-jual');
+      const totalLabaEl = document.getElementById('cart-' + tipe + '-total-laba');
+      const btnAll = document.getElementById('btn-proses-all-' + tipe);
+      if (!wrap || !listEl) return;
+
+      if (items.length === 0) {
+        wrap.classList.add('hidden');
+        if (btnAll) btnAll.classList.add('hidden');
+        return;
+      }
+
+      wrap.classList.remove('hidden');
+      if (btnAll) btnAll.classList.remove('hidden');
+      if (countEl) countEl.textContent = items.length + ' item';
+
+      let totalJual = 0, totalLaba = 0;
+      items.forEach(it => { totalJual += it.jual; totalLaba += (it.jual - it.modal); });
+      if (totalJualEl) totalJualEl.textContent = 'Rp ' + fmt(totalJual);
+      if (totalLabaEl) totalLabaEl.textContent = 'Rp ' + fmt(totalLaba);
+
+      const labaColor = tipe === 'digital' ? '#34d399' : '#34d399';
+      listEl.innerHTML = items.map((it, idx) => `
+        <div class="kasir-cart-item">
+          <div style="width:28px;height:28px;border-radius:9px;background:${tipe==='digital'?'rgba(0,97,194,0.1)':'rgba(124,58,237,0.1)'};
+               display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;font-weight:900;
+               color:${tipe==='digital'?'#0061C2':'#7c3aed'};">${idx+1}</div>
+          <div style="flex:1;min-width:0;">
+            <p style="font-size:12px;font-weight:900;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${it.produkNama}</p>
+            <div style="display:flex;gap:10px;margin-top:2px;">
+              <span style="font-size:9px;font-weight:700;color:#94a3b8;">Modal: <span style="color:#64748b;">Rp ${fmt(it.modal)}</span></span>
+              <span style="font-size:9px;font-weight:700;color:#94a3b8;">Jual: <span style="color:#0061C2;font-weight:900;">Rp ${fmt(it.jual)}</span></span>
+              <span style="font-size:9px;font-weight:700;color:#94a3b8;">Laba: <span style="color:#059669;font-weight:900;">Rp ${fmt(it.jual-it.modal)}</span></span>
+            </div>
+          </div>
+          <button onclick="hapusItemKeranjang('${tipe}','${it.id}')"
+            style="width:26px;height:26px;border-radius:8px;background:#fee2e2;border:none;cursor:pointer;
+                   display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="fas fa-trash" style="color:#ef4444;font-size:9px;"></i>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    async function prosesSemuaKeranjang(tipe) {
+      const items = window._kasirCart[tipe];
+      if (!items || items.length === 0) return;
+
+      const isDig = tipe === 'digital';
+      const tgl = document.getElementById(isDig ? 'kd-tgl' : 'kf-tgl').value || getWIBDate();
+      const status = document.getElementById(isDig ? 'kd-status' : 'kf-status').value;
+      const wpId = document.getElementById(isDig ? 'kd-w-penerima' : 'kf-w-penerima').value;
+      const cust = document.getElementById(isDig ? 'kd-customer' : 'kf-customer').value || 'Umum';
+      const note = document.getElementById(isDig ? 'kd-note' : 'kf-note').value;
+
+      const totalJual = items.reduce((a,b) => a + b.jual, 0);
+      const totalLaba = items.reduce((a,b) => a + (b.jual - b.modal), 0);
+
+      const konfirm = await (_getMySwal()||Swal).fire({
+        title: 'Proses Semua?',
+        html: `<p style="font-size:13px;color:#475569;">Akan memproses <b>${items.length} transaksi</b><br>Total jual: <b style="color:#0061C2;">Rp ${fmt(totalJual)}</b> · Laba: <b style="color:#059669;">Rp ${fmt(totalLaba)}</b></p>`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Proses Semua!',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#059669',
+        customClass: { popup: 'swal2-ku' }
+      });
+      if (!konfirm.isConfirmed) return;
+
+      let berhasil = 0;
+      for (const it of items) {
+        if (isDig) {
+          const wmId = document.getElementById('kd-w-modal').value;
+          if (wmId) {
+            const wmIdx = db.dompet.findIndex(w => w.id === wmId);
+            if (wmIdx !== -1) { db.dompet[wmIdx].saldo -= it.modal; addMutasi(wmId, it.modal, 'out', 'MODAL DIG: '+it.produkNama); }
+          }
+          if (status === 'Lunas' && wpId) {
+            const wpIdx = db.dompet.findIndex(w => w.id === wpId);
+            if (wpIdx !== -1) { db.dompet[wpIdx].saldo += it.jual; addMutasi(wpId, it.jual, 'in', 'TRX LUNAS: '+it.produkNama); }
+          } else if (status === 'Hutang') {
+            db.hutang.push({ id: 'H-'+Date.now()+'-'+berhasil, tipe: 'pelanggan', nama: cust, jumlah: it.jual, tgl, ket: 'DIG: '+it.produkNama });
+          }
+          db.transaksi.push({ id: 'TR-'+Date.now()+'-'+berhasil, tgl, produk: 'DIG: '+it.produkNama, modal: it.modal, jual: it.jual, pelanggan: cust, status, walletModal: document.getElementById('kd-w-modal').value, walletJual: wpId, pRef: it.produkId, tipe: 'digital' });
+        } else {
+          const pIdx = db.inventory.findIndex(p => p.id === it.produkId);
+          if (pIdx !== -1) {
+            if (db.inventory[pIdx].stok > 0) db.inventory[pIdx].stok -= 1;
+          }
+          if (status === 'Lunas' && wpId) {
+            const wpIdx = db.dompet.findIndex(w => w.id === wpId);
+            if (wpIdx !== -1) { db.dompet[wpIdx].saldo += it.jual; addMutasi(wpId, it.jual, 'in', 'TRX LUNAS: '+it.produkNama); }
+          } else if (status === 'Hutang') {
+            db.hutang.push({ id: 'H-'+Date.now()+'-'+berhasil, tipe: 'pelanggan', nama: cust, jumlah: it.jual, tgl, ket: 'FIS: '+it.produkNama });
+          }
+          db.transaksi.push({ id: 'TR-'+Date.now()+'-'+berhasil, tgl, produk: 'FIS: '+it.produkNama, modal: it.modal, jual: it.jual, pelanggan: cust, status, walletModal: null, walletJual: wpId, pRef: it.produkId, tipe: 'fisik' });
+        }
+        berhasil++;
+        await new Promise(r => setTimeout(r, 10)); // Pastikan ID unik
+      }
+
+      // Reset keranjang & form
+      window._kasirCart[tipe] = [];
+      renderKeranjang(tipe);
+      resetKasirForms();
+      showView('dashboard');
+
+      (_getMySwal()||Swal).fire({
+        title: `Sukses! 🎉`, icon: 'success',
+        html: `<p style="font-size:13px;color:#475569;"><b>${berhasil} transaksi</b> berhasil diproses!<br>Total: <b style="color:#0061C2;">Rp ${fmt(totalJual)}</b> · Laba: <b style="color:#059669;">Rp ${fmt(totalLaba)}</b></p>`,
+        timer: 2500, showConfirmButton: false, customClass: { popup: 'swal2-ku' }
+      });
+
+      syncImmediate().then(ok => { if (!ok && navigator.onLine) console.warn('[Kasir] Cloud sync gagal'); });
+    }
+
+    // ============================================================
+    // END KASIR CART
+    // ============================================================
 
     function resetKasirForms() {
       const today = getWIBDate();
