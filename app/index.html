@@ -8338,12 +8338,13 @@
       let kategori = '';
       if (ktgModeManual) {
         kategori = (document.getElementById('p-kategori-manual')?.value || '').trim();
-        // Auto-simpan kategori baru ke daftar jika belum ada
-        if (kategori && typeof window.autoSaveKategoriManual === 'function') {
-          window.autoSaveKategoriManual(tipe, kategori);
-        }
       } else {
         kategori = document.getElementById('p-kategori')?.value || '';
+      }
+      // Auto-simpan kategori ke daftar (berlaku untuk mode pilih maupun manual)
+      // agar selalu konsisten di filter stok, dropdown kasir, dan kelola kategori
+      if (kategori && typeof window.autoSaveKategoriManual === 'function') {
+        window.autoSaveKategoriManual(tipe, kategori);
       }
 
       if (!nama) return (_getMySwal()||Swal).fire('Error', 'Nama produk harus diisi', 'warning');
@@ -8371,6 +8372,8 @@
       }
       closeModal('modal-produk');
       await sync();
+      // Refresh filter dropdown di semua view agar kategori baru langsung muncul
+      if (typeof refreshKategoriFilters === 'function') refreshKategoriFilters();
       // Check for low stock warnings after saving
       checkLowStockNotif();
     }
