@@ -980,6 +980,214 @@
     [data-theme="dark"] .panduan-step-title { color: #e2e8f0 !important; }
     [data-theme="dark"] .panduan-step-desc { color: #94a3b8 !important; }
 
+    /* ════════════════════════════════════════════════
+       DARK MODE ENHANCED — Fix semua elemen yang terlewat
+    ════════════════════════════════════════════════ */
+
+    /* ── Kelola Toko: content body ── */
+    [data-theme="dark"] #modal-sidebar-kelola-toko .modal-content {
+      background: #0f172a !important;
+    }
+    [data-theme="dark"] #modal-sidebar-kelola-toko [style*="background:#f8fafc"],
+    [data-theme="dark"] #modal-sidebar-kelola-toko [style*="background:#f1f5f9"] {
+      background: #0f172a !important;
+    }
+    /* Card item toko (putih) */
+    [data-theme="dark"] #multitoko-list [style*="background:white"],
+    [data-theme="dark"] #multitoko-list [style*="background:#fff"],
+    [data-theme="dark"] #multitoko-list [style*="background: white"] {
+      background: #1e293b !important;
+      border-color: rgba(255,255,255,0.08) !important;
+    }
+    /* Inline color teks di kelola toko */
+    [data-theme="dark"] #modal-sidebar-kelola-toko [style*="color:#1e293b"],
+    [data-theme="dark"] #modal-sidebar-kelola-toko [style*="color:#0f172a"] { color: #e2e8f0 !important; }
+    [data-theme="dark"] #modal-sidebar-kelola-toko [style*="color:#475569"],
+    [data-theme="dark"] #modal-sidebar-kelola-toko [style*="color:#64748b"] { color: #94a3b8 !important; }
+    [data-theme="dark"] #modal-sidebar-kelola-toko [style*="color:#94a3b8"] { color: #64748b !important; }
+    /* Badge slot */
+    [data-theme="dark"] #multitoko-slot-badge { background: rgba(0,97,194,0.2) !important; color: #93c5fd !important; }
+    /* Info gradient kelola toko */
+    [data-theme="dark"] #modal-sidebar-kelola-toko [style*="background:linear-gradient(135deg,#eff6ff"] {
+      background: rgba(0,97,194,0.12) !important;
+      border-color: rgba(0,97,194,0.2) !important;
+    }
+    /* Tambah toko baru form */
+    [data-theme="dark"] #modal-tambah-toko .modal-content { background: #0f172a !important; }
+    [data-theme="dark"] #modal-tambah-toko .bg-blue-50 { background: rgba(0,97,194,0.12) !important; border-color: rgba(0,97,194,0.2) !important; }
+    [data-theme="dark"] #modal-tambah-toko .text-blue-600 { color: #60a5fa !important; }
+    [data-theme="dark"] #modal-tambah-toko h4 { color: #e2e8f0 !important; }
+    [data-theme="dark"] #modal-tambah-toko [style*="color:#94a3b8"] { color: #64748b !important; }
+
+    /* ── Absensi Kasir: Form fields (white cards) ── */
+    [data-theme="dark"] #modal-absensi-kasir [style*="background:white"],
+    [data-theme="dark"] #modal-absensi-kasir [style*="background:#fff"],
+    [data-theme="dark"] #modal-absensi-kasir [style*="background: white"] {
+      background: #1e293b !important;
+      border-color: rgba(255,255,255,0.08) !important;
+    }
+    /* Saldo awal card (hijau muda) */
+    [data-theme="dark"] #modal-absensi-kasir [style*="background:linear-gradient(135deg,#f0fdf4"] {
+      background: linear-gradient(135deg,#052e16,#064e3b) !important;
+      border-color: rgba(52,211,153,0.25) !important;
+    }
+    /* Sub-card putih transparan dalam saldo */
+    [data-theme="dark"] #modal-absensi-kasir [style*="background:rgba(255,255,255,0.6)"] {
+      background: rgba(255,255,255,0.07) !important;
+    }
+    /* Teks dalam saldo card */
+    [data-theme="dark"] #modal-absensi-kasir [style*="color:#064e3b"] { color: #6ee7b7 !important; }
+    [data-theme="dark"] #modal-absensi-kasir [style*="color:#15803d"] { color: #34d399 !important; }
+    [data-theme="dark"] #modal-absensi-kasir [style*="color:#0c4a6e"] { color: #7dd3fc !important; }
+    [data-theme="dark"] #modal-absensi-kasir [style*="color:#0369a1"] { color: #38bdf8 !important; }
+    [data-theme="dark"] #modal-absensi-kasir [style*="color:#6b7280"] { color: #64748b !important; }
+    /* Input fields warna teks */
+    [data-theme="dark"] #absensi-buka-nama,
+    [data-theme="dark"] #absensi-buka-tgl,
+    [data-theme="dark"] #absensi-buka-jam,
+    [data-theme="dark"] #absensi-buka-ket,
+    [data-theme="dark"] #absensi-tutup-shift-id { color: #e2e8f0 !important; }
+    /* Laporan list cards */
+    [data-theme="dark"] #absensi-laporan-list [style*="background:white"],
+    [data-theme="dark"] #absensi-laporan-list [style*="background:#fff"] {
+      background: #1e293b !important;
+      border-color: rgba(255,255,255,0.08) !important;
+    }
+    [data-theme="dark"] #absensi-laporan-list [style*="color:#1e293b"],
+    [data-theme="dark"] #absensi-laporan-list [style*="color:#0f172a"] { color: #e2e8f0 !important; }
+    [data-theme="dark"] #absensi-laporan-list [style*="color:#475569"],
+    [data-theme="dark"] #absensi-laporan-list [style*="color:#64748b"] { color: #94a3b8 !important; }
+    [data-theme="dark"] #absensi-laporan-list [style*="color:#94a3b8"] { color: #64748b !important; }
+    /* Tutup shift panel */
+    [data-theme="dark"] #absensi-panel-tutup [style*="background:white"],
+    [data-theme="dark"] #absensi-panel-tutup [style*="background:#fff"] {
+      background: #1e293b !important;
+      border-color: rgba(255,255,255,0.08) !important;
+    }
+    [data-theme="dark"] #absensi-panel-tutup [style*="color:#1e293b"],
+    [data-theme="dark"] #absensi-panel-tutup [style*="color:#0f172a"] { color: #e2e8f0 !important; }
+    [data-theme="dark"] #absensi-panel-tutup [style*="color:#475569"],
+    [data-theme="dark"] #absensi-panel-tutup [style*="color:#64748b"] { color: #94a3b8 !important; }
+    [data-theme="dark"] #absensi-panel-tutup select,
+    [data-theme="dark"] #absensi-panel-tutup input { color: #e2e8f0 !important; }
+    /* Px-5 pt-4 body absensi */
+    [data-theme="dark"] #modal-absensi-kasir > .modal-content > div.px-5 {
+      background: #0f172a !important;
+    }
+
+    /* ── Backup & Restore: semua card putih ── */
+    [data-theme="dark"] #modal-sidebar-backup .modal-content { background: #0f172a !important; }
+    [data-theme="dark"] #modal-sidebar-backup [style*="background:white"],
+    [data-theme="dark"] #modal-sidebar-backup [style*="background:#fff"],
+    [data-theme="dark"] #modal-sidebar-backup [style*="background: white"] {
+      background: #1e293b !important;
+      border-color: rgba(255,255,255,0.08) !important;
+    }
+    [data-theme="dark"] #modal-sidebar-backup [style*="color:#1e293b"],
+    [data-theme="dark"] #modal-sidebar-backup [style*="color:#0f172a"] { color: #e2e8f0 !important; }
+    [data-theme="dark"] #modal-sidebar-backup [style*="color:#475569"],
+    [data-theme="dark"] #modal-sidebar-backup [style*="color:#64748b"] { color: #94a3b8 !important; }
+    [data-theme="dark"] #modal-sidebar-backup [style*="color:#94a3b8"] { color: #64748b !important; }
+    /* Sub-header sync info */
+    [data-theme="dark"] #modal-sidebar-backup [style*="background:#f0fdf4"],
+    [data-theme="dark"] #modal-sidebar-backup [style*="background:#dcfce7"] {
+      background: rgba(16,185,129,0.1) !important;
+      border-color: rgba(16,185,129,0.2) !important;
+    }
+    [data-theme="dark"] #modal-sidebar-backup [style*="color:#065f46"],
+    [data-theme="dark"] #modal-sidebar-backup [style*="color:#166534"],
+    [data-theme="dark"] #modal-sidebar-backup [style*="color:#15803d"] { color: #6ee7b7 !important; }
+    [data-theme="dark"] #modal-sidebar-backup [style*="color:#0369a1"],
+    [data-theme="dark"] #modal-sidebar-backup [style*="color:#1d4ed8"] { color: #60a5fa !important; }
+    [data-theme="dark"] #modal-sidebar-backup [style*="color:#92400e"],
+    [data-theme="dark"] #modal-sidebar-backup [style*="color:#d97706"] { color: #fbbf24 !important; }
+    [data-theme="dark"] #modal-sidebar-backup [style*="color:#5b21b6"],
+    [data-theme="dark"] #modal-sidebar-backup [style*="color:#7c3aed"] { color: #a78bfa !important; }
+    /* Tombol unduh / restore */
+    [data-theme="dark"] #modal-sidebar-backup button[style*="background:#f1f5f9"],
+    [data-theme="dark"] #modal-sidebar-backup button[style*="background:#f8fafc"] {
+      background: rgba(255,255,255,0.08) !important;
+      border-color: rgba(255,255,255,0.1) !important;
+      color: #e2e8f0 !important;
+    }
+
+    /* ── Tentang Aplikasi: card fitur & info teknis ── */
+    [data-theme="dark"] #modal-sidebar-tentang .modal-content { background: #0f172a !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background:white"],
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background:#fff"],
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background: white"] {
+      background: #1e293b !important;
+      border-color: rgba(255,255,255,0.08) !important;
+    }
+    /* Border-bottom divider di info teknis */
+    [data-theme="dark"] #modal-sidebar-tentang [style*="border-bottom"] {
+      border-bottom-color: rgba(255,255,255,0.07) !important;
+    }
+    /* Teks inline warna */
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#1e293b"],
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#0f172a"] { color: #e2e8f0 !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#475569"],
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#64748b"] { color: #94a3b8 !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#94a3b8"] { color: #64748b !important; }
+    /* Fitur card badge (beragam warna muda) */
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background:#eff6ff"],
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background:#dbeafe"] { background: rgba(0,97,194,0.12) !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background:#fef9c3"],
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background:#fef08a"] { background: rgba(234,179,8,0.12) !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background:#fce7f3"],
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background:#fdf4ff"] { background: rgba(192,38,211,0.12) !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background:#fff7ed"],
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background:#fed7aa"] { background: rgba(234,88,12,0.12) !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background:#ecfdf5"] { background: rgba(16,185,129,0.10) !important; }
+    /* Warna teks fitur card */
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#1d4ed8"],
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#1e40af"] { color: #60a5fa !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#7c3aed"],
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#6d28d9"] { color: #a78bfa !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#c026d3"],
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#a21caf"] { color: #e879f9 !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#ea580c"],
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#c2410c"] { color: #fb923c !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#059669"],
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#065f46"] { color: #34d399 !important; }
+
+    /* ── Panduan Pengguna: semua card konten ── */
+    [data-theme="dark"] #modal-sidebar-panduan .modal-content { background: #0f172a !important; }
+    [data-theme="dark"] .panduan-tab-content [style*="background:white"],
+    [data-theme="dark"] .panduan-tab-content [style*="background:#fff"],
+    [data-theme="dark"] .panduan-tab-content [style*="background: white"] {
+      background: #1e293b !important;
+      border-color: rgba(255,255,255,0.08) !important;
+    }
+    [data-theme="dark"] .panduan-tab-content [style*="color:#1e293b"],
+    [data-theme="dark"] .panduan-tab-content [style*="color:#0f172a"] { color: #e2e8f0 !important; }
+    [data-theme="dark"] .panduan-tab-content [style*="color:#475569"],
+    [data-theme="dark"] .panduan-tab-content [style*="color:#64748b"] { color: #94a3b8 !important; }
+    [data-theme="dark"] .panduan-tab-content [style*="color:#94a3b8"] { color: #64748b !important; }
+    /* Step numbered badge */
+    [data-theme="dark"] .panduan-tab-content [style*="background:#eff6ff"],
+    [data-theme="dark"] .panduan-tab-content [style*="background:#dbeafe"] { background: rgba(0,97,194,0.15) !important; }
+    /* Arrow/divider garis */
+    [data-theme="dark"] .panduan-tab-content [style*="color:#1d4ed8"],
+    [data-theme="dark"] .panduan-tab-content [style*="color:#2563eb"] { color: #60a5fa !important; }
+    [data-theme="dark"] .panduan-tab-content [style*="color:#059669"],
+    [data-theme="dark"] .panduan-tab-content [style*="color:#065f46"] { color: #34d399 !important; }
+    [data-theme="dark"] .panduan-tab-content [style*="color:#d97706"],
+    [data-theme="dark"] .panduan-tab-content [style*="color:#92400e"] { color: #fbbf24 !important; }
+    /* Highlight tip box */
+    [data-theme="dark"] .panduan-tab-content [style*="background:#fffbeb"],
+    [data-theme="dark"] .panduan-tab-content [style*="background:#fef9c3"] { background: rgba(234,179,8,0.1) !important; border-color: rgba(234,179,8,0.2) !important; }
+    [data-theme="dark"] .panduan-tab-content [style*="background:#ecfdf5"],
+    [data-theme="dark"] .panduan-tab-content [style*="background:#dcfce7"] { background: rgba(16,185,129,0.1) !important; }
+    [data-theme="dark"] .panduan-tab-content [style*="background:#eff6ff"] { background: rgba(0,97,194,0.1) !important; }
+    /* Border garis pemisah */
+    [data-theme="dark"] .panduan-tab-content [style*="border-bottom:1px solid #e2e8f0"],
+    [data-theme="dark"] .panduan-tab-content [style*="border-bottom: 1px solid #e2e8f0"] {
+      border-bottom-color: rgba(255,255,255,0.07) !important;
+    }
+    /* Panduan modal header strip */
+    [data-theme="dark"] #modal-sidebar-panduan [style*="background:#f1f5f9"],
+    [data-theme="dark"] #modal-sidebar-panduan [style*="background:#f8fafc"] { background: #1e293b !important; }
 
     /* Info nama toko (biru) */
     [data-theme="dark"] #modal-sidebar-akun .bg-blue-50 {
