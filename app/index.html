@@ -7101,6 +7101,14 @@
 
         const activeStoreId = localStorage.getItem('k_active_store_id');
 
+        // Jika baru saja hapus semua data, jangan tarik data lama dari cloud
+        if (localStorage.getItem('k_just_cleared') === 'true') {
+          localStorage.removeItem('k_just_cleared');
+          showSyncToast('ok', 'DATA BERHASIL DIHAPUS ✓');
+          renderAll();
+          return;
+        }
+
         if (activeStoreId) {
           // Ada toko aktif — load datanya dari user_stores
           showSyncToast('saving', 'MEMUAT DATA TOKO...');
@@ -7721,6 +7729,12 @@
     async function fetchCloudData() {
       const sid = localStorage.getItem('k_sid');
       if (!sid || !navigator.onLine) return;
+
+      // Jangan tarik data dari cloud jika baru saja hapus semua
+      if (localStorage.getItem('k_just_cleared') === 'true') {
+        localStorage.removeItem('k_just_cleared');
+        return;
+      }
 
       const pendingSync = localStorage.getItem('k_pending_sync') === 'true';
       if (pendingSync || _syncRunning || _syncQueued) return;
@@ -10622,16 +10636,36 @@ ${t.tipe === 'ewallet' ? `
         window.db = db;
         saveLocalData(); // simpan state kosong ke localStorage sebelum reload
 
-        // Hapus dari Firestore (jika online) — FIXED: pakai path 'stores' sesuai saveFirebaseData()
+        // Hapus dari Firestore (jika online) — hapus SEMUA sumber data
         const uid = _resolveStoreId(localStorage.getItem('k_sid'));
+        const emptyDb = {
+          dompet: [], transaksi: [], inventory: [], hutang: [],
+          hutang_lunas: [], pelanggan: [], mutasi: [], notes: [],
+          riwayat_hutang: []
+        };
         if (uid && uid !== 'DEMO' && window._fbFirestore) {
+          // 1. Reset collection 'stores' (path utama sync)
           try {
-            await window._fbFirestore.collection('stores').doc(uid).set({
-              dompet: [], transaksi: [], inventory: [], hutang: [],
-              hutang_lunas: [], pelanggan: [], mutasi: [], notes: [],
-              riwayat_hutang: []
-            });
-          } catch(e) { console.warn('[hapusSemuaData] Gagal reset Firestore:', e.message); }
+            await window._fbFirestore.collection('stores').doc(uid).set(emptyDb);
+          } catch(e) { console.warn('[hapusSemuaData] Gagal reset stores:', e.message); }
+
+          // 2. Reset collection 'user_stores' (multi-toko) — INI YANG BIKIN DATA BALIK
+          const activeStoreId = localStorage.getItem('k_active_store_id');
+          if (activeStoreId) {
+            try {
+              await window._fbFirestore.collection('user_stores').doc(activeStoreId).update({
+                data: emptyDb,
+                last_sync: new Date()
+              });
+            } catch(e) { console.warn('[hapusSemuaData] Gagal reset user_stores aktif:', e.message); }
+          }
+          // Cari dan reset semua user_stores milik uid ini (jaga-jaga)
+          try {
+            const snap = await window._fbFirestore.collection('user_stores').where('uid', '==', uid).get();
+            const batch = window._fbFirestore.batch();
+            snap.docs.forEach(d => batch.update(d.ref, { data: emptyDb, last_sync: new Date() }));
+            if (snap.docs.length) await batch.commit();
+          } catch(e) { console.warn('[hapusSemuaData] Gagal reset semua user_stores:', e.message); }
         }
 
         Swal2.close();
@@ -10646,6 +10680,9 @@ ${t.tipe === 'ewallet' ? `
           allowOutsideClick: false,
           customClass: { popup: 'swal2-ku' }
         });
+
+        // Tandai bahwa baru saja dihapus — agar initApp tidak menarik data lama dari cloud
+        localStorage.setItem('k_just_cleared', 'true');
 
         // Reload
         location.reload();
