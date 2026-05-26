@@ -2942,24 +2942,6 @@
             <!-- FORM BODY -->
             <div id="struk-setting-body" class="p-4 space-y-4">
 
-              <!-- ===== WATERMARK BADGE INFO ===== -->
-              <div id="struk-watermark-badge" style="border-radius:18px;overflow:hidden;border:1.5px solid #e9d5ff;background:linear-gradient(135deg,#faf5ff 0%,#f0f9ff 100%);">
-                <!-- Header badge -->
-                <div style="padding:11px 14px 10px;display:flex;align-items:center;gap:10px;">
-                  <div id="struk-wm-icon-wrap" style="width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:linear-gradient(135deg,#7c3aed,#a855f7);box-shadow:0 4px 12px rgba(124,58,237,0.3);">
-                    <i id="struk-wm-icon" class="fas fa-lock" style="font-size:14px;color:#fff;"></i>
-                  </div>
-                  <div style="flex:1;min-width:0;">
-                    <p id="struk-wm-title" style="font-size:11px;font-weight:900;color:#4c1d95;font-family:'Plus Jakarta Sans',sans-serif;line-height:1.2;">Watermark Struk</p>
-                    <p id="struk-wm-subtitle" style="font-size:9px;font-weight:700;color:#7c3aed;font-family:'Plus Jakarta Sans',sans-serif;margin-top:1px;"></p>
-                  </div>
-                  <div id="struk-wm-pill" style="flex-shrink:0;"></div>
-                </div>
-                <!-- Body info -->
-                <div id="struk-wm-body" style="padding:0 14px 13px;"></div>
-              </div>
-              <!-- ===== END WATERMARK BADGE INFO ===== -->
-
               <!-- Upload Logo -->
               <div>
                 <label style="font-size:9px;font-weight:900;color:#7c3aed;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:8px;">
@@ -3019,6 +3001,39 @@
             </div>
           </div>
           <!-- END SETTING STRUK THERMAL -->
+
+          <!-- Hapus Semua Data — hanya tampil untuk Owner -->
+          <div id="hapus-semua-data-wrap" style="display:none;">
+            <div style="border-radius:20px;overflow:hidden;border:1.5px solid #fecaca;background:linear-gradient(135deg,#fff5f5,#fff1f2);margin-bottom:0;">
+              <!-- Header warning -->
+              <div style="padding:12px 16px 10px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #fecaca;">
+                <div style="width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:linear-gradient(135deg,#dc2626,#ef4444);box-shadow:0 4px 12px rgba(220,38,38,0.3);">
+                  <i class="fas fa-triangle-exclamation" style="font-size:14px;color:#fff;"></i>
+                </div>
+                <div style="flex:1;min-width:0;">
+                  <p style="font-size:11px;font-weight:900;color:#7f1d1d;font-family:'Plus Jakarta Sans',sans-serif;line-height:1.2;">Zona Berbahaya</p>
+                  <p style="font-size:9px;font-weight:700;color:#dc2626;font-family:'Plus Jakarta Sans',sans-serif;margin-top:1px;">Tindakan ini tidak dapat dibatalkan</p>
+                </div>
+                <span style="font-size:8px;font-weight:900;background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;padding:3px 8px;border-radius:20px;flex-shrink:0;">OWNER</span>
+              </div>
+              <!-- Body -->
+              <div style="padding:12px 16px;">
+                <p style="font-size:10px;font-weight:700;color:#7f1d1d;font-family:'Plus Jakarta Sans',sans-serif;line-height:1.5;margin-bottom:12px;">
+                  Menghapus seluruh data toko: transaksi, produk, pelanggan, hutang, dompet, dan semua riwayat secara permanen dari perangkat ini.
+                </p>
+                <button onclick="hapusSemuaData()"
+                  style="width:100%;padding:12px 14px;border-radius:16px;background:linear-gradient(135deg,#dc2626,#ef4444);border:none;cursor:pointer;
+                         display:flex;align-items:center;justify-content:center;gap:8px;
+                         font-size:12px;font-weight:900;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;
+                         box-shadow:0 6px 18px rgba(220,38,38,0.35);transition:all .18s;"
+                  onmouseover="this.style.filter='brightness(1.07)';this.style.transform='translateY(-1px)'"
+                  onmouseout="this.style.filter='';this.style.transform=''">
+                  <i class="fas fa-trash-can" style="font-size:13px;"></i>
+                  Hapus Semua Data Toko
+                </button>
+              </div>
+            </div>
+          </div>
 
           <button onclick="closeModal('modal-sidebar-akun'); logout();" class="w-full py-3.5 bg-red-50 text-red-600 rounded-2xl font-black text-sm border-0 cursor-pointer flex items-center justify-center gap-2 hover:bg-red-100 transition-all">
             <i class="fas fa-right-from-bracket"></i> Keluar dari Akun
@@ -9323,72 +9338,6 @@
       return (PLAN_RANK[localStorage.getItem('k_plan') || 'trial'] ?? 0) >= 2;
     }
 
-    function _renderWatermarkBadge() {
-      const plan = (localStorage.getItem('k_plan') || 'trial').toLowerCase();
-      const PLAN_RANK = { trial: 0, basic: 1, pro: 2, unlimited: 3 };
-      const isPro = (PLAN_RANK[plan] ?? 0) >= 2;
-
-      const elIconWrap = document.getElementById('struk-wm-icon-wrap');
-      const elIcon     = document.getElementById('struk-wm-icon');
-      const elTitle    = document.getElementById('struk-wm-title');
-      const elSubtitle = document.getElementById('struk-wm-subtitle');
-      const elPill     = document.getElementById('struk-wm-pill');
-      const elBody     = document.getElementById('struk-wm-body');
-      const elBadge    = document.getElementById('struk-watermark-badge');
-      if (!elBadge) return;
-
-      const PLAN_LABEL = { trial:'Trial', basic:'Basic', pro:'Pro', unlimited:'Unlimited' };
-      const planName   = PLAN_LABEL[plan] || plan;
-
-      if (isPro) {
-        // === PRO / UNLIMITED — watermark hilang ===
-        elBadge.style.border      = '1.5px solid #bbf7d0';
-        elBadge.style.background  = 'linear-gradient(135deg,#f0fdf4 0%,#ecfdf5 100%)';
-        elIconWrap.style.background     = 'linear-gradient(135deg,#059669,#10b981)';
-        elIconWrap.style.boxShadow      = '0 4px 12px rgba(5,150,105,0.3)';
-        elIcon.className  = 'fas fa-unlock';
-        elTitle.style.color    = '#065f46';
-        elTitle.textContent    = 'Watermark Struk';
-        elSubtitle.style.color = '#059669';
-        elSubtitle.textContent = 'Tidak tampil di struk Anda ✓';
-        elPill.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;background:linear-gradient(135deg,#059669,#10b981);color:#fff;font-size:9px;font-weight:900;font-family:'Plus Jakarta Sans',sans-serif;"><i class="fas fa-crown" style="font-size:8px;"></i>${planName}</span>`;
-        elBody.innerHTML = `
-          <div style="display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border-radius:12px;background:rgba(5,150,105,0.08);border:1px solid rgba(5,150,105,0.18);">
-            <i class="fas fa-circle-check" style="color:#10b981;font-size:14px;margin-top:1px;flex-shrink:0;"></i>
-            <p style="font-size:10px;font-weight:700;color:#065f46;font-family:'Plus Jakarta Sans',sans-serif;line-height:1.5;margin:0;">
-              Paket <b>${planName}</b> aktif — watermark <span style="color:#059669;font-weight:900;">"powered by KonterPro"</span> otomatis <b>disembunyikan</b> dari semua struk cetak &amp; gambar.
-            </p>
-          </div>`;
-      } else {
-        // === TRIAL / BASIC — watermark wajib tampil ===
-        elBadge.style.border      = '1.5px solid #fde68a';
-        elBadge.style.background  = 'linear-gradient(135deg,#fffbeb 0%,#fef9ee 100%)';
-        elIconWrap.style.background  = 'linear-gradient(135deg,#d97706,#f59e0b)';
-        elIconWrap.style.boxShadow   = '0 4px 12px rgba(217,119,6,0.3)';
-        elIcon.className  = 'fas fa-lock';
-        elTitle.style.color    = '#78350f';
-        elTitle.textContent    = 'Watermark Struk';
-        elSubtitle.style.color = '#d97706';
-        elSubtitle.textContent = 'Wajib tampil di paket ini';
-        elPill.innerHTML = `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff;font-size:9px;font-weight:900;font-family:'Plus Jakarta Sans',sans-serif;"><i class="fas fa-lock" style="font-size:8px;"></i>${planName}</span>`;
-        elBody.innerHTML = `
-          <div style="display:flex;align-items:flex-start;gap:9px;padding:10px 12px;border-radius:12px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);margin-bottom:9px;">
-            <i class="fas fa-triangle-exclamation" style="color:#f59e0b;font-size:14px;margin-top:1px;flex-shrink:0;"></i>
-            <p style="font-size:10px;font-weight:700;color:#78350f;font-family:'Plus Jakarta Sans',sans-serif;line-height:1.5;margin:0;">
-              Paket <b>${planName}</b> — teks <span style="color:#d97706;font-weight:900;">"powered by KonterPro"</span> akan selalu tampil di bagian bawah struk &amp; gambar cetak. Tidak dapat dihapus.
-            </p>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:12px;background:linear-gradient(135deg,#7c3aed,#a855f7);cursor:pointer;" onclick="openModal('modal-sidebar-akun'); setTimeout(()=>{ const el=document.getElementById('perpanjang-section'); if(el) el.scrollIntoView({behavior:'smooth'}); },300);">
-            <i class="fas fa-crown" style="color:#fde68a;font-size:13px;flex-shrink:0;"></i>
-            <div style="flex:1;">
-              <p style="font-size:10px;font-weight:900;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;line-height:1.2;">Upgrade ke Pro / Unlimited</p>
-              <p style="font-size:8px;font-weight:700;color:rgba(255,255,255,0.7);font-family:'Plus Jakarta Sans',sans-serif;margin-top:1px;">Hilangkan watermark &amp; buka semua fitur</p>
-            </div>
-            <i class="fas fa-chevron-right" style="color:rgba(255,255,255,0.6);font-size:10px;flex-shrink:0;"></i>
-          </div>`;
-      }
-    }
-
     function _loadSettingStrukToForm() {
       const wrap = document.getElementById('struk-setting-body');
       const lockEl = document.getElementById('struk-setting-lock');
@@ -9396,9 +9345,6 @@
       // Semua user bisa akses setting struk
       if (wrap)   wrap.style.display = 'block';
       if (lockEl) lockEl.style.display = 'none';
-
-      // Render watermark badge sesuai plan
-      _renderWatermarkBadge();
 
       const alamat  = localStorage.getItem('k_struk_alamat')  || '';
       const tagline = localStorage.getItem('k_struk_tagline') || '';
@@ -10562,6 +10508,168 @@ ${t.tipe === 'ewallet' ? `
     }
 
     // ============================================================
+    // HAPUS SEMUA DATA TOKO (Owner only)
+    // ============================================================
+    async function hapusSemuaData() {
+      const Swal2 = _getMySwal() || Swal;
+      const storeName = localStorage.getItem('k_store_name') || 'toko Anda';
+
+      // === STEP 1: Peringatan keras ===
+      const step1 = await Swal2.fire({
+        icon: 'warning',
+        title: '⚠️ Hapus Semua Data?',
+        html: `
+          <div style="text-align:left;">
+            <div style="background:#fef2f2;border:1.5px solid #fecaca;border-radius:14px;padding:12px 14px;margin-bottom:12px;">
+              <p style="font-size:12px;font-weight:800;color:#7f1d1d;margin-bottom:6px;"><i class="fas fa-circle-exclamation mr-1.5 text-red-500"></i>Data yang akan dihapus permanen:</p>
+              <ul style="font-size:11px;font-weight:700;color:#b91c1c;padding-left:18px;margin:0;line-height:1.9;">
+                <li>Semua <b>Transaksi</b> (POS, Digital, E-Wallet)</li>
+                <li>Semua <b>Produk</b> &amp; Inventori</li>
+                <li>Semua data <b>Pelanggan</b></li>
+                <li>Semua data <b>Hutang</b> &amp; riwayat</li>
+                <li>Semua <b>Dompet</b> &amp; mutasi</li>
+                <li>Semua <b>Catatan</b> &amp; laporan</li>
+              </ul>
+            </div>
+            <p style="font-size:11px;font-weight:700;color:#64748b;text-align:center;">Tindakan ini <b style="color:#dc2626;">TIDAK DAPAT DIBATALKAN</b>.</p>
+          </div>`,
+        showCancelButton: true,
+        confirmButtonText: '<i class="fas fa-chevron-right mr-1"></i>Lanjutkan',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#dc2626',
+        customClass: { popup: 'swal2-ku' }
+      });
+      if (!step1.isConfirmed) return;
+
+      // === STEP 2: Konfirmasi kedua — input nama toko ===
+      const step2 = await Swal2.fire({
+        icon: 'error',
+        title: '🔐 Konfirmasi Penghapusan',
+        html: `
+          <div style="text-align:left;">
+            <p style="font-size:12px;font-weight:700;color:#475569;margin-bottom:12px;">
+              Untuk melanjutkan, ketik nama toko Anda:<br>
+              <b style="color:#dc2626;font-size:13px;">${storeName}</b>
+            </p>
+            <input id="swal-confirm-nama"
+              type="text"
+              placeholder="Ketik nama toko di sini..."
+              style="width:100%;padding:11px 14px;border-radius:14px;border:2px solid #fecaca;
+                     background:#fff5f5;font-size:12px;font-weight:700;color:#1e293b;outline:none;
+                     font-family:'Plus Jakarta Sans',sans-serif;box-sizing:border-box;"
+              oninput="
+                const val = this.value.trim();
+                const btn = document.querySelector('.swal2-confirm');
+                if(val === '${storeName}') {
+                  this.style.borderColor='#dc2626';
+                  this.style.background='#fef2f2';
+                  if(btn) { btn.disabled=false; btn.style.opacity='1'; }
+                } else {
+                  this.style.borderColor='#fecaca';
+                  this.style.background='#fff5f5';
+                  if(btn) { btn.disabled=true; btn.style.opacity='0.45'; }
+                }">
+            <p style="font-size:9px;font-weight:600;color:#94a3b8;margin-top:6px;text-align:center;">
+              <i class="fas fa-info-circle mr-1"></i>Nama harus persis sama, termasuk huruf besar/kecil
+            </p>
+          </div>`,
+        showCancelButton: true,
+        confirmButtonText: '<i class="fas fa-trash-can mr-1"></i>Ya, Hapus Semua Data',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#dc2626',
+        customClass: { popup: 'swal2-ku' },
+        didOpen: () => {
+          const btn = document.querySelector('.swal2-confirm');
+          if (btn) { btn.disabled = true; btn.style.opacity = '0.45'; }
+          setTimeout(() => document.getElementById('swal-confirm-nama')?.focus(), 200);
+        },
+        preConfirm: () => {
+          const val = document.getElementById('swal-confirm-nama')?.value?.trim() || '';
+          if (val !== storeName) {
+            Swal2.showValidationMessage('Nama toko tidak sesuai. Penghapusan dibatalkan.');
+            return false;
+          }
+          return true;
+        }
+      });
+      if (!step2.isConfirmed) return;
+
+      // === EKSEKUSI: Hapus semua data ===
+      try {
+        // Loading
+        Swal2.fire({
+          title: 'Menghapus Data...',
+          html: '<p style="font-size:12px;color:#64748b;">Mohon tunggu, sedang menghapus semua data toko.</p>',
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          customClass: { popup: 'swal2-ku' },
+          didOpen: () => Swal2.showLoading()
+        });
+
+        const sid = localStorage.getItem('k_sid') || localStorage.getItem('k_logged');
+
+        // Hapus db localStorage
+        Object.keys(localStorage).forEach(k => {
+          if (k.startsWith('konterku_db_') || k.startsWith('ktg_')) localStorage.removeItem(k);
+        });
+
+        // Reset db in-memory
+        if (window.db) {
+          window.db.transaksi   = [];
+          window.db.produk      = window.db.produk      ? [] : window.db.produk;
+          window.db.inventory   = [];
+          window.db.pelanggan   = [];
+          window.db.hutang      = [];
+          window.db.hutang_lunas= [];
+          window.db.dompet      = [];
+          window.db.mutasi      = [];
+          window.db.notes       = [];
+          window.db.riwayat_hutang = [];
+        }
+
+        // Hapus dari Firestore (jika online)
+        const uid = localStorage.getItem('k_sid');
+        if (uid && uid !== 'DEMO' && window._fbFirestore) {
+          const colls = ['transaksi','produk','inventory','pelanggan','hutang','hutang_lunas','dompet','mutasi','notes'];
+          for (const coll of colls) {
+            try {
+              const snap = await window._fbFirestore
+                .collection('toko').doc(uid).collection(coll).get();
+              const batch = window._fbFirestore.batch();
+              snap.docs.forEach(d => batch.delete(d.ref));
+              if (snap.docs.length) await batch.commit();
+            } catch(e) { /* lanjut */ }
+          }
+        }
+
+        Swal2.close();
+
+        // Sukses
+        await Swal2.fire({
+          icon: 'success',
+          title: 'Data Berhasil Dihapus',
+          html: `<p style="font-size:12px;color:#475569;">Semua data <b>${storeName}</b> telah dihapus. Aplikasi akan dimuat ulang.</p>`,
+          confirmButtonText: 'OK',
+          confirmButtonColor: '#0061C2',
+          allowOutsideClick: false,
+          customClass: { popup: 'swal2-ku' }
+        });
+
+        // Reload
+        location.reload();
+
+      } catch(err) {
+        Swal2.close();
+        Swal2.fire({
+          icon: 'error',
+          title: 'Gagal Menghapus',
+          text: 'Terjadi kesalahan: ' + (err.message || err),
+          customClass: { popup: 'swal2-ku' }
+        });
+      }
+    }
+
+    // ============================================================
     // SIDEBAR FUNCTIONS
     // ============================================================
     // ── JAM DIGITAL SIDEBAR ──────────────────────────────────────────────────
@@ -10809,6 +10917,13 @@ ${t.tipe === 'ewallet' ? `
         }, 150);
         // Load setting struk
         _loadSettingStrukToForm();
+
+        // Tampilkan tombol Hapus Semua Data hanya untuk Owner (bukan kasir)
+        const _hapusWrap = document.getElementById('hapus-semua-data-wrap');
+        if (_hapusWrap) {
+          const _isKasirMode = localStorage.getItem('k_kasir_mode') === 'true';
+          _hapusWrap.style.display = _isKasirMode ? 'none' : 'block';
+        }
       }
 
       else if (menu === 'catatan') {
