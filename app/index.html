@@ -4292,10 +4292,24 @@
               </button>
             </div>
 
-            <!-- Info shift terpilih -->
+            <!-- Info shift terpilih + durasi realtime -->
             <div id="absensi-tutup-info" class="rounded-2xl p-4 mb-3 hidden" style="background:linear-gradient(135deg,#fffbeb,#fef3c7);border:1.5px solid #fde68a;">
               <p style="font-size:8px;font-weight:900;color:#92400e;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;"><i class="fas fa-circle-info mr-1"></i>Info Shift</p>
               <div class="space-y-1.5" id="absensi-tutup-info-content"></div>
+              <!-- Durasi berjalan realtime -->
+              <div id="absensi-shift-durasi-wrap" class="mt-3 rounded-xl p-3 flex items-center gap-3" style="background:rgba(245,158,11,0.12);border:1.5px solid #fbbf24;">
+                <div class="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0" style="background:#f59e0b;">
+                  <i class="fas fa-stopwatch text-white" style="font-size:11px;"></i>
+                </div>
+                <div>
+                  <p style="font-size:7px;font-weight:900;color:#92400e;text-transform:uppercase;letter-spacing:0.08em;">Shift Sudah Berjalan</p>
+                  <p id="absensi-shift-durasi-live" style="font-size:16px;font-weight:900;color:#b45309;font-variant-numeric:tabular-nums;">0j 0m 0d</p>
+                </div>
+                <!-- Badge peringatan jika > 12 jam -->
+                <div id="absensi-shift-overtime-badge" class="hidden ml-auto px-2 py-1 rounded-lg" style="background:#ef4444;font-size:8px;font-weight:900;color:white;white-space:nowrap;">
+                  <i class="fas fa-triangle-exclamation mr-1"></i> > 12 JAM!
+                </div>
+              </div>
             </div>
 
             <!-- Jam Tutup -->
@@ -4445,11 +4459,24 @@
 
             <!-- Tombol Export (hanya pemilik) -->
             <div id="abl-export-wrap" style="display:none;margin-bottom:12px;">
-              <button onclick="exportAbsensiCSV()"
-                style="width:100%;padding:11px 16px;border-radius:14px;border:1.5px solid #bbf7d0;background:linear-gradient(135deg,#f0fdf4,#dcfce7);font-size:10px;font-weight:900;color:#065f46;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Plus Jakarta Sans',sans-serif;">
-                <i class="fas fa-file-csv" style="font-size:13px;color:#059669;"></i>
-                EXPORT DATA ABSENSI (.CSV)
-                <span style="font-size:8px;font-weight:700;background:rgba(5,150,105,0.12);padding:2px 7px;border-radius:20px;color:#059669;">Penggajian & Laporan</span>
+              <div class="grid grid-cols-2 gap-2">
+                <button onclick="exportAbsensiCSV()"
+                  style="padding:11px 12px;border-radius:14px;border:1.5px solid #bbf7d0;background:linear-gradient(135deg,#f0fdf4,#dcfce7);font-size:9px;font-weight:900;color:#065f46;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Plus Jakarta Sans',sans-serif;">
+                  <i class="fas fa-file-csv" style="font-size:12px;color:#059669;"></i>
+                  EXPORT CSV
+                </button>
+                <button onclick="exportAbsensiPDF()"
+                  style="padding:11px 12px;border-radius:14px;border:1.5px solid #fca5a5;background:linear-gradient(135deg,#fff1f2,#fee2e2);font-size:9px;font-weight:900;color:#991b1b;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Plus Jakarta Sans',sans-serif;">
+                  <i class="fas fa-file-pdf" style="font-size:12px;color:#ef4444;"></i>
+                  EXPORT PDF
+                </button>
+              </div>
+              <!-- Tombol Rekap Per Kasir -->
+              <button onclick="showRekapKasir()"
+                style="width:100%;margin-top:8px;padding:11px 16px;border-radius:14px;border:1.5px solid #c4b5fd;background:linear-gradient(135deg,#f5f3ff,#ede9fe);font-size:9px;font-weight:900;color:#5b21b6;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Plus Jakarta Sans',sans-serif;">
+                <i class="fas fa-chart-bar" style="font-size:12px;color:#7c3aed;"></i>
+                REKAP JAM KERJA & GAJI PER KASIR
+                <span style="font-size:8px;font-weight:700;background:rgba(124,58,237,0.12);padding:2px 7px;border-radius:20px;color:#7c3aed;">Periode filter aktif</span>
               </button>
             </div>
 
@@ -14447,12 +14474,46 @@ ${t.tipe === 'ewallet' ? `
   let _absensiFilter = 'semua';
   let _absensiActiveShifts = [];
 
-  // ─── BUKA MODAL ABSENSI ───
   function openAbsensiKasirModal() {
     openModal('modal-absensi-kasir');
     setAbsensiTab('buka');
     _startAbsensiClock();
     _prefillAbsensiBuka();
+    // Cek shift overtime setelah 1 detik (beri waktu Firebase load)
+    setTimeout(_checkOvertimeShifts, 1500);
+  }
+
+  // ─── CEK SHIFT YANG SUDAH > 12 JAM (reminder) ───
+  async function _checkOvertimeShifts() {
+    try {
+      const uid = localStorage.getItem('k_kasir_mode') === 'true'
+        ? (localStorage.getItem('k_owner_uid') || localStorage.getItem('k_sid'))
+        : ((window._fbAuth?.currentUser?.uid) || localStorage.getItem('k_sid'));
+      if (!uid || !window._fbFirestore) return;
+      const snap = await window._fbFirestore.collection('absensi_kasir')
+        .where('owner_uid','==',uid).where('status','==','aktif').limit(20).get();
+      const now = new Date();
+      const overtime = [];
+      snap.forEach(d => {
+        const s = d.data();
+        const bukaAt = s.buka_at?.toDate ? s.buka_at.toDate() : new Date((s.buka_tgl||'') + 'T' + (s.buka_jam||'00:00'));
+        const diffH  = (now - bukaAt) / 3600000;
+        if (diffH >= 12) overtime.push({ nama: s.nama, jam: Math.floor(diffH) });
+      });
+      if (overtime.length > 0) {
+        const listHtml = overtime.map(o => `<li style="margin-bottom:4px;"><b>${o.nama}</b> — sudah <b style="color:#ef4444;">${o.jam} jam</b></li>`).join('');
+        (_getMySwal()||Swal).fire({
+          icon: 'warning',
+          title: `⏰ ${overtime.length} Shift Belum Ditutup!`,
+          html: `<p style="font-size:12px;color:#475569;margin-bottom:10px;">Shift berikut sudah berjalan lebih dari 12 jam:</p>
+                 <ul style="text-align:left;font-size:12px;color:#0f172a;padding-left:16px;">${listHtml}</ul>`,
+          confirmButtonText: 'Tutup Sekarang',
+          confirmButtonColor: '#7c3aed',
+          showCancelButton: true, cancelButtonText: 'Nanti',
+          customClass:{popup:'swal2-ku'}
+        }).then(r => { if (r.isConfirmed) setAbsensiTab('tutup'); });
+      }
+    } catch(e) {}
   }
 
   // ─── JALANKAN JAM REALTIME ───
@@ -14636,10 +14697,12 @@ ${t.tipe === 'ewallet' ? `
   }
 
   // ─── SAAT PILIH SHIFT UNTUK DITUTUP ───
+  let _absensiShiftDurasiInterval = null;
   function onSelectShiftTutup() {
     const shiftId = document.getElementById('absensi-tutup-shift-id')?.value;
     const infoBox = document.getElementById('absensi-tutup-info');
     const infoContent = document.getElementById('absensi-tutup-info-content');
+    if (_absensiShiftDurasiInterval) { clearInterval(_absensiShiftDurasiInterval); _absensiShiftDurasiInterval = null; }
     if (!shiftId || !infoBox || !infoContent) { if (infoBox) infoBox.classList.add('hidden'); return; }
     const s = _absensiActiveShifts.find(x => x.id === shiftId);
     if (!s) { infoBox.classList.add('hidden'); return; }
@@ -14663,6 +14726,24 @@ ${t.tipe === 'ewallet' ? `
       </div>
     `;
     infoBox.classList.remove('hidden');
+    // ── Real-time durasi shift ──
+    const bukaAt = s.buka_at?.toDate ? s.buka_at.toDate() : new Date((s.buka_tgl||'') + 'T' + (s.buka_jam||'00:00'));
+    function updateDurasi() {
+      const now = new Date();
+      const diffMs = now - bukaAt;
+      if (diffMs < 0) return;
+      const totalDetik = Math.floor(diffMs / 1000);
+      const dtk = totalDetik % 60;
+      const mnt = Math.floor(totalDetik / 60) % 60;
+      const jam = Math.floor(totalDetik / 3600);
+      const el = document.getElementById('absensi-shift-durasi-live');
+      if (el) el.textContent = `${jam}j ${mnt}m ${dtk}d`;
+      // Peringatan > 12 jam
+      const badge = document.getElementById('absensi-shift-overtime-badge');
+      if (badge) badge.classList.toggle('hidden', jam < 12);
+    }
+    updateDurasi();
+    _absensiShiftDurasiInterval = setInterval(updateDurasi, 1000);
     hitungSelisihShift();
   }
 
@@ -14695,7 +14776,6 @@ ${t.tipe === 'ewallet' ? `
 
   // ─── PROSES BUKA SHIFT ───
   async function prosesAbsensiBuka() {
-    // Gunakan owner_uid (uid pemilik toko) agar konsisten antara kasir & pemilik
     const isKasirMode = localStorage.getItem('k_kasir_mode') === 'true';
     const uid = isKasirMode
       ? (localStorage.getItem('k_owner_uid') || localStorage.getItem('k_sid'))
@@ -14712,30 +14792,52 @@ ${t.tipe === 'ewallet' ? `
     if (!jam)  return (_getMySwal()||Swal).fire('Perhatian', 'Jam mulai shift harus diisi!', 'warning');
     try {
       await waitMTFirebase(6000);
+      // ── VALIDASI: cek apakah kasir ini sudah punya shift aktif ──
+      const dupSnap = await window._fbFirestore.collection('absensi_kasir')
+        .where('owner_uid','==', uid)
+        .where('nama','==', nama)
+        .where('status','==','aktif')
+        .limit(1).get();
+      if (!dupSnap.empty) {
+        const existing = dupSnap.docs[0].data();
+        return (_getMySwal()||Swal).fire({
+          icon: 'warning',
+          title: 'Shift Masih Aktif!',
+          html: `<b>${nama}</b> sudah memiliki shift aktif sejak<br><b style="color:#f59e0b;">${existing.buka_tgl||''} pukul ${existing.buka_jam||''}</b>.<br><small style="color:#94a3b8;">Tutup shift yang berjalan terlebih dahulu sebelum membuka shift baru.</small>`,
+          confirmButtonText: 'Ke Tutup Shift',
+          confirmButtonColor: '#7c3aed',
+          showCancelButton: true, cancelButtonText: 'Batal',
+          customClass:{popup:'swal2-ku'}
+        }).then(r => { if (r.isConfirmed) setAbsensiTab('tutup'); });
+      }
       const HARI = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
       const tglObj = new Date(tgl + 'T' + jam);
+      const kasirUid = isKasirMode
+        ? (localStorage.getItem('k_kasir_uid') || '')
+        : ((window._fbAuth?.currentUser?.uid) || '');
       await window._fbFirestore.collection('absensi_kasir').add({
         owner_uid       : uid,
         store_id        : localStorage.getItem('k_active_store_id') || '',
+        kasir_uid       : kasirUid,
         nama            : nama,
         buka_tgl        : tgl,
         buka_jam        : jam,
         buka_hari       : HARI[tglObj.getDay()],
         buka_at         : tglObj,
-        saldo_awal      : saldoKas,        // backward-compat
+        saldo_awal      : saldoKas,
         saldo_awal_kas  : saldoKas,
         saldo_awal_bank : saldoBank,
         keterangan_buka : ket,
         status          : 'aktif',
         created_at      : new Date(),
+        created_by      : kasirUid || uid,
       });
-      // Reset form
       document.getElementById('absensi-buka-ket').value = '';
       const fmtRp = v => 'Rp ' + (v||0).toLocaleString('id-ID');
       (_getMySwal()||Swal).fire({
         title: '✅ Shift Dibuka!',
         html: `<b>${nama}</b> mulai shift<br><small style="color:#94a3b8;">${tgl} pukul ${jam}</small><br><small style="color:#059669;">Kas: <b>${fmtRp(saldoKas)}</b> · Bank: <b>${fmtRp(saldoBank)}</b></small>`,
-        icon: 'success', timer: 3500, showConfirmButton: false
+        icon: 'success', timer: 3500, showConfirmButton: false, customClass:{popup:'swal2-ku'}
       });
     } catch(e) {
       (_getMySwal()||Swal).fire('Gagal', e.message || 'Error menyimpan absensi', 'error');
@@ -14755,6 +14857,31 @@ ${t.tipe === 'ewallet' ? `
     if (!jamTutup)  return (_getMySwal()||Swal).fire('Perhatian', 'Jam tutup shift harus diisi!', 'warning');
     const s = _absensiActiveShifts.find(x => x.id === shiftId);
     if (!s) return (_getMySwal()||Swal).fire('Error', 'Data shift tidak ditemukan.', 'error');
+
+    // ── PIN KONFIRMASI sebelum tutup shift ──
+    const pinResult = await (_getMySwal()||Swal).fire({
+      title: 'Konfirmasi Tutup Shift',
+      html: `<p style="font-size:12px;color:#475569;margin-bottom:10px;">Masukkan PIN <b style="color:#7c3aed;">1234</b> untuk konfirmasi menutup shift <b>${s.nama}</b></p>
+             <input id="swal-pin-tutup" type="password" maxlength="6" inputmode="numeric" class="swal2-input" placeholder="••••" style="text-align:center;font-size:22px;letter-spacing:0.3em;font-weight:900;">
+             <p style="font-size:9px;color:#94a3b8;margin-top:8px;">PIN default: <b>1234</b> (bisa diubah di pengaturan)</p>`,
+      icon: 'lock',
+      showCancelButton: true,
+      confirmButtonText: '<i class="fas fa-lock-open mr-1"></i> Konfirmasi',
+      cancelButtonText: 'Batal',
+      confirmButtonColor: '#7c3aed',
+      customClass:{popup:'swal2-ku'},
+      preConfirm: () => {
+        const v = document.getElementById('swal-pin-tutup')?.value || '';
+        const storedPin = localStorage.getItem('k_tutup_shift_pin') || '1234';
+        if (v !== storedPin) {
+          Swal.showValidationMessage('PIN salah! Coba lagi.');
+          return false;
+        }
+        return true;
+      }
+    });
+    if (!pinResult.isConfirmed) return;
+
     const saldoAwalKas  = s.saldo_awal_kas  !== undefined ? (s.saldo_awal_kas||0)  : (s.saldo_awal||0);
     const saldoAwalBank = s.saldo_awal_bank || 0;
     const selisihKas    = saldoAkhirKas  - saldoAwalKas;
@@ -14768,24 +14895,24 @@ ${t.tipe === 'ewallet' ? `
         <small style="color:${selisihTotal>=0?'#059669':'#ef4444'}">Selisih Total: ${selisihTotal>=0?'+':''}Rp ${Math.abs(selisihTotal).toLocaleString('id-ID')}</small>`,
       icon: 'question', showCancelButton: true,
       confirmButtonText: 'Ya, Tutup Shift', cancelButtonText: 'Batal',
-      confirmButtonColor: '#7c3aed'
+      confirmButtonColor: '#7c3aed', customClass:{popup:'swal2-ku'}
     });
     if (!confirm.isConfirmed) return;
     try {
       await waitMTFirebase(6000);
       const HARI = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
       const tutupObj = new Date(tglTutup + 'T' + jamTutup);
-      // Hitung durasi shift
       const bukaAt = s.buka_at?.toDate ? s.buka_at.toDate() : new Date(s.buka_at);
       const durasiMs = tutupObj - bukaAt;
       const durasiJam = Math.floor(durasiMs / 3600000);
       const durasiMenit = Math.floor((durasiMs % 3600000) / 60000);
+      const closedByUid = (window._fbAuth?.currentUser?.uid) || localStorage.getItem('k_sid') || '';
       await window._fbFirestore.collection('absensi_kasir').doc(shiftId).update({
         tutup_tgl         : tglTutup,
         tutup_jam         : jamTutup,
         tutup_hari        : HARI[tutupObj.getDay()],
         tutup_at          : tutupObj,
-        saldo_akhir       : saldoAkhirKas,       // backward-compat
+        saldo_akhir       : saldoAkhirKas,
         saldo_akhir_kas   : saldoAkhirKas,
         saldo_akhir_bank  : saldoAkhirBank,
         selisih_saldo     : selisihTotal,
@@ -14795,17 +14922,19 @@ ${t.tipe === 'ewallet' ? `
         durasi_menit      : durasiMenit,
         keterangan_tutup  : ket,
         status            : 'selesai',
+        closed_by         : closedByUid,
+        closed_at         : new Date(),
       });
-      // Reset form
       document.getElementById('absensi-tutup-ket').value = '';
       const infoBox = document.getElementById('absensi-tutup-info');
       if (infoBox) infoBox.classList.add('hidden');
+      if (_absensiShiftDurasiInterval) { clearInterval(_absensiShiftDurasiInterval); _absensiShiftDurasiInterval = null; }
       (_getMySwal()||Swal).fire({
         title: '✅ Shift Ditutup!',
         html: `<b>${s.nama}</b> — ${durasiJam}j ${durasiMenit}m<br>
           <small style="color:#64748b;">Kas: <b>Rp ${saldoAwalKas.toLocaleString('id-ID')}</b> → <b>Rp ${saldoAkhirKas.toLocaleString('id-ID')}</b></small><br>
           <small style="color:#64748b;">Bank: <b>Rp ${saldoAwalBank.toLocaleString('id-ID')}</b> → <b>Rp ${saldoAkhirBank.toLocaleString('id-ID')}</b></small>`,
-        icon: 'success', timer: 4000, showConfirmButton: false
+        icon: 'success', timer: 4000, showConfirmButton: false, customClass:{popup:'swal2-ku'}
       });
       await _loadShiftAktifUntukTutup();
     } catch(e) {
@@ -14825,6 +14954,7 @@ ${t.tipe === 'ewallet' ? `
 
     // Tampilkan/sembunyikan tombol export & filter tanggal sesuai role
     const isKasirMode = localStorage.getItem('k_kasir_mode') === 'true';
+    const kasirNama   = isKasirMode ? (localStorage.getItem('k_kasir_nama') || '') : '';
     const exportWrap = document.getElementById('abl-export-wrap');
     if (exportWrap) exportWrap.style.display = isKasirMode ? 'none' : 'block';
 
@@ -14846,8 +14976,14 @@ ${t.tipe === 'ewallet' ? `
         const tb = b.buka_at && b.buka_at.toDate ? b.buka_at.toDate() : new Date((b.buka_tgl||'') + 'T' + (b.buka_jam||'00:00'));
         return tb - ta;
       });
-      _absensiDataCache = data; // simpan cache untuk export & filter
+      _absensiDataCache = data;
+      // ── Kasir mode: filter hanya tampilkan shift miliknya ──
+      if (isKasirMode && kasirNama) {
+        data = data.filter(d => (d.nama||'').toLowerCase() === kasirNama.toLowerCase());
+      }
       _renderAbsensiList(data);
+      // Jika kasir mode, update cache juga dengan data yang sudah difilter
+      if (isKasirMode) _absensiDataCache = data;
     } catch(e) {
       listEl.innerHTML = `<div class="text-center py-8"><p style="font-size:10px;color:#ef4444;font-weight:700;"><i class="fas fa-triangle-exclamation mr-1"></i>Gagal memuat: ${e.message||'Error'}</p></div>`;
     }
@@ -15020,6 +15156,12 @@ ${t.tipe === 'ewallet' ? `
             <p style="font-size:8px;font-weight:900;color:#92400e;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:2px;">Keterangan</p>
             <p style="font-size:10px;font-weight:700;color:#78350f;">${s.keterangan_buka||''} ${s.keterangan_tutup ? '· '+s.keterangan_tutup : ''}</p>
           </div>` : ''}
+
+          ${s._edited_at ? `
+          <div class="rounded-xl px-3 py-2 flex items-center gap-2" style="background:#fef9c3;border:1px solid #fde047;">
+            <i class="fas fa-pen-to-square" style="font-size:9px;color:#ca8a04;"></i>
+            <p style="font-size:8px;font-weight:800;color:#92400e;">Pernah diedit oleh <b>${s._edited_by||'—'}</b> · ${s._edit_count||1}x edit</p>
+          </div>` : ''}
         </div>
       </div>`;
     }).join('');
@@ -15116,6 +15258,212 @@ ${t.tipe === 'ewallet' ? `
     (_getMySwal()||Swal).fire({ icon:'success', title:'Export Berhasil!', text:`${data.length} data absensi telah diexport ke file CSV.`, timer:2200, showConfirmButton:false, customClass:{popup:'swal2-ku'} });
   }
 
+  // ─── EXPORT PDF ───
+  function exportAbsensiPDF() {
+    const isKasirMode = localStorage.getItem('k_kasir_mode') === 'true';
+    if (isKasirMode) {
+      (_getMySwal()||Swal).fire({ icon:'warning', title:'Akses Ditolak', text:'Hanya pemilik toko yang dapat mengexport PDF.', customClass:{popup:'swal2-ku'} });
+      return;
+    }
+    let data = [..._absensiDataCache];
+    if (_absensiFilter === 'aktif')   data = data.filter(d => d.status === 'aktif');
+    if (_absensiFilter === 'selesai') data = data.filter(d => d.status === 'selesai');
+    const bulan  = (document.getElementById('abl-filter-bulan')||{}).value || '';
+    const tahun  = (document.getElementById('abl-filter-tahun')||{}).value || '';
+    const dari   = (document.getElementById('abl-filter-tgl-dari')||{}).value || '';
+    const sampai = (document.getElementById('abl-filter-tgl-sampai')||{}).value || '';
+    if (bulan || tahun) data = data.filter(d => {
+      const tgl = d.buka_tgl||'';
+      if (tahun && !tgl.startsWith(tahun)) return false;
+      if (bulan && tgl.slice(5,7) !== bulan) return false;
+      return true;
+    });
+    if (dari || sampai) data = data.filter(d => {
+      const tgl = d.buka_tgl||'';
+      if (dari   && tgl < dari)   return false;
+      if (sampai && tgl > sampai) return false;
+      return true;
+    });
+    if (data.length === 0) {
+      (_getMySwal()||Swal).fire({ icon:'info', title:'Tidak ada data', text:'Tidak ada data untuk diekspor.', customClass:{popup:'swal2-ku'} });
+      return;
+    }
+    const storeName   = localStorage.getItem('k_store_name') || 'Toko';
+    const tglCetak    = new Date().toLocaleDateString('id-ID',{day:'2-digit',month:'long',year:'numeric'});
+    const periodeLabel = (bulan||tahun) ? `${bulan ? ['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'][parseInt(bulan)]||'' : ''} ${tahun||''}`.trim()
+                         : (dari||sampai) ? `${dari||'—'} s/d ${sampai||'—'}` : 'Semua Periode';
+    const fmtRp = v => 'Rp ' + (v||0).toLocaleString('id-ID');
+    const fmtS  = (v, pos='#059669', neg='#ef4444') => `<span style="color:${v>=0?pos:neg}">${v>=0?'+':'-'}Rp ${Math.abs(v).toLocaleString('id-ID')}</span>`;
+    const selesai = data.filter(d => d.status === 'selesai');
+    const totalJam = selesai.reduce((s,d) => s+(d.durasi_jam||0),0) + Math.floor(selesai.reduce((s,d)=>s+(d.durasi_menit||0),0)/60);
+    const totalMnt = selesai.reduce((s,d) => s+(d.durasi_menit||0),0) % 60;
+    const rows = data.map((s,i) => {
+      const saldoAwalKas   = s.saldo_awal_kas  !== undefined ? (s.saldo_awal_kas||0)  : (s.saldo_awal||0);
+      const saldoAkhirKas  = s.saldo_akhir_kas !== undefined ? (s.saldo_akhir_kas||0) : (s.saldo_akhir||0);
+      const selisihKas     = s.selisih_kas  !== undefined ? s.selisih_kas  : 0;
+      const isAktif = s.status === 'aktif';
+      const editInfo = s._edited_at ? `<br><span style="font-size:8px;color:#f59e0b;">✏️ Edit: ${s._edited_by||'—'}</span>` : '';
+      return `<tr style="background:${i%2===0?'#ffffff':'#f8fafc'}">
+        <td style="padding:6px 8px;font-size:10px;font-weight:700;color:#1e293b;border-bottom:1px solid #f1f5f9;">${s.nama||'—'}${editInfo}</td>
+        <td style="padding:6px 8px;font-size:9px;color:#475569;border-bottom:1px solid #f1f5f9;white-space:nowrap;">${s.buka_tgl||'—'}<br>${s.buka_jam||'—'}</td>
+        <td style="padding:6px 8px;font-size:9px;color:#475569;border-bottom:1px solid #f1f5f9;white-space:nowrap;">${isAktif?'<span style="color:#059669;font-weight:900;">● AKTIF</span>':(s.tutup_tgl||'—')+'<br>'+(s.tutup_jam||'—')}</td>
+        <td style="padding:6px 8px;font-size:10px;font-weight:900;color:#1e293b;border-bottom:1px solid #f1f5f9;text-align:center;">${isAktif?'—':(s.durasi_jam||0)+'j '+(s.durasi_menit||0)+'m'}</td>
+        <td style="padding:6px 8px;font-size:9px;border-bottom:1px solid #f1f5f9;text-align:right;">${fmtRp(saldoAwalKas)}</td>
+        <td style="padding:6px 8px;font-size:9px;border-bottom:1px solid #f1f5f9;text-align:right;">${isAktif?'—':fmtRp(saldoAkhirKas)}</td>
+        <td style="padding:6px 8px;font-size:9px;border-bottom:1px solid #f1f5f9;text-align:right;">${isAktif?'—':fmtS(selisihKas)}</td>
+        <td style="padding:6px 8px;font-size:9px;border-bottom:1px solid #f1f5f9;text-align:center;">${s.keterangan_buka||s.keterangan_tutup||'—'}</td>
+      </tr>`;
+    }).join('');
+    const html = `<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">
+      <title>Laporan Absensi - ${storeName}</title>
+      <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 24px; color: #1e293b; font-size: 11px; }
+        .header { background: linear-gradient(135deg,#022c22,#064e3b); color: white; padding: 20px 24px; border-radius: 12px; margin-bottom: 20px; }
+        .header h1 { margin: 0; font-size: 20px; font-weight: 900; }
+        .header p { margin: 4px 0 0; opacity: 0.7; font-size: 11px; }
+        .meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+        .meta-card { background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 10px; padding: 10px 14px; }
+        .meta-card .label { font-size: 8px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.08em; }
+        .meta-card .value { font-size: 16px; font-weight: 900; color: #1e293b; margin-top: 2px; }
+        table { width: 100%; border-collapse: collapse; }
+        thead tr { background: linear-gradient(135deg,#022c22,#064e3b); color: white; }
+        thead th { padding: 9px 8px; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; text-align: left; }
+        tbody tr:hover { background: #f0fdf4 !important; }
+        .footer { margin-top: 24px; text-align: center; font-size: 9px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 12px; }
+        @media print { body { padding: 10px; } @page { margin: 15mm; } }
+      </style>
+    </head><body>
+      <div class="header">
+        <h1><i style="margin-right:8px;">📋</i>Laporan Absensi Kasir</h1>
+        <p>${storeName} · Periode: ${periodeLabel} · Dicetak: ${tglCetak}</p>
+      </div>
+      <div class="meta-grid">
+        <div class="meta-card"><div class="label">Total Shift</div><div class="value">${data.length}</div></div>
+        <div class="meta-card"><div class="label">Shift Selesai</div><div class="value">${selesai.length}</div></div>
+        <div class="meta-card"><div class="label">Total Jam Kerja</div><div class="value">${totalJam}j ${totalMnt}m</div></div>
+        <div class="meta-card"><div class="label">Shift Aktif</div><div class="value" style="color:#059669;">${data.filter(d=>d.status==='aktif').length}</div></div>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Nama Kasir</th><th>Jam Masuk</th><th>Jam Keluar</th><th style="text-align:center;">Durasi</th>
+          <th style="text-align:right;">Saldo Awal Kas</th><th style="text-align:right;">Saldo Akhir Kas</th>
+          <th style="text-align:right;">Selisih Kas</th><th style="text-align:center;">Keterangan</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="footer">KonterKU Cloud · ${storeName} · Laporan digenerate otomatis pada ${tglCetak}</div>
+    </body></html>`;
+    const w = window.open('', '_blank', 'width=1000,height=700');
+    if (!w) {
+      (_getMySwal()||Swal).fire({ icon:'warning', title:'Popup Diblokir', text:'Aktifkan popup browser lalu coba lagi.', customClass:{popup:'swal2-ku'} });
+      return;
+    }
+    w.document.write(html);
+    w.document.close();
+    setTimeout(() => w.print(), 500);
+    (_getMySwal()||Swal).fire({ icon:'success', title:'PDF Siap!', text:'Jendela cetak telah dibuka. Pilih "Save as PDF" di dialog print.', timer:3000, showConfirmButton:false, customClass:{popup:'swal2-ku'} });
+  }
+
+  // ─── REKAP JAM KERJA & GAJI PER KASIR ───
+  function showRekapKasir() {
+    const isKasirMode = localStorage.getItem('k_kasir_mode') === 'true';
+    if (isKasirMode) {
+      (_getMySwal()||Swal).fire({ icon:'warning', title:'Akses Ditolak', text:'Hanya pemilik toko yang dapat melihat rekap gaji.', customClass:{popup:'swal2-ku'} });
+      return;
+    }
+    let data = [..._absensiDataCache].filter(d => d.status === 'selesai');
+    // Terapkan filter periode aktif
+    const bulan  = (document.getElementById('abl-filter-bulan')||{}).value || '';
+    const tahun  = (document.getElementById('abl-filter-tahun')||{}).value || '';
+    const dari   = (document.getElementById('abl-filter-tgl-dari')||{}).value || '';
+    const sampai = (document.getElementById('abl-filter-tgl-sampai')||{}).value || '';
+    if (bulan || tahun) data = data.filter(d => {
+      const tgl = d.buka_tgl||'';
+      if (tahun && !tgl.startsWith(tahun)) return false;
+      if (bulan && tgl.slice(5,7) !== bulan) return false;
+      return true;
+    });
+    if (dari || sampai) data = data.filter(d => {
+      const tgl = d.buka_tgl||'';
+      if (dari   && tgl < dari)   return false;
+      if (sampai && tgl > sampai) return false;
+      return true;
+    });
+    if (data.length === 0) {
+      (_getMySwal()||Swal).fire({ icon:'info', title:'Tidak ada data', text:'Tidak ada data shift selesai untuk rekap.', customClass:{popup:'swal2-ku'} });
+      return;
+    }
+    // Agregasi per kasir
+    const kasirMap = {};
+    data.forEach(s => {
+      const nama = s.nama || '(Tanpa Nama)';
+      if (!kasirMap[nama]) kasirMap[nama] = { totalMenit: 0, shifts: 0 };
+      kasirMap[nama].totalMenit += (s.durasi_jam||0)*60 + (s.durasi_menit||0);
+      kasirMap[nama].shifts++;
+    });
+    const ratePerJam = parseInt(localStorage.getItem('k_upah_per_jam') || '0');
+    const kasirRows = Object.entries(kasirMap).sort((a,b) => b[1].totalMenit - a[1].totalMenit).map(([nama, v]) => {
+      const jam  = Math.floor(v.totalMenit/60);
+      const mnt  = v.totalMenit%60;
+      const gaji = ratePerJam > 0 ? Math.round((v.totalMenit/60)*ratePerJam) : null;
+      return `<tr style="border-bottom:1px solid #e2e8f0;">
+        <td style="padding:10px 12px;font-size:12px;font-weight:800;color:#1e293b;">${nama}</td>
+        <td style="padding:10px 12px;font-size:11px;font-weight:700;color:#475569;text-align:center;">${v.shifts}</td>
+        <td style="padding:10px 12px;font-size:13px;font-weight:900;color:#0061C2;text-align:center;">${jam}j ${mnt}m</td>
+        <td style="padding:10px 12px;font-size:12px;font-weight:900;color:${gaji!==null?'#059669':'#94a3b8'};text-align:right;">
+          ${gaji !== null ? 'Rp ' + gaji.toLocaleString('id-ID') : '<span style="font-size:9px;">Set rate dulu</span>'}
+        </td>
+      </tr>`;
+    }).join('');
+    const periodeLabel = (bulan||tahun) ? `${bulan?['','Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'][parseInt(bulan)]||'':''} ${tahun||''}`.trim()
+                         : (dari||sampai) ? `${dari||'—'} s/d ${sampai||'—'}` : 'Semua Periode';
+    (_getMySwal()||Swal).fire({
+      title: 'Rekap Jam Kerja & Gaji',
+      width: '680px',
+      html: `
+        <div style="font-family:'Plus Jakarta Sans',sans-serif;text-align:left;">
+          <p style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;margin-bottom:12px;">Periode: ${periodeLabel}</p>
+          ${ratePerJam === 0 ? `
+          <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:12px;padding:10px 14px;margin-bottom:12px;">
+            <p style="font-size:10px;font-weight:800;color:#92400e;margin-bottom:6px;"><i class="fas fa-coins mr-1"></i>Set Rate Upah Per Jam</p>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <span style="font-size:11px;font-weight:700;color:#64748b;">Rp</span>
+              <input id="swal-rate-perjam" type="number" min="0" placeholder="Contoh: 15000"
+                style="flex:1;padding:8px 12px;border:1.5px solid #fde68a;border-radius:10px;font-size:12px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;outline:none;background:white;"
+                value="${localStorage.getItem('k_upah_per_jam')||''}">
+              <button onclick="const v=parseInt(document.getElementById('swal-rate-perjam').value)||0;if(v>0){localStorage.setItem('k_upah_per_jam',v);showRekapKasir();Swal.close();}" 
+                style="padding:8px 14px;border-radius:10px;border:0;background:#f59e0b;color:white;font-size:10px;font-weight:900;cursor:pointer;white-space:nowrap;">Simpan Rate</button>
+            </div>
+            <p style="font-size:8px;color:#a78bfa;margin-top:6px;">Rate disimpan di perangkat ini. Isi 0 untuk tidak menghitung gaji.</p>
+          </div>` : `
+          <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:8px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+            <p style="font-size:10px;font-weight:800;color:#065f46;margin:0;"><i class="fas fa-coins mr-1"></i>Rate Upah: <b>Rp ${ratePerJam.toLocaleString('id-ID')}/jam</b></p>
+            <button onclick="localStorage.removeItem('k_upah_per_jam');showRekapKasir();Swal.close();" 
+              style="padding:4px 10px;border-radius:8px;border:1px solid #86efac;background:white;font-size:8px;font-weight:800;color:#059669;cursor:pointer;">Ubah Rate</button>
+          </div>`}
+          <table style="width:100%;border-collapse:collapse;">
+            <thead>
+              <tr style="background:linear-gradient(135deg,#022c22,#064e3b);">
+                <th style="padding:9px 12px;font-size:9px;font-weight:900;color:white;text-align:left;">Nama Kasir</th>
+                <th style="padding:9px 12px;font-size:9px;font-weight:900;color:white;text-align:center;">Shift</th>
+                <th style="padding:9px 12px;font-size:9px;font-weight:900;color:white;text-align:center;">Total Jam Kerja</th>
+                <th style="padding:9px 12px;font-size:9px;font-weight:900;color:white;text-align:right;">Estimasi Gaji</th>
+              </tr>
+            </thead>
+            <tbody>${kasirRows}</tbody>
+          </table>
+          <p style="font-size:8px;color:#94a3b8;margin-top:10px;text-align:center;"><i class="fas fa-circle-info mr-1"></i>Gaji dihitung dari: Total Menit ÷ 60 × Rate/Jam. Hanya shift berstatus "selesai" yang dihitung.</p>
+        </div>`,
+      confirmButtonText: '<i class="fas fa-file-pdf mr-1"></i> Export PDF',
+      showCancelButton: true,
+      cancelButtonText: 'Tutup',
+      confirmButtonColor: '#ef4444',
+      customClass: { popup: 'swal2-ku' },
+    }).then(r => {
+      if (r.isConfirmed) exportAbsensiPDF();
+    });
+  }
+
   // ─── FILTER LAPORAN ───
   function setAbsensiLaporanFilter(f) {
     _absensiFilter = f;
@@ -15152,6 +15500,7 @@ ${t.tipe === 'ewallet' ? `
           <input id="swal-edit-tutup-jam" type="time" class="swal2-input" style="font-size:13px;font-weight:700;margin-bottom:10px;" value="${item.tutup_jam||''}">
           <p style="font-size:10px;font-weight:800;color:#64748b;margin-bottom:4px;text-transform:uppercase;">Keterangan</p>
           <input id="swal-edit-ket" class="swal2-input" style="font-size:13px;font-weight:700;" value="${(item.keterangan_buka||item.keterangan_tutup||'')}" placeholder="Keterangan (opsional)">
+          <p style="font-size:9px;font-weight:700;color:#f59e0b;margin-top:12px;background:#fffbeb;padding:8px 12px;border-radius:10px;border:1px solid #fde68a;"><i class="fas fa-pen-to-square mr-1"></i>Riwayat edit akan dicatat otomatis.</p>
         </div>`,
       customClass: { popup: 'swal2-ku' },
       showCancelButton: true,
@@ -15167,7 +15516,6 @@ ${t.tipe === 'ewallet' ? `
       })
     });
     if (!formValues) return;
-    // Hitung ulang durasi jika ada buka & tutup jam
     let updateData = {
       nama: formValues.nama || item.nama,
       buka_jam: formValues.buka_jam || item.buka_jam,
@@ -15175,7 +15523,6 @@ ${t.tipe === 'ewallet' ? `
     };
     if (formValues.tutup_jam) {
       updateData.tutup_jam = formValues.tutup_jam;
-      // Hitung durasi
       const bukaDt  = new Date((item.buka_tgl||'2000-01-01') + 'T' + formValues.buka_jam);
       const tutupDt = new Date((item.tutup_tgl||item.buka_tgl||'2000-01-01') + 'T' + formValues.tutup_jam);
       let diffMs = tutupDt - bukaDt;
@@ -15184,6 +15531,18 @@ ${t.tipe === 'ewallet' ? `
       updateData.durasi_jam   = Math.floor(diffMin / 60);
       updateData.durasi_menit = diffMin % 60;
     }
+    // ── Audit trail ──
+    const editorUid  = (window._fbAuth?.currentUser?.uid) || localStorage.getItem('k_sid') || '';
+    const editorNama = localStorage.getItem('k_kasir_nama') || localStorage.getItem('k_store_name') || editorUid;
+    const prevEdit   = item._edit_history || [];
+    updateData._edited_at   = new Date();
+    updateData._edited_by   = editorNama;
+    updateData._edit_count  = (item._edit_count||0) + 1;
+    updateData._edit_history = [...prevEdit, {
+      at: new Date().toISOString(),
+      by: editorNama,
+      changes: Object.keys(updateData).filter(k => !k.startsWith('_')).join(', ')
+    }].slice(-10); // simpan max 10 riwayat
     try {
       await waitMTFirebase(5000);
       await window._fbFirestore.collection('absensi_kasir').doc(id).update(updateData);
