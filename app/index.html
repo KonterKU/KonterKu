@@ -6652,6 +6652,55 @@
             </div>
           </div>
 
+
+          <!-- ── DISKON & BIAYA TAMBAHAN ── -->
+          <div class="kasir-field-card" style="border-color:rgba(251,146,60,0.3);background:linear-gradient(135deg,#fffbeb,#fef3c7);">
+            <div class="kasir-field-row" style="border:none;">
+              <div class="kasir-field-icon" style="background:rgba(251,146,60,0.12);">
+                <i class="fas fa-percent" style="color:#f97316;"></i>
+              </div>
+              <div class="flex-1">
+                <p class="kasir-field-label" style="color:#c2410c;font-weight:900;letter-spacing:0.05em;">DISKON & BIAYA TAMBAHAN</p>
+              </div>
+            </div>
+
+            <!-- Diskon -->
+            <div class="kasir-field-row" style="border:none;padding-top:4px;gap:8px;">
+              <div style="flex:1;background:white;border:1.5px solid #fed7aa;border-radius:12px;padding:9px 12px;display:flex;align-items:center;gap:6px;">
+                <i class="fas fa-tag" style="color:#f97316;font-size:10px;"></i>
+                <input type="number" id="kf-diskon-val" class="kasir-field-input" placeholder="Diskon" min="0"
+                  style="background:transparent;padding:0;font-size:13px;font-weight:700;color:#1e293b;border:none;outline:none;"
+                  oninput="updateKasirFisikTotal()">
+              </div>
+              <select id="kf-diskon-tipe" onchange="updateKasirFisikTotal()"
+                style="background:white;border:1.5px solid #fed7aa;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:900;color:#f97316;cursor:pointer;min-width:64px;">
+                <option value="rp">Rp</option>
+                <option value="pct">%</option>
+              </select>
+            </div>
+
+
+            <!-- Biaya Tambahan -->
+            <div class="kasir-field-row" style="border:none;padding-top:10px;">
+              <div style="flex:1;background:white;border:1.5px solid #fed7aa;border-radius:12px;padding:9px 12px;display:flex;align-items:center;gap:6px;">
+                <i class="fas fa-circle-plus" style="color:#f97316;font-size:10px;"></i>
+                <input type="number" id="kf-biaya-tambahan" class="kasir-field-input" placeholder="Biaya Tambahan" min="0"
+                  style="background:transparent;padding:0;font-size:13px;font-weight:700;color:#1e293b;border:none;outline:none;"
+                  oninput="updateKasirFisikTotal()">
+              </div>
+            </div>
+
+
+            <!-- Preview Total -->
+            <div id="kf-total-preview" class="hidden" style="margin-top:12px;background:linear-gradient(135deg,#0061C2,#0ea5e9);border-radius:14px;padding:12px 14px;">
+              <div id="kf-total-rincian" style="font-size:9px;font-weight:700;color:rgba(255,255,255,0.65);margin-bottom:6px;line-height:1.7;"></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.15);padding-top:8px;">
+                <span style="font-size:10px;font-weight:900;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.06em;">Total Pembayaran</span>
+                <span id="kf-total-final" style="font-size:18px;font-weight:900;color:white;">Rp 0</span>
+              </div>
+            </div>
+          </div>
+
           <!-- Tombol Tambah ke Keranjang Gabungan -->
           <button onclick="tambahKeKeranjang('fisik')" class="kasir-add-btn" style="border-color:rgba(124,58,237,0.4);color:#7c3aed;background:rgba(124,58,237,0.05);">
             <i class="fas fa-plus-circle" style="color:#7c3aed;"></i> TAMBAH KE KERANJANG
@@ -8047,6 +8096,8 @@
       } else {
         row.style.display = 'none';
       }
+    
+      if (tipe === 'fisik') updateKasirFisikTotal();
     }
 
     function updateKasirStatus(tipe) {
@@ -8647,19 +8698,30 @@
         const pid  = document.getElementById('kf-produk').value;
         const pIdx = db.inventory.findIndex(p => p.id === pid);
         if (pIdx === -1) { (_getMySwal()||Swal).fire('Peringatan','Silakan pilih produk fisik!','warning'); return; }
-        const jual = Number(document.getElementById('kf-jual').value) || 0;
-        if (jual <= 0) { (_getMySwal()||Swal).fire('Peringatan','Harga jual harus diisi!','warning'); return; }
+        const jualDasar = Number(document.getElementById('kf-jual').value) || 0;
+        if (jualDasar <= 0) { (_getMySwal()||Swal).fire('Peringatan','Harga jual harus diisi!','warning'); return; }
+
+        // Kalkulasi diskon & biaya tambahan
+        const _dVal  = Number(document.getElementById('kf-diskon-val')?.value) || 0;
+        const _dTipe = document.getElementById('kf-diskon-tipe')?.value || 'rp';
+        const diskon = _dTipe === 'pct' ? Math.round(jualDasar * _dVal / 100) : _dVal;
+        const stlhDiskon = Math.max(0, jualDasar - diskon);
+        const biayaTambahan = Number(document.getElementById('kf-biaya-tambahan')?.value) || 0;
+        const jualFinal = stlhDiskon + biayaTambahan;
 
         item = {
           id: 'C-'+Date.now()+'-'+Math.random().toString(36).slice(2,6),
           tipe: 'fisik',
           produkNama: db.inventory[pIdx].nama,
-          modal: db.inventory[pIdx].modal, jual,
-          produkId: pid
+          modal: db.inventory[pIdx].modal, jual: jualFinal,
+          produkId: pid,
+          diskon, biayaTambahan
         };
 
         document.getElementById('kf-jual').value = '';
         const laba = document.getElementById('kf-laba-row'); if(laba) laba.style.display='none';
+        ['kf-diskon-val','kf-biaya-tambahan'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+        const prv = document.getElementById('kf-total-preview'); if(prv) prv.classList.add('hidden');
       }
 
       if (!item) return;
@@ -8891,6 +8953,35 @@
       syncImmediate().then(ok => { if (!ok && navigator.onLine) console.warn('[Kasir] Cloud sync gagal'); });
     }
 
+    // ── Live total preview kasir fisik ──
+    function updateKasirFisikTotal() {
+      const jualDasar     = Number(document.getElementById('kf-jual')?.value) || 0;
+      const diskonVal     = Number(document.getElementById('kf-diskon-val')?.value) || 0;
+      const diskonTipe    = document.getElementById('kf-diskon-tipe')?.value || 'rp';
+      const biayaTambahan = Number(document.getElementById('kf-biaya-tambahan')?.value) || 0;
+
+      const diskonNominal = diskonTipe === 'pct' ? Math.round(jualDasar * diskonVal / 100) : diskonVal;
+      const setelahDiskon = Math.max(0, jualDasar - diskonNominal);
+      const total         = setelahDiskon + biayaTambahan;
+
+      const prv = document.getElementById('kf-total-preview');
+      if (!prv) return;
+
+      const adaModifikasi = diskonNominal > 0 || biayaTambahan > 0;
+      if (jualDasar <= 0 && !adaModifikasi) { prv.classList.add('hidden'); return; }
+      prv.classList.remove('hidden');
+
+      let rincian = '';
+      if (jualDasar > 0)       rincian += `Harga Jual: Rp ${_fmt(jualDasar)}<br>`;
+      if (diskonNominal > 0)   rincian += `Diskon${diskonTipe==='pct'?' ('+diskonVal+'%)':''}: − Rp ${_fmt(diskonNominal)}<br>`;
+      if (biayaTambahan > 0)   rincian += `Biaya Tambahan: + Rp ${_fmt(biayaTambahan)}<br>`;
+
+      const rEl = document.getElementById('kf-total-rincian');
+      const tEl = document.getElementById('kf-total-final');
+      if (rEl) rEl.innerHTML = rincian;
+      if (tEl) tEl.textContent = 'Rp ' + _fmt(total);
+    }
+
     function resetKasirForms() {
       const today = getWIBDate();
       ['kd-tgl','kf-tgl','ke-tgl'].forEach(id => { const el = document.getElementById(id); if(el) el.value = today; });
@@ -8902,6 +8993,10 @@
       const man = document.getElementById('kd-produk-manual');
       if (man) man.value = "";
       ['kd-laba-row','kf-laba-row'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display='none'; });
+      // Reset fisik extra fields
+      ['kf-diskon-val','kf-biaya-tambahan'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+      const _kfDiskonTipe = document.getElementById('kf-diskon-tipe'); if(_kfDiskonTipe) _kfDiskonTipe.value='rp';
+      const _kfPrv = document.getElementById('kf-total-preview'); if(_kfPrv) _kfPrv.classList.add('hidden');
       const ewlCalc = document.getElementById('ewl-calc-row');
       if (ewlCalc) ewlCalc.classList.add('hidden');
       const ewlLive = document.getElementById('ewl-profit-live');
@@ -10727,8 +10822,17 @@
         if (db.inventory[pIdx].stok <= 0) return (_getMySwal()||Swal).fire('Error', 'Stok habis!', 'error');
         productName = db.inventory[pIdx].nama;
         modal = db.inventory[pIdx].modal;
-        jual = Number(document.getElementById('kf-jual').value);
-        if (jual <= 0) return (_getMySwal()||Swal).fire('Error', 'Harga jual harus diisi!', 'warning');
+        const jualDasar = Number(document.getElementById('kf-jual').value);
+        if (jualDasar <= 0) return (_getMySwal()||Swal).fire('Error', 'Harga jual harus diisi!', 'warning');
+
+        // Kalkulasi diskon & biaya tambahan
+        const _kfDiskonVal  = Number(document.getElementById('kf-diskon-val')?.value) || 0;
+        const _kfDiskonTipe = document.getElementById('kf-diskon-tipe')?.value || 'rp';
+        const diskonNominal = _kfDiskonTipe === 'pct' ? Math.round(jualDasar * _kfDiskonVal / 100) : _kfDiskonVal;
+        const setelahDiskon = Math.max(0, jualDasar - diskonNominal);
+        const biayaTambahan = Number(document.getElementById('kf-biaya-tambahan')?.value) || 0;
+        jual = setelahDiskon + biayaTambahan;
+
         db.inventory[pIdx].stok -= 1;
         if (status === 'Lunas') {
           const wpIdx = db.dompet.findIndex(w => w.id === wpId);
@@ -10736,7 +10840,11 @@
         } else {
           db.hutang.push({ id: 'H-'+Date.now(), tipe: 'pelanggan', nama: cust, jumlah: jual, tgl, ket: 'FIS: '+productName+' '+note });
         }
-        db.transaksi.push({ id: 'TR-'+Date.now(), tgl, produk: 'FIS: '+productName, modal, jual, pelanggan: cust, status, walletModal: null, walletJual: wpId, pRef: pid, tipe: 'fisik', note });
+        db.transaksi.push({
+          id: 'TR-'+Date.now(), tgl, produk: 'FIS: '+productName, modal, jual,
+          pelanggan: cust, status, walletModal: null, walletJual: wpId, pRef: pid, tipe: 'fisik', note,
+          diskon: diskonNominal, biayaTambahan
+        });
       }
 
       resetKasirForms();
