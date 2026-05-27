@@ -2087,6 +2087,186 @@
       background: rgba(124,58,237,0.12) !important;
       border-color: rgba(124,58,237,0.25) !important;
     }
+
+    /* ══════════════════════════════════════════════════════════════
+       DARK MODE — PATCH LENGKAP: Laporan & Stats, Pelanggan,
+       Catatan Toko, Kasir — semua bg terang → gelap
+    ══════════════════════════════════════════════════════════════ */
+
+    /* ── Laporan & Stats: stat cards ── */
+    [data-theme="dark"] #modal-sidebar-laporan .bg-blue-50,
+    [data-theme="dark"] #modal-sidebar-laporan .bg-emerald-50,
+    [data-theme="dark"] #modal-sidebar-laporan .bg-violet-50 {
+      background: rgba(255,255,255,0.05) !important;
+      border-color: rgba(255,255,255,0.08) !important;
+    }
+    [data-theme="dark"] #modal-sidebar-laporan .text-blue-600   { color: #60a5fa !important; }
+    [data-theme="dark"] #modal-sidebar-laporan .text-emerald-600 { color: #34d399 !important; }
+    [data-theme="dark"] #modal-sidebar-laporan .text-violet-600  { color: #c084fc !important; }
+    [data-theme="dark"] #modal-sidebar-laporan .border-blue-100,
+    [data-theme="dark"] #modal-sidebar-laporan .border-emerald-100,
+    [data-theme="dark"] #modal-sidebar-laporan .border-violet-100 { border-color: rgba(255,255,255,0.08) !important; }
+
+    /* ── Laporan & Stats: grafik container ── */
+    [data-theme="dark"] #modal-sidebar-laporan .bg-slate-50 {
+      background: rgba(255,255,255,0.04) !important;
+      border-color: rgba(255,255,255,0.07) !important;
+    }
+    [data-theme="dark"] #modal-sidebar-laporan .border-slate-100 { border-color: rgba(255,255,255,0.07) !important; }
+    [data-theme="dark"] #modal-sidebar-laporan .text-slate-500 { color: #64748b !important; }
+
+    /* ── Laporan & Stats: piutang & hutang card ── */
+    [data-theme="dark"] #modal-sidebar-laporan .bg-amber-50 {
+      background: rgba(245,158,11,0.08) !important;
+      border-color: rgba(245,158,11,0.18) !important;
+    }
+    [data-theme="dark"] #modal-sidebar-laporan .bg-red-50 {
+      background: rgba(239,68,68,0.08) !important;
+      border-color: rgba(239,68,68,0.18) !important;
+    }
+    [data-theme="dark"] #modal-sidebar-laporan .border-amber-100 { border-color: rgba(245,158,11,0.18) !important; }
+    [data-theme="dark"] #modal-sidebar-laporan .border-red-100   { border-color: rgba(239,68,68,0.18) !important; }
+    [data-theme="dark"] #modal-sidebar-laporan .text-amber-700   { color: #fbbf24 !important; }
+    [data-theme="dark"] #modal-sidebar-laporan .text-red-700     { color: #f87171 !important; }
+
+    /* ── Laporan & Stats: Export PDF section ── */
+    [data-theme="dark"] #modal-sidebar-laporan [style*="background:linear-gradient(135deg,#f0f9ff"],
+    [data-theme="dark"] #modal-sidebar-laporan [style*="background:linear-gradient(135deg, #f0f9ff"] {
+      background: rgba(0,97,194,0.10) !important;
+      border-color: rgba(0,97,194,0.20) !important;
+    }
+    [data-theme="dark"] #modal-sidebar-laporan .border-cyan-100 { border-color: rgba(0,97,194,0.15) !important; }
+    [data-theme="dark"] #modal-sidebar-laporan .text-slate-800  { color: #e2e8f0 !important; }
+    [data-theme="dark"] #modal-sidebar-laporan .text-slate-400  { color: #64748b !important; }
+
+    /* Tombol periode PDF inactive */
+    [data-theme="dark"] #modal-sidebar-laporan .pdf-periode-btn[style*="background:white"],
+    [data-theme="dark"] #modal-sidebar-laporan .pdf-periode-btn[style*="background: white"] {
+      background: rgba(255,255,255,0.07) !important;
+      color: #94a3b8 !important;
+      border-color: rgba(255,255,255,0.10) !important;
+    }
+
+    /* Periode info box */
+    [data-theme="dark"] #pdf-periode-info {
+      background: rgba(0,97,194,0.12) !important;
+      border-color: rgba(0,97,194,0.25) !important;
+    }
+    [data-theme="dark"] #pdf-periode-label { color: #7dd3fc !important; }
+
+    /* ── Laporan v2 header bar & body ── */
+    [data-theme="dark"] #lap-header-bar {
+      border-bottom-color: rgba(255,255,255,0.08) !important;
+    }
+    [data-theme="dark"] #lap-header-bar .lap-tab-wrap {
+      background: rgba(255,255,255,0.06) !important;
+    }
+    /* Tab periode header */
+    [data-theme="dark"] #modal-sidebar-laporan [id^="lap-tab-"][style*="background:transparent"] {
+      color: rgba(255,255,255,0.35) !important;
+    }
+    /* KPI cards */
+    [data-theme="dark"] #lap-card-omset { background: rgba(0,97,194,0.15) !important; border-color: rgba(0,97,194,0.25) !important; }
+    [data-theme="dark"] #lap-card-laba  { background: rgba(16,185,129,0.12) !important; border-color: rgba(16,185,129,0.22) !important; }
+    [data-theme="dark"] #lap-card-trx   { background: rgba(139,92,246,0.12) !important; border-color: rgba(139,92,246,0.22) !important; }
+    /* Grafik wrap */
+    [data-theme="dark"] #modal-sidebar-laporan [style*="background:rgba(0,0,0,0.04)"] {
+      background: rgba(255,255,255,0.04) !important;
+      border-color: rgba(255,255,255,0.07) !important;
+    }
+    /* Top5 wrap */
+    [data-theme="dark"] #modal-sidebar-laporan [style*="background:linear-gradient(135deg,rgba(0,97,194"] {
+      background: rgba(0,97,194,0.15) !important;
+    }
+    [data-theme="dark"] #lap-top5 [style*="border-bottom:1px solid rgba(0,0,0,0.05)"] {
+      border-bottom-color: rgba(255,255,255,0.06) !important;
+    }
+    [data-theme="dark"] #lap-top5 [style*="background:rgba(0,0,0,0.07)"] {
+      background: rgba(255,255,255,0.1) !important;
+    }
+    /* Export Excel button hover */
+    #btn-export-xlsx:active { opacity: 0.85; transform: scale(0.98); }
+    /* PDF section inner */
+    [data-theme="dark"] #modal-sidebar-laporan [style*="background:rgba(0,97,194,0.06)"] {
+      background: rgba(0,97,194,0.10) !important;
+      border-color: rgba(0,97,194,0.22) !important;
+    }
+    [data-theme="dark"] #modal-sidebar-laporan .pdf-periode-btn[style*="background:transparent"] {
+      color: rgba(255,255,255,0.4) !important;
+      border-color: rgba(255,255,255,0.12) !important;
+    }
+    [data-theme="dark"] #sidebar-cust-list .bg-white,
+    [data-theme="dark"] #sidebar-cust-list [style*="background:white"],
+    [data-theme="dark"] #sidebar-cust-list [style*="background:#fff"] {
+      background: #1e293b !important;
+      border-color: rgba(255,255,255,0.07) !important;
+    }
+    /* Avatar lingkaran pelanggan */
+    [data-theme="dark"] #sidebar-cust-list .bg-blue-100 {
+      background: rgba(0,97,194,0.20) !important;
+    }
+    [data-theme="dark"] #sidebar-cust-list .text-blue-700 { color: #60a5fa !important; }
+    [data-theme="dark"] #sidebar-cust-list .text-slate-800 { color: #e2e8f0 !important; }
+    [data-theme="dark"] #sidebar-cust-list .text-slate-400 { color: #64748b !important; }
+
+    /* ── Catatan Toko: kartu catatan ── */
+    [data-theme="dark"] #sidebar-notes-list .bg-white,
+    [data-theme="dark"] #sidebar-notes-list [style*="background:white"],
+    [data-theme="dark"] #sidebar-notes-list [style*="background:#fff"] {
+      background: #1e293b !important;
+      border-color: rgba(255,255,255,0.07) !important;
+    }
+    [data-theme="dark"] #sidebar-notes-list .text-slate-800 { color: #e2e8f0 !important; }
+    [data-theme="dark"] #sidebar-notes-list .text-slate-400,
+    [data-theme="dark"] #sidebar-notes-list .text-slate-500 { color: #64748b !important; }
+    [data-theme="dark"] #sidebar-notes-list .text-slate-600 { color: #94a3b8 !important; }
+
+    /* ── Kasir: section tambahan yang masih terang ── */
+    /* Filter kategori fisik */
+    [data-theme="dark"] .kasir-field-card.bg-white,
+    [data-theme="dark"] .kasir-field-card[style*="background:white"],
+    [data-theme="dark"] .kasir-field-card[style*="background:#fff"] {
+      background: #1e293b !important;
+      border-color: rgba(255,255,255,0.07) !important;
+    }
+    /* Estimasi laba strip */
+    [data-theme="dark"] [id^="kasir-"] .bg-emerald-50,
+    [data-theme="dark"] .modal-content .bg-emerald-50 {
+      background: rgba(16,185,129,0.08) !important;
+      border-color: rgba(16,185,129,0.18) !important;
+    }
+    /* Keterangan / catatan tambahan placeholder area */
+    [data-theme="dark"] .kasir-note-area {
+      background: rgba(255,255,255,0.04) !important;
+      border-color: rgba(255,255,255,0.08) !important;
+      color: #f1f5f9 !important;
+    }
+
+    /* ── Generic: Tailwind color classes dalam semua modal dark ── */
+    [data-theme="dark"] .modal-content .bg-blue-50   { background: rgba(59,130,246,0.08)  !important; border-color: rgba(59,130,246,0.15)  !important; }
+    [data-theme="dark"] .modal-content .bg-emerald-50{ background: rgba(16,185,129,0.08)  !important; border-color: rgba(16,185,129,0.15)  !important; }
+    [data-theme="dark"] .modal-content .bg-violet-50 { background: rgba(139,92,246,0.08)  !important; border-color: rgba(139,92,246,0.15)  !important; }
+    [data-theme="dark"] .modal-content .bg-amber-50  { background: rgba(245,158,11,0.08)  !important; border-color: rgba(245,158,11,0.15)  !important; }
+    [data-theme="dark"] .modal-content .bg-red-50    { background: rgba(239,68,68,0.08)   !important; border-color: rgba(239,68,68,0.15)   !important; }
+    [data-theme="dark"] .modal-content .bg-slate-50  { background: rgba(255,255,255,0.04) !important; border-color: rgba(255,255,255,0.07) !important; }
+    [data-theme="dark"] .modal-content .bg-slate-100 { background: rgba(255,255,255,0.06) !important; }
+    [data-theme="dark"] .modal-content .bg-white      { background: #1e293b !important; }
+
+    [data-theme="dark"] .modal-content .border-blue-100   { border-color: rgba(59,130,246,0.15)  !important; }
+    [data-theme="dark"] .modal-content .border-emerald-100{ border-color: rgba(16,185,129,0.15)  !important; }
+    [data-theme="dark"] .modal-content .border-violet-100 { border-color: rgba(139,92,246,0.15)  !important; }
+    [data-theme="dark"] .modal-content .border-amber-100  { border-color: rgba(245,158,11,0.15)  !important; }
+    [data-theme="dark"] .modal-content .border-red-100    { border-color: rgba(239,68,68,0.15)   !important; }
+    [data-theme="dark"] .modal-content .border-slate-100  { border-color: rgba(255,255,255,0.07) !important; }
+
+    [data-theme="dark"] .modal-content .text-blue-600    { color: #60a5fa !important; }
+    [data-theme="dark"] .modal-content .text-emerald-600 { color: #34d399 !important; }
+    [data-theme="dark"] .modal-content .text-violet-600  { color: #c084fc !important; }
+    [data-theme="dark"] .modal-content .text-amber-700   { color: #fbbf24 !important; }
+    [data-theme="dark"] .modal-content .text-red-700     { color: #f87171 !important; }
+    [data-theme="dark"] .modal-content .text-slate-800   { color: #e2e8f0 !important; }
+    [data-theme="dark"] .modal-content .text-slate-600   { color: #94a3b8 !important; }
+    [data-theme="dark"] .modal-content .text-slate-500   { color: #64748b !important; }
   </style>
   <script>
     // ===== TEMA SISTEM (DARK / LIGHT) =====
@@ -4727,114 +4907,151 @@
       </div>
     </div>
 
-    <!-- ===== MODAL SIDEBAR: LAPORAN & STATS ===== -->
+    <!-- ===== MODAL SIDEBAR: LAPORAN & ANALITIK (v2) ===== -->
     <div id="modal-sidebar-laporan" class="modal-overlay">
-      <div class="modal-content" style="max-height:90vh">
-        <div class="flex justify-between items-center mb-5">
-          <div>
-            <h4 class="text-lg font-black">Laporan & Stats</h4>
-            <p class="text-[9px] text-slate-400 font-bold">Analisis omset & laba toko</p>
-          </div>
-          <button onclick="closeModal('modal-sidebar-laporan')" class="text-slate-400 text-xl cursor-pointer border-0 bg-transparent"><i class="fas fa-times"></i></button>
-        </div>
+      <div class="modal-content" style="max-height:92vh;padding:0;overflow:hidden;display:flex;flex-direction:column;">
 
-        <!-- Stat cards ringkas -->
-        <div class="grid grid-cols-3 gap-2 mb-4">
-          <div class="bg-blue-50 rounded-2xl p-3 text-center border border-blue-100">
-            <p class="text-base font-black text-blue-600" id="lap-omset-today">Rp 0</p>
-            <p class="text-[7px] font-black text-slate-400 uppercase mt-0.5">Omset Hari Ini</p>
-          </div>
-          <div class="bg-emerald-50 rounded-2xl p-3 text-center border border-emerald-100">
-            <p class="text-base font-black text-emerald-600" id="lap-laba-today">Rp 0</p>
-            <p class="text-[7px] font-black text-slate-400 uppercase mt-0.5">Laba Bersih</p>
-          </div>
-          <div class="bg-violet-50 rounded-2xl p-3 text-center border border-violet-100">
-            <p class="text-base font-black text-violet-600" id="lap-trx-today">0</p>
-            <p class="text-[7px] font-black text-slate-400 uppercase mt-0.5">Total TRX</p>
-          </div>
-        </div>
-
-        <!-- Grafik 7 hari -->
-        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-4">
-          <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-3">Tren Keuangan 7 Hari Terakhir</p>
-          <div class="relative w-full" style="height:180px">
-            <canvas id="laporan-chart"></canvas>
-          </div>
-        </div>
-
-        <!-- Stats tambahan -->
-        <div class="grid grid-cols-2 gap-3 mb-4">
-          <div class="bg-amber-50 rounded-2xl p-3 border border-amber-100">
-            <div class="flex items-center gap-2 mb-1">
-              <i class="fas fa-arrow-up text-emerald-500 text-[10px]"></i>
-              <p class="text-[8px] font-black text-slate-400 uppercase">Total Piutang</p>
-            </div>
-            <p class="text-sm font-black text-amber-700" id="lap-piutang">Rp 0</p>
-          </div>
-          <div class="bg-red-50 rounded-2xl p-3 border border-red-100">
-            <div class="flex items-center gap-2 mb-1">
-              <i class="fas fa-arrow-down text-red-500 text-[10px]"></i>
-              <p class="text-[8px] font-black text-slate-400 uppercase">Total Hutang</p>
-            </div>
-            <p class="text-sm font-black text-red-700" id="lap-hutang">Rp 0</p>
-          </div>
-        </div>
-
-        <!-- Export PDF Section -->
-        <div class="rounded-2xl overflow-hidden border border-cyan-100" style="background:linear-gradient(135deg,#f0f9ff,#e0f2fe);">
-          <div class="px-4 pt-4 pb-3 flex items-center gap-3 border-b border-cyan-100">
-            <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:linear-gradient(135deg,#0061C2,#38BDF8);box-shadow:0 4px 12px rgba(0,97,194,0.3);">
-              <i class="fas fa-file-pdf text-white" style="font-size:13px;"></i>
-            </div>
+        <!-- ── HEADER ── -->
+        <div style="padding:20px 20px 14px;border-bottom:1px solid rgba(0,0,0,0.07);flex-shrink:0;" id="lap-header-bar">
+          <div class="flex justify-between items-start">
             <div>
-              <p class="text-[11px] font-black text-slate-800">Export Laporan PDF</p>
-              <p class="text-[8px] font-bold text-slate-400">Unduh laporan keuangan toko</p>
+              <h4 style="font-size:17px;font-weight:900;color:inherit;margin:0 0 2px;">📊 Laporan & Analitik</h4>
+              <p style="font-size:9px;font-weight:700;color:#64748b;margin:0;">Pantau bisnis lebih dalam</p>
+            </div>
+            <button onclick="closeModal('modal-sidebar-laporan')" style="background:none;border:none;font-size:20px;color:#94a3b8;cursor:pointer;padding:2px 4px;line-height:1;"><i class="fas fa-times"></i></button>
+          </div>
+          <!-- Tab Periode -->
+          <div style="display:flex;gap:4px;margin-top:12px;background:rgba(0,0,0,0.05);border-radius:12px;padding:3px;">
+            <button id="lap-tab-harian"   onclick="setLapPeriode('harian')"   style="flex:1;padding:7px 4px;border-radius:9px;border:none;font-size:9px;font-weight:900;cursor:pointer;transition:all 0.2s;background:#0061C2;color:white;box-shadow:0 2px 8px rgba(0,97,194,0.4);">Harian</button>
+            <button id="lap-tab-mingguan" onclick="setLapPeriode('mingguan')" style="flex:1;padding:7px 4px;border-radius:9px;border:none;font-size:9px;font-weight:900;cursor:pointer;transition:all 0.2s;background:transparent;color:#64748b;">Mingguan</button>
+            <button id="lap-tab-bulanan"  onclick="setLapPeriode('bulanan')"  style="flex:1;padding:7px 4px;border-radius:9px;border:none;font-size:9px;font-weight:900;cursor:pointer;transition:all 0.2s;background:transparent;color:#64748b;">Bulanan</button>
+            <button id="lap-tab-tahunan"  onclick="setLapPeriode('tahunan')"  style="flex:1;padding:7px 4px;border-radius:9px;border:none;font-size:9px;font-weight:900;cursor:pointer;transition:all 0.2s;background:transparent;color:#64748b;">Tahunan</button>
+          </div>
+        </div>
+
+        <!-- ── SCROLLABLE BODY ── -->
+        <div style="overflow-y:auto;flex:1;padding:16px 16px 24px;" id="lap-body">
+
+          <!-- KPI Cards -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
+            <div id="lap-card-omset" style="border-radius:16px;padding:10px 8px;text-align:center;background:rgba(0,97,194,0.08);border:1px solid rgba(0,97,194,0.15);">
+              <p style="font-size:11px;font-weight:900;color:#0061C2;margin:0 0 2px;" id="lap-omset-today">Rp 0</p>
+              <p style="font-size:7px;font-weight:900;color:#64748b;text-transform:uppercase;margin:0;">Omset</p>
+            </div>
+            <div id="lap-card-laba" style="border-radius:16px;padding:10px 8px;text-align:center;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.15);">
+              <p style="font-size:11px;font-weight:900;color:#059669;margin:0 0 2px;" id="lap-laba-today">Rp 0</p>
+              <p style="font-size:7px;font-weight:900;color:#64748b;text-transform:uppercase;margin:0;">Laba Bersih</p>
+            </div>
+            <div id="lap-card-trx" style="border-radius:16px;padding:10px 8px;text-align:center;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.15);">
+              <p style="font-size:11px;font-weight:900;color:#7c3aed;margin:0 0 2px;" id="lap-trx-today">0</p>
+              <p style="font-size:7px;font-weight:900;color:#64748b;text-transform:uppercase;margin:0;">Total TRX</p>
             </div>
           </div>
-          <div class="p-4 space-y-3">
-            <!-- Pilih Periode -->
-            <div>
-              <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-2">Pilih Periode</p>
-              <div class="grid grid-cols-4 gap-1.5">
-                <button onclick="setPdfPeriode('harian')" id="pdf-btn-harian"
-                  class="pdf-periode-btn py-2 rounded-xl text-[9px] font-black border-2 transition-all cursor-pointer"
-                  style="background:#0061C2;color:white;border-color:#0061C2;box-shadow:0 4px 12px rgba(0,97,194,0.35);">
-                  Harian
-                </button>
-                <button onclick="setPdfPeriode('mingguan')" id="pdf-btn-mingguan"
-                  class="pdf-periode-btn py-2 rounded-xl text-[9px] font-black border-2 transition-all cursor-pointer"
-                  style="background:white;color:#64748b;border-color:#e2e8f0;">
-                  Mingguan
-                </button>
-                <button onclick="setPdfPeriode('bulanan')" id="pdf-btn-bulanan"
-                  class="pdf-periode-btn py-2 rounded-xl text-[9px] font-black border-2 transition-all cursor-pointer"
-                  style="background:white;color:#64748b;border-color:#e2e8f0;">
-                  Bulanan
-                </button>
-                <button onclick="setPdfPeriode('tahunan')" id="pdf-btn-tahunan"
-                  class="pdf-periode-btn py-2 rounded-xl text-[9px] font-black border-2 transition-all cursor-pointer"
-                  style="background:white;color:#64748b;border-color:#e2e8f0;">
-                  Tahunan
-                </button>
+
+          <!-- KPI Row 2: Margin & Avg -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+            <div style="border-radius:14px;padding:10px 12px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.15);">
+              <p style="font-size:7px;font-weight:900;color:#64748b;text-transform:uppercase;margin:0 0 3px;"><i class="fas fa-percent" style="color:#f59e0b;margin-right:3px;"></i>Margin Laba</p>
+              <p style="font-size:14px;font-weight:900;color:#d97706;margin:0;" id="lap-margin">0%</p>
+            </div>
+            <div style="border-radius:14px;padding:10px 12px;background:rgba(14,165,233,0.08);border:1px solid rgba(14,165,233,0.15);">
+              <p style="font-size:7px;font-weight:900;color:#64748b;text-transform:uppercase;margin:0 0 3px;"><i class="fas fa-receipt" style="color:#0ea5e9;margin-right:3px;"></i>Rata-rata/Trx</p>
+              <p style="font-size:14px;font-weight:900;color:#0284c7;margin:0;" id="lap-avg-trx">Rp 0</p>
+            </div>
+          </div>
+
+          <!-- Grafik Tren -->
+          <div style="border-radius:16px;padding:14px;margin-bottom:14px;background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.07);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <p style="font-size:9px;font-weight:900;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin:0;" id="lap-chart-title">Tren 7 Hari Terakhir</p>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <span style="display:flex;align-items:center;gap:3px;font-size:8px;font-weight:700;color:#0061C2;"><span style="width:8px;height:2px;background:#0061C2;border-radius:2px;display:inline-block;"></span>Omset</span>
+                <span style="display:flex;align-items:center;gap:3px;font-size:8px;font-weight:700;color:#10b981;"><span style="width:8px;height:2px;background:#10b981;border-radius:2px;display:inline-block;"></span>Laba</span>
               </div>
             </div>
-            <!-- Info Periode Terpilih -->
-            <div id="pdf-periode-info" class="flex items-center gap-2 px-3 py-2 rounded-xl" style="background:rgba(0,97,194,0.07);border:1px solid rgba(0,97,194,0.15);">
-              <i class="fas fa-calendar-days text-blue-500" style="font-size:10px;"></i>
-              <p class="text-[9px] font-black text-blue-700" id="pdf-periode-label">Hari ini: <span id="pdf-periode-range">—</span></p>
+            <div style="position:relative;width:100%;height:160px;">
+              <canvas id="laporan-chart"></canvas>
             </div>
-            <!-- Tombol Export -->
-            <button onclick="doExportPDF()" id="btn-export-pdf"
-              class="w-full py-3 rounded-xl font-black text-[11px] flex items-center justify-center gap-2 cursor-pointer border-0 transition-all"
-              style="background:linear-gradient(135deg,#0061C2,#38BDF8);color:white;box-shadow:0 6px 20px rgba(0,97,194,0.4);">
-              <i class="fas fa-file-arrow-down"></i>
-              <span id="btn-export-pdf-text">UNDUH LAPORAN PDF</span>
-            </button>
           </div>
-        </div>
 
+          <!-- Top 5 Produk Terlaris -->
+          <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(0,0,0,0.07);margin-bottom:14px;">
+            <div style="padding:10px 14px;background:linear-gradient(135deg,rgba(0,97,194,0.12),rgba(56,189,248,0.10));border-bottom:1px solid rgba(0,0,0,0.06);">
+              <p style="font-size:9px;font-weight:900;color:#0061C2;text-transform:uppercase;letter-spacing:.08em;margin:0;">🏆 Top 5 Produk Terlaris</p>
+            </div>
+            <div id="lap-top5" style="padding:8px 10px;"></div>
+          </div>
+
+          <!-- Piutang & Hutang -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
+            <div style="border-radius:14px;padding:10px 12px;background:rgba(16,185,129,0.07);border:1px solid rgba(16,185,129,0.15);">
+              <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
+                <i class="fas fa-arrow-up" style="color:#10b981;font-size:8px;"></i>
+                <p style="font-size:7px;font-weight:900;color:#64748b;text-transform:uppercase;margin:0;">Total Piutang</p>
+              </div>
+              <p style="font-size:13px;font-weight:900;color:#059669;margin:0;" id="lap-piutang">Rp 0</p>
+            </div>
+            <div style="border-radius:14px;padding:10px 12px;background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.15);">
+              <div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;">
+                <i class="fas fa-arrow-down" style="color:#ef4444;font-size:8px;"></i>
+                <p style="font-size:7px;font-weight:900;color:#64748b;text-transform:uppercase;margin:0;">Total Hutang</p>
+              </div>
+              <p style="font-size:13px;font-weight:900;color:#dc2626;margin:0;" id="lap-hutang">Rp 0</p>
+            </div>
+          </div>
+
+          <!-- ── AKSI EXPORT & SHARE ── -->
+          <p style="font-size:8px;font-weight:900;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin:0 0 8px;">⚡ Aksi Cepat</p>
+
+          <!-- Export Excel -->
+          <button onclick="doExportExcel()" id="btn-export-xlsx"
+            style="width:100%;padding:13px 16px;border-radius:14px;border:none;font-size:11px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;background:linear-gradient(135deg,#16a34a,#22c55e);color:white;box-shadow:0 4px 16px rgba(22,163,74,0.35);transition:all 0.2s;">
+            <i class="fas fa-file-excel" style="font-size:14px;"></i>
+            <span>EXPORT KE EXCEL (.xlsx)</span>
+          </button>
+
+          <!-- Share WhatsApp -->
+          <button onclick="doShareWhatsApp()"
+            style="width:100%;padding:13px 16px;border-radius:14px;border:none;font-size:11px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;background:linear-gradient(135deg,#25d366,#128c7e);color:white;box-shadow:0 4px 16px rgba(37,211,102,0.35);transition:all 0.2s;">
+            <i class="fab fa-whatsapp" style="font-size:16px;"></i>
+            <span>SHARE RINGKASAN VIA WHATSAPP</span>
+          </button>
+
+          <!-- Export PDF (existing) -->
+          <div style="border-radius:16px;overflow:hidden;border:1px solid rgba(0,97,194,0.2);background:rgba(0,97,194,0.06);">
+            <div style="padding:10px 14px 8px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(0,97,194,0.1);">
+              <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#0061C2,#38BDF8);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <i class="fas fa-file-pdf" style="color:white;font-size:12px;"></i>
+              </div>
+              <div>
+                <p style="font-size:10px;font-weight:900;margin:0 0 1px;">Export Laporan PDF</p>
+                <p style="font-size:8px;font-weight:600;color:#64748b;margin:0;">Unduh laporan keuangan toko</p>
+              </div>
+            </div>
+            <div style="padding:10px 14px;">
+              <p style="font-size:7.5px;font-weight:900;color:#64748b;text-transform:uppercase;letter-spacing:.08em;margin:0 0 6px;">Pilih Periode</p>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:8px;">
+                <button onclick="setPdfPeriode('harian')" id="pdf-btn-harian" class="pdf-periode-btn" style="padding:7px 2px;border-radius:10px;border:2px solid #0061C2;background:#0061C2;color:white;font-size:8px;font-weight:900;cursor:pointer;box-shadow:0 2px 8px rgba(0,97,194,0.3);">Harian</button>
+                <button onclick="setPdfPeriode('mingguan')" id="pdf-btn-mingguan" class="pdf-periode-btn" style="padding:7px 2px;border-radius:10px;border:2px solid rgba(0,0,0,0.1);background:transparent;color:#64748b;font-size:8px;font-weight:900;cursor:pointer;">Mingguan</button>
+                <button onclick="setPdfPeriode('bulanan')" id="pdf-btn-bulanan" class="pdf-periode-btn" style="padding:7px 2px;border-radius:10px;border:2px solid rgba(0,0,0,0.1);background:transparent;color:#64748b;font-size:8px;font-weight:900;cursor:pointer;">Bulanan</button>
+                <button onclick="setPdfPeriode('tahunan')" id="pdf-btn-tahunan" class="pdf-periode-btn" style="padding:7px 2px;border-radius:10px;border:2px solid rgba(0,0,0,0.1);background:transparent;color:#64748b;font-size:8px;font-weight:900;cursor:pointer;">Tahunan</button>
+              </div>
+              <div id="pdf-periode-info" style="display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:10px;background:rgba(0,97,194,0.07);border:1px solid rgba(0,97,194,0.15);margin-bottom:8px;">
+                <i class="fas fa-calendar-days" style="color:#0061C2;font-size:9px;"></i>
+                <p style="font-size:8.5px;font-weight:900;color:#0061C2;margin:0;" id="pdf-periode-label">Hari ini: <span id="pdf-periode-range">—</span></p>
+              </div>
+              <button onclick="doExportPDF()" id="btn-export-pdf"
+                style="width:100%;padding:11px;border-radius:12px;border:none;font-size:10px;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;background:linear-gradient(135deg,#0061C2,#38BDF8);color:white;box-shadow:0 4px 14px rgba(0,97,194,0.4);">
+                <i class="fas fa-file-arrow-down"></i>
+                <span id="btn-export-pdf-text">UNDUH LAPORAN PDF</span>
+              </button>
+            </div>
+          </div>
+
+        </div><!-- end lap-body -->
       </div>
     </div>
+    <!-- ===== END MODAL LAPORAN & ANALITIK ===== -->
 
     <!-- ===== MODAL SIDEBAR: PELANGGAN ===== -->
     <div id="modal-sidebar-pelanggan" class="modal-overlay">
@@ -12197,46 +12414,317 @@ ${t.tipe === 'ewallet' ? `
       }
     }
 
-    function renderSidebarLaporan() {
-      const today = getWIBDate();
-      const todayTrx = (db.transaksi||[]).filter(t => t.tgl === today);
-      const omset = todayTrx.reduce((a,b) => a + Number(b.jual||0), 0);
-      const laba  = todayTrx.reduce((a,b) => a + (Number(b.jual||0) - Number(b.modal||0)), 0);
-      const trxCount = todayTrx.length;
-      const piutang = (db.hutang||[]).filter(h => h.tipe === 'pelanggan').reduce((a,b) => a + Number(b.jumlah||0), 0);
-      const hutang  = (db.hutang||[]).filter(h => h.tipe === 'toko').reduce((a,b) => a + Number(b.jumlah||0), 0);
+    // ═══════════════════════════════════════════════════════════════
+    // LAPORAN & ANALITIK v2 — renderSidebarLaporan + helpers
+    // ═══════════════════════════════════════════════════════════════
 
-      const el = (id, v) => { const e = document.getElementById(id); if (e) e.innerText = v; };
-      el('lap-omset-today', 'Rp ' + fmt(omset));
-      el('lap-laba-today',  'Rp ' + fmt(laba));
-      el('lap-trx-today',   trxCount);
-      el('lap-piutang',     'Rp ' + fmt(piutang));
-      el('lap-hutang',      'Rp ' + fmt(hutang));
+    // State periode yang aktif
+    window._lapPeriode = 'harian';
 
-      // Render chart
-      const canvas = document.getElementById('laporan-chart');
-      if (!canvas) return;
-      const daysRange = [];
-      for (let i = 6; i >= 0; i--) {
-        const d = new Date(); d.setDate(d.getDate() - i);
-        daysRange.push(getWIBDate(d));
-      }
-      const labels = daysRange.map(d => { const p = d.split('-'); return p[2]+'/'+p[1]; });
-      const omsetData = daysRange.map(d => (db.transaksi||[]).filter(t => t.tgl === d).reduce((a,b) => a+Number(b.jual||0), 0));
-      const labaData  = daysRange.map(d => (db.transaksi||[]).filter(t => t.tgl === d).reduce((a,b) => a+(Number(b.jual||0)-Number(b.modal||0)), 0));
-
-      if (window._lapoChart) window._lapoChart.destroy();
-      window._lapoChart = new Chart(canvas, {
-        type: 'line',
-        data: {
-          labels,
-          datasets: [
-            { label: 'Omset', data: omsetData, borderColor: '#0061C2', backgroundColor: 'rgba(0,97,194,0.1)', borderWidth: 2, fill: true, tension: 0.4, pointRadius: 3 },
-            { label: 'Laba',  data: labaData,  borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', borderWidth: 2, fill: true, tension: 0.4, pointRadius: 3 }
-          ]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { font: { size: 9, weight: '800' }, boxWidth: 10 } } }, scales: { x: { ticks: { font: { size: 8 } } }, y: { ticks: { font: { size: 8 }, callback: v => 'Rp '+fmt(v) } } } }
+    function setLapPeriode(p) {
+      window._lapPeriode = p;
+      ['harian','mingguan','bulanan','tahunan'].forEach(k => {
+        const btn = document.getElementById('lap-tab-'+k);
+        if (!btn) return;
+        if (k === p) {
+          btn.style.background = '#0061C2';
+          btn.style.color = 'white';
+          btn.style.boxShadow = '0 2px 8px rgba(0,97,194,0.4)';
+        } else {
+          btn.style.background = 'transparent';
+          btn.style.color = '#64748b';
+          btn.style.boxShadow = 'none';
+        }
       });
+      renderSidebarLaporan();
+    }
+
+    function _lapGetDateRange(periode) {
+      const now = new Date();
+      const pad = n => String(n).padStart(2,'0');
+      const toStr = d => d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+      if (periode === 'harian') {
+        const s = toStr(now); return { start: s, end: s, label: 'Hari ini ('+s+')' };
+      }
+      if (periode === 'mingguan') {
+        const day = now.getDay(); const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+        const mon = new Date(now); mon.setDate(diff);
+        const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+        return { start: toStr(mon), end: toStr(sun), label: toStr(mon)+' s/d '+toStr(sun) };
+      }
+      if (periode === 'bulanan') {
+        const s = now.getFullYear()+'-'+pad(now.getMonth()+1)+'-01';
+        const e = toStr(new Date(now.getFullYear(), now.getMonth()+1, 0));
+        return { start: s, end: e, label: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][now.getMonth()]+' '+now.getFullYear() };
+      }
+      // tahunan
+      const s = now.getFullYear()+'-01-01', e = now.getFullYear()+'-12-31';
+      return { start: s, end: e, label: 'Tahun '+now.getFullYear() };
+    }
+
+    function _lapFilterTrx(trxList, range) {
+      return trxList.filter(t => t.tgl >= range.start && t.tgl <= range.end);
+    }
+
+    function _lapBuildChartData(periode, range) {
+      const pad = n => String(n).padStart(2,'0');
+      const trxAll = db.transaksi || [];
+      if (periode === 'harian') {
+        // jam-jaman (0-23 dikelompok 3 jam)
+        const slots = ['00-02','03-05','06-08','09-11','12-14','15-17','18-20','21-23'];
+        const labels = slots.map(s => s.split('-')[0]+':00');
+        const omsetD = new Array(8).fill(0), labaD = new Array(8).fill(0);
+        trxAll.filter(t => t.tgl === range.start).forEach(t => {
+          const h = t.jam ? parseInt(t.jam.split(':')[0]) : Math.floor(Math.random()*24);
+          const idx = Math.min(Math.floor(h/3), 7);
+          omsetD[idx] += Number(t.jual||0);
+          labaD[idx]  += Number(t.jual||0) - Number(t.modal||0);
+        });
+        return { labels, omset: omsetD, laba: labaD };
+      }
+      if (periode === 'mingguan') {
+        const days = []; const d = new Date(range.start);
+        const hariSingkat = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+        while (d <= new Date(range.end)) {
+          days.push(new Date(d)); d.setDate(d.getDate()+1);
+        }
+        const labels = days.map(x => hariSingkat[x.getDay()]+' '+pad(x.getDate()));
+        const toStr = x => x.getFullYear()+'-'+pad(x.getMonth()+1)+'-'+pad(x.getDate());
+        const omsetD = days.map(x => trxAll.filter(t=>t.tgl===toStr(x)).reduce((a,b)=>a+Number(b.jual||0),0));
+        const labaD  = days.map(x => trxAll.filter(t=>t.tgl===toStr(x)).reduce((a,b)=>a+(Number(b.jual||0)-Number(b.modal||0)),0));
+        return { labels, omset: omsetD, laba: labaD };
+      }
+      if (periode === 'bulanan') {
+        // per-minggu dalam bulan
+        const yr = parseInt(range.start.split('-')[0]), mo = parseInt(range.start.split('-')[1])-1;
+        const totalDays = new Date(yr, mo+1, 0).getDate();
+        const weeks = [];
+        for (let w=1; w<=totalDays; w+=7) { const e=Math.min(w+6,totalDays); weeks.push({s:w,e}); }
+        const labels = weeks.map(w=>'Mgg '+w.s+'-'+w.e);
+        const omsetD = weeks.map(w => {
+          let sum=0; for(let d=w.s;d<=w.e;d++){const ds=yr+'-'+pad(mo+1)+'-'+pad(d); sum+=trxAll.filter(t=>t.tgl===ds).reduce((a,b)=>a+Number(b.jual||0),0);} return sum;
+        });
+        const labaD = weeks.map(w => {
+          let sum=0; for(let d=w.s;d<=w.e;d++){const ds=yr+'-'+pad(mo+1)+'-'+pad(d); sum+=trxAll.filter(t=>t.tgl===ds).reduce((a,b)=>a+(Number(b.jual||0)-Number(b.modal||0)),0);} return sum;
+        });
+        return { labels, omset: omsetD, laba: labaD };
+      }
+      // tahunan — per bulan
+      const yr = parseInt(range.start.split('-')[0]);
+      const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+      const omsetD = months.map((_,mi) => {
+        const prefix = yr+'-'+pad(mi+1);
+        return trxAll.filter(t=>t.tgl&&t.tgl.startsWith(prefix)).reduce((a,b)=>a+Number(b.jual||0),0);
+      });
+      const labaD = months.map((_,mi) => {
+        const prefix = yr+'-'+pad(mi+1);
+        return trxAll.filter(t=>t.tgl&&t.tgl.startsWith(prefix)).reduce((a,b)=>a+(Number(b.jual||0)-Number(b.modal||0)),0);
+      });
+      return { labels: months, omset: omsetD, laba: labaD };
+    }
+
+    function renderSidebarLaporan() {
+      const periode = window._lapPeriode || 'harian';
+      const range   = _lapGetDateRange(periode);
+      const trxList = db.transaksi || [];
+      const filtered = _lapFilterTrx(trxList, range);
+
+      const omset = filtered.reduce((a,b) => a + Number(b.jual||0), 0);
+      const laba  = filtered.reduce((a,b) => a + (Number(b.jual||0) - Number(b.modal||0)), 0);
+      const trxCount = filtered.length;
+      const margin = omset > 0 ? Math.round(laba/omset*100) : 0;
+      const avgTrx = trxCount > 0 ? Math.round(omset/trxCount) : 0;
+      const piutang = (db.hutang||[]).filter(h=>h.tipe==='pelanggan').reduce((a,b)=>a+Number(b.jumlah||0),0);
+      const hutang  = (db.hutang||[]).filter(h=>h.tipe==='toko').reduce((a,b)=>a+Number(b.jumlah||0),0);
+
+      const el = (id, v) => { const e = document.getElementById(id); if(e) e.innerText = v; };
+      el('lap-omset-today', 'Rp '+fmt(omset));
+      el('lap-laba-today',  'Rp '+fmt(laba));
+      el('lap-trx-today',   trxCount);
+      el('lap-margin',      margin+'%');
+      el('lap-avg-trx',     'Rp '+fmt(avgTrx));
+      el('lap-piutang',     'Rp '+fmt(piutang));
+      el('lap-hutang',      'Rp '+fmt(hutang));
+
+      const titleMap = { harian:'Tren Hari Ini (per 3 jam)', mingguan:'Tren Minggu Ini (per hari)', bulanan:'Tren Bulan Ini (per minggu)', tahunan:'Tren Tahun Ini (per bulan)' };
+      el('lap-chart-title', titleMap[periode] || '');
+
+      // Grafik
+      const canvas = document.getElementById('laporan-chart');
+      if (canvas) {
+        const chartData = _lapBuildChartData(periode, range);
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+        const tickColor = isDark ? '#64748b' : '#94a3b8';
+        if (window._lapoChart) window._lapoChart.destroy();
+        window._lapoChart = new Chart(canvas, {
+          type: 'line',
+          data: {
+            labels: chartData.labels,
+            datasets: [
+              { label:'Omset', data:chartData.omset, borderColor:'#0061C2', backgroundColor:'rgba(0,97,194,0.12)', borderWidth:2.5, fill:true, tension:0.45, pointRadius:3, pointBackgroundColor:'#0061C2' },
+              { label:'Laba',  data:chartData.laba,  borderColor:'#10b981', backgroundColor:'rgba(16,185,129,0.10)', borderWidth:2.5, fill:true, tension:0.45, pointRadius:3, pointBackgroundColor:'#10b981' }
+            ]
+          },
+          options: {
+            responsive:true, maintainAspectRatio:false,
+            plugins: { legend:{display:false}, tooltip:{ callbacks:{ label: ctx => ' Rp '+fmt(ctx.parsed.y) } } },
+            scales: {
+              x: { grid:{color:gridColor}, ticks:{color:tickColor, font:{size:8,weight:'700'}} },
+              y: { grid:{color:gridColor}, ticks:{color:tickColor, font:{size:7.5}, callback: v => v>=1e6?'Rp '+(v/1e6).toFixed(1)+'jt':v>=1e3?'Rp '+(v/1e3).toFixed(0)+'rb':'Rp '+v} }
+            }
+          }
+        });
+      }
+
+      // Top 5 Produk Terlaris
+      const produkMap = {};
+      filtered.forEach(t => {
+        const nama = (t.produk||'').replace(/^(DIG:|FIS:|EWL:)\s*/,'').trim() || 'Lain-lain';
+        if (!produkMap[nama]) produkMap[nama] = { qty:0, omset:0, laba:0 };
+        produkMap[nama].qty++;
+        produkMap[nama].omset += Number(t.jual||0);
+        produkMap[nama].laba  += Number(t.jual||0) - Number(t.modal||0);
+      });
+      const top5 = Object.entries(produkMap).sort((a,b)=>b[1].qty-a[1].qty).slice(0,5);
+      const maxQty = top5.length ? top5[0][1].qty : 1;
+      const medals = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+      const barColors = ['#0061C2','#0284c7','#0ea5e9','#38bdf8','#7dd3fc'];
+      const top5El = document.getElementById('lap-top5');
+      if (top5El) {
+        if (!top5.length) {
+          top5El.innerHTML = `<div style="text-align:center;padding:16px 0;"><p style="font-size:10px;color:#94a3b8;font-weight:700;">Belum ada transaksi di periode ini</p></div>`;
+        } else {
+          top5El.innerHTML = top5.map(([nama,d],i) => `
+            <div style="display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid rgba(0,0,0,0.05);">
+              <span style="font-size:14px;flex-shrink:0;">${medals[i]}</span>
+              <div style="flex:1;min-width:0;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+                  <p style="font-size:10px;font-weight:900;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%;">${nama}</p>
+                  <p style="font-size:9px;font-weight:900;color:#0061C2;margin:0;flex-shrink:0;">${d.qty}x · Rp ${fmt(d.omset)}</p>
+                </div>
+                <div style="height:4px;border-radius:4px;background:rgba(0,0,0,0.07);overflow:hidden;">
+                  <div style="height:100%;width:${Math.round(d.qty/maxQty*100)}%;background:${barColors[i]};border-radius:4px;transition:width 0.5s ease;"></div>
+                </div>
+              </div>
+            </div>`).join('');
+        }
+      }
+
+      // Simpan state untuk export
+      window._lapCurrentData = { periode, range, omset, laba, trxCount, margin, avgTrx, piutang, hutang, filtered, top5 };
+    }
+
+    // ── Export Excel (.xlsx via SheetJS CDN) ──
+    function doExportExcel() {
+      const d = window._lapCurrentData;
+      if (!d) { alert('Render laporan dulu.'); return; }
+      if (typeof XLSX === 'undefined') {
+        // Load SheetJS on demand
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+        s.onload = () => _doExportExcelCore(d);
+        s.onerror = () => alert('Gagal memuat library Excel. Cek koneksi internet.');
+        document.head.appendChild(s);
+      } else {
+        _doExportExcelCore(d);
+      }
+    }
+
+    function _doExportExcelCore(d) {
+      const wb = XLSX.utils.book_new();
+      const storeName = localStorage.getItem('k_store_name') || 'KonterKU';
+
+      // ── Sheet 1: Ringkasan ──
+      const ringSummary = [
+        [storeName+' — Laporan '+d.periode.charAt(0).toUpperCase()+d.periode.slice(1)],
+        ['Periode:', d.range.label],
+        ['Dibuat:', new Date().toLocaleString('id-ID')],
+        [],
+        ['RINGKASAN KEUANGAN'],
+        ['Total Omset', d.omset],
+        ['Total Laba Bersih', d.laba],
+        ['Jumlah Transaksi', d.trxCount],
+        ['Margin Laba (%)', d.omset>0?+(d.laba/d.omset*100).toFixed(1):0],
+        ['Rata-rata per Transaksi', d.trxCount>0?Math.round(d.omset/d.trxCount):0],
+        [],
+        ['PIUTANG & HUTANG'],
+        ['Total Piutang (Pelanggan)', d.piutang],
+        ['Total Hutang (Toko)', d.hutang],
+      ];
+      const ws1 = XLSX.utils.aoa_to_sheet(ringSummary);
+      ws1['!cols'] = [{wch:28},{wch:20}];
+      XLSX.utils.book_append_sheet(wb, ws1, 'Ringkasan');
+
+      // ── Sheet 2: Detail Transaksi ──
+      const trxRows = [['No','Tanggal','Produk','Pelanggan','Modal','Harga Jual','Laba','Status','Tipe']];
+      (d.filtered||[]).forEach((t,i) => {
+        trxRows.push([
+          i+1, t.tgl||'',
+          (t.produk||'').replace(/^(DIG:|FIS:|EWL:)\s*/,''),
+          t.pelanggan||'Umum',
+          Number(t.modal||0), Number(t.jual||0),
+          Number(t.jual||0)-Number(t.modal||0),
+          t.status||'lunas', t.tipe||'-'
+        ]);
+      });
+      const ws2 = XLSX.utils.aoa_to_sheet(trxRows);
+      ws2['!cols'] = [{wch:5},{wch:12},{wch:24},{wch:18},{wch:14},{wch:14},{wch:14},{wch:10},{wch:10}];
+      XLSX.utils.book_append_sheet(wb, ws2, 'Detail Transaksi');
+
+      // ── Sheet 3: Top 5 Produk ──
+      const topRows = [['Rank','Produk','Jumlah Terjual','Total Omset','Total Laba']];
+      (d.top5||[]).forEach(([nama,info],i) => {
+        topRows.push([i+1, nama, info.qty, info.omset, info.laba]);
+      });
+      const ws3 = XLSX.utils.aoa_to_sheet(topRows);
+      ws3['!cols'] = [{wch:6},{wch:28},{wch:16},{wch:16},{wch:16}];
+      XLSX.utils.book_append_sheet(wb, ws3, 'Top Produk');
+
+      const fname = storeName.replace(/\s+/g,'_')+'_Laporan_'+d.periode+'_'+d.range.start+'.xlsx';
+      XLSX.writeFile(wb, fname);
+
+      // Toast notif
+      const S = typeof Swal !== 'undefined' ? Swal : null;
+      if (S) S.fire({ toast:true, position:'top-end', icon:'success', title:'✅ Export Excel berhasil!', timer:2500, showConfirmButton:false, customClass:{popup:'swal2-ku-toast'} });
+    }
+
+    // ── Share ringkasan via WhatsApp ──
+    function doShareWhatsApp() {
+      const d = window._lapCurrentData;
+      if (!d) { alert('Render laporan dulu.'); return; }
+      const storeName = localStorage.getItem('k_store_name') || 'Toko';
+      const fmtRp = v => 'Rp ' + Number(v).toLocaleString('id-ID');
+      const margin = d.omset > 0 ? (d.laba/d.omset*100).toFixed(1) : 0;
+      const top5Lines = (d.top5||[]).map(([nama,info],i) =>
+        (i+1)+'. '+nama+' ('+info.qty+'x — '+fmtRp(info.omset)+')'
+      ).join('\n');
+
+      const periodeLabel = { harian:'Hari Ini', mingguan:'Minggu Ini', bulanan:'Bulan Ini', tahunan:'Tahun Ini' };
+      const now = new Date();
+      const tgl = now.toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+      const msg = [
+        '📊 *LAPORAN '+(periodeLabel[d.periode]||d.periode).toUpperCase()+' — '+storeName.toUpperCase()+'*',
+        '📅 '+tgl,
+        '📆 Periode: '+d.range.label,
+        '',
+        '💰 *Ringkasan Keuangan*',
+        '├ Omset Total   : '+fmtRp(d.omset),
+        '├ Laba Bersih   : '+fmtRp(d.laba),
+        '├ Margin Laba   : '+margin+'%',
+        '├ Total Transaksi: '+d.trxCount+' trx',
+        '└ Rata-rata/Trx : '+fmtRp(d.trxCount>0?Math.round(d.omset/d.trxCount):0),
+        '',
+        d.top5&&d.top5.length ? '🏆 *Top Produk Terlaris*\n'+top5Lines : '',
+        '',
+        '💳 Piutang: '+fmtRp(d.piutang)+' | Hutang: '+fmtRp(d.hutang),
+        '',
+        '_Dikirim via KonterKU Cloud POS_ 🚀'
+      ].filter(x=>x!==null).join('\n');
+
+      const url = 'https://wa.me/?text='+encodeURIComponent(msg);
+      window.open(url, '_blank');
     }
 
     function renderSidebarCustomers() {
@@ -18284,5 +18772,999 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
   })();
   </script>
   <!-- ===== END SMART NOTIFICATION SYSTEM ===== -->
+
+<!-- ================================================================
+     KonterKU — MODUL BISNIS LANJUTAN v1.0
+     Cara pakai: Paste seluruh blok ini SEBELUM </body> di index.html
+     Fitur:
+       1. Database Pelanggan + Riwayat Beli
+       2. Sistem Diskon & Voucher Promo
+       3. Rekonsiliasi Dompet Otomatis
+       4. Push Notifikasi PWA
+       5. Foto Produk di Katalog Stok
+       6. Auto-link Pelanggan di setiap transaksi kasir
+================================================================ -->
+
+<!-- ═══════════════════════════════════════════════════════
+     CSS TAMBAHAN MODUL BISNIS LANJUTAN
+═══════════════════════════════════════════════════════ -->
+<style>
+  /* ── Foto Produk ── */
+  .stok-foto-thumb {
+    width: 42px; height: 42px; border-radius: 12px; object-fit: cover;
+    border: 1.5px solid rgba(0,97,194,0.15); flex-shrink: 0;
+    background: #f1f5f9;
+  }
+  .stok-foto-placeholder {
+    width: 42px; height: 42px; border-radius: 12px; flex-shrink: 0;
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    border: 1.5px dashed #cbd5e1;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: #94a3b8;
+  }
+  .foto-upload-zone {
+    border: 2.5px dashed #e2e8f0; border-radius: 16px;
+    padding: 20px; text-align: center; cursor: pointer;
+    transition: all 0.2s; background: #fafafa;
+  }
+  .foto-upload-zone:hover { border-color: #0061C2; background: #eff6ff; }
+  .foto-upload-zone.has-foto { border-style: solid; border-color: #0061C2; background: #eff6ff; }
+
+  /* ── Voucher / Diskon ── */
+  .voucher-card {
+    border-radius: 18px; overflow: hidden;
+    border: 1.5px solid rgba(0,97,194,0.12);
+    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+    position: relative;
+  }
+  .voucher-card::before {
+    content: '';
+    position: absolute; left: 50%; top: 0; bottom: 0;
+    width: 1.5px; background: repeating-linear-gradient(to bottom, #bfdbfe 0px, #bfdbfe 6px, transparent 6px, transparent 12px);
+  }
+  .voucher-hole-left {
+    position: absolute; left: calc(50% - 10px); top: 50%; transform: translate(-50%, -50%);
+    width: 20px; height: 20px; border-radius: 50%; background: var(--bg, #F8FAFC);
+  }
+  .voucher-hole-right {
+    position: absolute; left: calc(50% + 10px); top: 50%; transform: translate(-50%, -50%);
+    width: 20px; height: 20px; border-radius: 50%; background: var(--bg, #F8FAFC);
+  }
+  [data-theme="dark"] .voucher-card { background: linear-gradient(135deg, rgba(0,97,194,0.12), rgba(37,99,235,0.08)); border-color: rgba(0,97,194,0.2); }
+  [data-theme="dark"] .voucher-hole-left,
+  [data-theme="dark"] .voucher-hole-right { background: #0f172a; }
+
+  /* ── Pelanggan Card ── */
+  .pelanggan-pro-card {
+    border-radius: 20px; background: white; border: 1px solid #f1f5f9;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04); overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .pelanggan-pro-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.08); }
+  [data-theme="dark"] .pelanggan-pro-card { background: #1e293b; border-color: rgba(255,255,255,0.06); }
+
+  /* ── Rekonsiliasi ── */
+  .rekon-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; border-bottom: 1px solid var(--sb-border);
+    transition: background 0.15s;
+  }
+  .rekon-row:hover { background: rgba(0,97,194,0.04); }
+  .rekon-row:last-child { border-bottom: none; }
+  .rekon-badge-ok  { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.2); border-radius: 8px; padding: 2px 8px; font-size: 9px; font-weight: 900; }
+  .rekon-badge-diff { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); border-radius: 8px; padding: 2px 8px; font-size: 9px; font-weight: 900; }
+
+  /* ── PWA Notif badge ── */
+  .notif-perm-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 100px; font-size: 9px; font-weight: 900;
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .notif-perm-granted  { background: rgba(16,185,129,0.12); color: #10b981; }
+  .notif-perm-denied   { background: rgba(239,68,68,0.12); color: #ef4444; }
+  .notif-perm-default  { background: rgba(245,158,11,0.12); color: #f59e0b; }
+
+  /* ── Diskon input strip di kasir ── */
+  #kasir-diskon-strip {
+    border-radius: 16px; overflow: hidden;
+    border: 1.5px solid rgba(239,68,68,0.2);
+    background: linear-gradient(135deg, #fff5f5, #fef2f2);
+    margin-top: 10px; padding: 12px 14px;
+  }
+  [data-theme="dark"] #kasir-diskon-strip {
+    background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.18);
+  }
+</style>
+
+<!-- ═══════════════════════════════════════════════════════
+     HTML: MODAL-MODAL BARU
+═══════════════════════════════════════════════════════ -->
+
+<!-- ① MODAL: Detail Pelanggan + Riwayat Beli -->
+<div id="modal-pelanggan-detail" class="modal-overlay">
+  <div class="modal-content" style="max-height:92vh;">
+    <div class="flex justify-between items-center mb-5">
+      <h4 class="text-lg font-black" style="color:var(--sb-text-title);">👤 Profil Pelanggan</h4>
+      <button onclick="closeModal('modal-pelanggan-detail')" class="text-slate-400 text-xl cursor-pointer border-0 bg-transparent"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="pelanggan-detail-content"></div>
+  </div>
+</div>
+
+<!-- ② MODAL: Kelola Voucher & Diskon -->
+<div id="modal-voucher" class="modal-overlay">
+  <div class="modal-content" style="max-height:92vh;">
+    <div class="flex justify-between items-center mb-5">
+      <div>
+        <h4 class="text-lg font-black" style="color:var(--sb-text-title);">🏷️ Voucher & Diskon</h4>
+        <p class="text-[9px] font-bold text-slate-400 mt-0.5">Kelola promo & kode diskon toko</p>
+      </div>
+      <button onclick="closeModal('modal-voucher')" class="text-slate-400 text-xl cursor-pointer border-0 bg-transparent"><i class="fas fa-times"></i></button>
+    </div>
+    <!-- Tab -->
+    <div class="flex gap-2 mb-4 p-1 rounded-2xl" style="background:#f1f5f9;">
+      <button onclick="voucherTab('list')" id="vtab-list" class="flex-1 py-2.5 text-[10px] font-900 rounded-xl border-0 cursor-pointer transition-all font-black" style="background:#0061C2;color:white;box-shadow:0 4px 12px rgba(0,97,194,0.3);">DAFTAR VOUCHER</button>
+      <button onclick="voucherTab('add')"  id="vtab-add"  class="flex-1 py-2.5 text-[10px] font-900 rounded-xl border-0 cursor-pointer transition-all font-black" style="background:transparent;color:#94a3b8;">BUAT BARU</button>
+    </div>
+    <div id="voucher-list-panel">
+      <div id="voucher-list-content"></div>
+    </div>
+    <div id="voucher-add-panel" style="display:none;" class="space-y-3">
+      <div>
+        <label style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;display:block;margin-bottom:4px;">Kode Voucher</label>
+        <input id="vc-kode" class="input-premium" placeholder="Contoh: PROMO50, DISC10K" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()">
+      </div>
+      <div>
+        <label style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;display:block;margin-bottom:4px;">Tipe Diskon</label>
+        <div class="flex gap-2">
+          <button id="vc-type-pct" onclick="vcSetType('pct')" class="flex-1 py-3 text-[10px] font-black rounded-xl border-0 cursor-pointer" style="background:linear-gradient(135deg,#0061C2,#38bdf8);color:white;box-shadow:0 4px 12px rgba(0,97,194,0.3);">% Persen</button>
+          <button id="vc-type-nom" onclick="vcSetType('nom')" class="flex-1 py-3 text-[10px] font-black rounded-xl border-0 cursor-pointer" style="background:#f1f5f9;color:#94a3b8;">Rp Nominal</button>
+        </div>
+      </div>
+      <div>
+        <label style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;display:block;margin-bottom:4px;"><span id="vc-nilai-label">Nilai Diskon (%)</span></label>
+        <input id="vc-nilai" type="number" class="input-premium" placeholder="Contoh: 10 (untuk 10%)">
+      </div>
+      <div>
+        <label style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;display:block;margin-bottom:4px;">Maks. Penggunaan (0 = tak terbatas)</label>
+        <input id="vc-maks" type="number" class="input-premium" placeholder="0" value="0">
+      </div>
+      <div>
+        <label style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;display:block;margin-bottom:4px;">Berlaku s/d (kosongkan = selamanya)</label>
+        <input id="vc-exp" type="date" class="input-premium">
+      </div>
+      <button onclick="simpanVoucher()" class="w-full py-4 rounded-2xl font-black text-[12px] text-white border-0 cursor-pointer" style="background:linear-gradient(135deg,#0061C2,#0ea5e9);box-shadow:0 8px 24px rgba(0,97,194,0.4);">
+        <i class="fas fa-ticket mr-2"></i>BUAT VOUCHER
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ③ MODAL: Rekonsiliasi Dompet -->
+<div id="modal-rekon" class="modal-overlay">
+  <div class="modal-content" style="max-height:92vh;">
+    <div class="flex justify-between items-center mb-5">
+      <div>
+        <h4 class="text-lg font-black" style="color:var(--sb-text-title);">🔄 Rekonsiliasi Dompet</h4>
+        <p class="text-[9px] font-bold text-slate-400 mt-0.5">Cocokkan saldo buku vs fisik otomatis</p>
+      </div>
+      <button onclick="closeModal('modal-rekon')" class="text-slate-400 text-xl cursor-pointer border-0 bg-transparent"><i class="fas fa-times"></i></button>
+    </div>
+    <button onclick="jalankanRekon()" class="w-full py-3 rounded-2xl font-black text-[11px] text-white border-0 cursor-pointer mb-4" style="background:linear-gradient(135deg,#7c3aed,#a855f7);box-shadow:0 6px 18px rgba(124,58,237,0.35);">
+      <i class="fas fa-calculator mr-2"></i>JALANKAN REKONSILIASI OTOMATIS
+    </button>
+    <div id="rekon-result"></div>
+  </div>
+</div>
+
+<!-- ④ MODAL: PWA Notifikasi -->
+<div id="modal-notif-pwa" class="modal-overlay">
+  <div class="modal-content">
+    <div class="flex justify-between items-center mb-5">
+      <div>
+        <h4 class="text-lg font-black" style="color:var(--sb-text-title);">🔔 Push Notifikasi PWA</h4>
+        <p class="text-[9px] font-bold text-slate-400 mt-0.5">Kelola notifikasi push di perangkat ini</p>
+      </div>
+      <button onclick="closeModal('modal-notif-pwa')" class="text-slate-400 text-xl cursor-pointer border-0 bg-transparent"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="notif-pwa-content"></div>
+  </div>
+</div>
+
+<!-- ⑤ MODAL: Foto Produk (upload/preview) -->
+<div id="modal-foto-produk" class="modal-overlay">
+  <div class="modal-content">
+    <div class="flex justify-between items-center mb-5">
+      <h4 class="text-lg font-black" style="color:var(--sb-text-title);">📸 Foto Produk</h4>
+      <button onclick="closeModal('modal-foto-produk')" class="text-slate-400 text-xl cursor-pointer border-0 bg-transparent"><i class="fas fa-times"></i></button>
+    </div>
+    <p id="fp-produk-nama" class="text-[11px] font-bold text-slate-500 mb-4"></p>
+    <div class="foto-upload-zone" id="foto-upload-zone" onclick="document.getElementById('foto-file-input').click()">
+      <img id="foto-preview-img" src="" style="max-height:160px;width:100%;object-fit:contain;border-radius:12px;display:none;margin-bottom:8px;">
+      <div id="foto-upload-placeholder">
+        <i class="fas fa-camera text-4xl text-slate-300 mb-2 block"></i>
+        <p class="text-[12px] font-black text-slate-400">Tap untuk upload foto</p>
+        <p class="text-[9px] font-bold text-slate-300 mt-1">JPG/PNG · Maks 500KB</p>
+      </div>
+    </div>
+    <input type="file" id="foto-file-input" accept="image/*" style="display:none;" onchange="handleFotoUpload(event)">
+    <input type="hidden" id="foto-produk-id">
+    <div class="flex gap-3 mt-4">
+      <button onclick="hapusFotoProduk()" id="btn-hapus-foto" class="flex-1 py-3 rounded-2xl text-[11px] font-black border-0 cursor-pointer" style="background:#fef2f2;color:#ef4444;">
+        <i class="fas fa-trash mr-1"></i>HAPUS
+      </button>
+      <button onclick="simpanFotoProduk()" class="flex-1 py-3 rounded-2xl text-[11px] font-black text-white border-0 cursor-pointer" style="background:linear-gradient(135deg,#0061C2,#0ea5e9);box-shadow:0 4px 16px rgba(0,97,194,0.35);">
+        <i class="fas fa-check mr-1"></i>SIMPAN FOTO
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT: SELURUH LOGIKA 6 FITUR
+═══════════════════════════════════════════════════════ -->
+<script>
+(function KonterKUBisnisLanjutan() {
+  'use strict';
+
+  // ─────────────────────────────────────────────────
+  // HELPER: tunggu app ready (db & sync tersedia)
+  // ─────────────────────────────────────────────────
+  function waitApp(cb) {
+    if (typeof window.db !== 'undefined' && typeof window.sync === 'function') { cb(); return; }
+    setTimeout(() => waitApp(cb), 300);
+  }
+
+  const _fmt = (n) => new Intl.NumberFormat('id-ID').format(Number(n) || 0);
+  const _S   = () => window.MySwal || window._getMySwal?.() || window.Swal;
+  const _now = () => { const d = new Date(); return d.toISOString().split('T')[0]; };
+
+  // ═══════════════════════════════════════════════════
+  // ①  DATABASE PELANGGAN + RIWAYAT BELI
+  // ═══════════════════════════════════════════════════
+
+  // Buka profil + riwayat beli pelanggan
+  window.bukaProfilPelanggan = function(nama) {
+    const plg = (window.db.pelanggan || []).find(p => p.nama === nama);
+    if (!plg) { _S()?.fire('Info', 'Data pelanggan tidak ditemukan.', 'info'); return; }
+
+    const trxPlg = (window.db.transaksi || [])
+      .filter(t => (t.pelanggan || '').toLowerCase() === nama.toLowerCase())
+      .sort((a, b) => (b.tgl || '').localeCompare(a.tgl || ''));
+
+    const totalBeli = trxPlg.reduce((s, t) => s + Number(t.jual || 0), 0);
+    const totalTrx  = trxPlg.length;
+    const lastBeli  = trxPlg[0]?.tgl || '—';
+
+    // Hitung level
+    const level = totalBeli >= 5000000 ? { label: 'PLATINUM', color: '#8b5cf6', icon: '💎' }
+                : totalBeli >= 2000000 ? { label: 'GOLD',     color: '#f59e0b', icon: '🥇' }
+                : totalBeli >= 500000  ? { label: 'SILVER',   color: '#64748b', icon: '🥈' }
+                : { label: 'MEMBER', color: '#0061C2', icon: '⭐' };
+
+    const riwayatHTML = trxPlg.length
+      ? trxPlg.slice(0, 20).map(t => `
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--sb-border);">
+            <div style="width:34px;height:34px;border-radius:10px;background:${t.tipe==='digital'?'rgba(14,165,233,0.1)':'rgba(16,185,129,0.1)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i class="fas ${t.tipe==='digital'?'fa-bolt':'fa-box'}" style="font-size:11px;color:${t.tipe==='digital'?'#0ea5e9':'#10b981'};"></i>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <p style="font-size:11px;font-weight:800;color:var(--sb-text-title);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${(t.produk||'').replace(/^(DIG|FIS|EWL|ADJ):\s*/i,'')}</p>
+              <p style="font-size:9px;font-weight:700;color:var(--sb-text-sub);">${t.tgl||'—'} · ${t.status||'—'}</p>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <p style="font-size:12px;font-weight:900;color:#0061C2;">Rp ${_fmt(t.jual)}</p>
+              <p style="font-size:8px;font-weight:700;color:#10b981;">+Rp ${_fmt(Number(t.jual||0)-Number(t.modal||0))}</p>
+            </div>
+          </div>`)
+        .join('')
+      : '<div style="padding:24px;text-align:center;color:#94a3b8;font-size:11px;font-weight:700;">Belum ada riwayat transaksi</div>';
+
+    document.getElementById('pelanggan-detail-content').innerHTML = `
+      <!-- Header kartu pelanggan -->
+      <div style="border-radius:20px;background:linear-gradient(135deg,#0a1628,#0061C2);padding:20px;margin-bottom:16px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(56,189,248,0.15);border-radius:50%;"></div>
+        <div style="display:flex;align-items:center;gap:14px;position:relative;">
+          <div style="width:52px;height:52px;border-radius:18px;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;color:white;flex-shrink:0;">
+            ${(plg.nama||'?').charAt(0).toUpperCase()}
+          </div>
+          <div style="flex:1;">
+            <p style="font-size:16px;font-weight:900;color:white;">${plg.nama||'—'}</p>
+            <p style="font-size:10px;font-weight:700;color:rgba(255,255,255,0.6);">${plg.telp||'No. HP belum diisi'}</p>
+          </div>
+          <span style="padding:5px 12px;border-radius:100px;font-size:8px;font-weight:900;background:rgba(255,255,255,0.15);color:white;letter-spacing:0.06em;">${level.icon} ${level.label}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px;">
+          <div style="background:rgba(255,255,255,0.1);border-radius:12px;padding:10px;text-align:center;">
+            <p style="font-size:7.5px;font-weight:900;color:rgba(255,255,255,0.5);text-transform:uppercase;">Total Beli</p>
+            <p style="font-size:12px;font-weight:900;color:white;">Rp ${_fmt(totalBeli)}</p>
+          </div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:12px;padding:10px;text-align:center;">
+            <p style="font-size:7.5px;font-weight:900;color:rgba(255,255,255,0.5);text-transform:uppercase;">Total Trx</p>
+            <p style="font-size:16px;font-weight:900;color:white;">${totalTrx}</p>
+          </div>
+          <div style="background:rgba(255,255,255,0.1);border-radius:12px;padding:10px;text-align:center;">
+            <p style="font-size:7.5px;font-weight:900;color:rgba(255,255,255,0.5);text-transform:uppercase;">Terakhir</p>
+            <p style="font-size:10px;font-weight:900;color:white;">${lastBeli}</p>
+          </div>
+        </div>
+      </div>
+      <!-- Riwayat Beli -->
+      <p style="font-size:9px;font-weight:900;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">📋 Riwayat Pembelian (${totalTrx} transaksi)</p>
+      <div style="background:var(--sb-bg);border-radius:16px;border:1px solid var(--sb-border);overflow:hidden;max-height:40vh;overflow-y:auto;">
+        ${riwayatHTML}
+      </div>
+      ${plg.catatan ? `<div style="margin-top:12px;padding:12px;border-radius:14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);">
+        <p style="font-size:9px;font-weight:900;color:#f59e0b;text-transform:uppercase;margin-bottom:4px;">📝 Catatan</p>
+        <p style="font-size:11px;font-weight:700;color:var(--sb-text-title);">${plg.catatan}</p>
+      </div>` : ''}
+    `;
+    openModal('modal-pelanggan-detail');
+  };
+
+  // Patch sidebar pelanggan agar card bisa diklik
+  function patchSidebarPelanggan() {
+    const origRender = window.renderSidebarPelanggan || window.renderCustList;
+    if (!origRender) { setTimeout(patchSidebarPelanggan, 500); return; }
+    // Hook: tambah listener ke card pelanggan
+    const observer = new MutationObserver(() => {
+      document.querySelectorAll('#sidebar-cust-list [data-cust-nama]').forEach(el => {
+        if (el.dataset.proHooked) return;
+        el.dataset.proHooked = '1';
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', () => window.bukaProfilPelanggan(el.dataset.custNama));
+      });
+    });
+    const target = document.getElementById('sidebar-cust-list');
+    if (target) observer.observe(target, { childList: true, subtree: true });
+  }
+
+  // ═══════════════════════════════════════════════════
+  // ②  SISTEM DISKON & VOUCHER PROMO
+  // ═══════════════════════════════════════════════════
+
+  function getVouchers() {
+    try { return JSON.parse(localStorage.getItem('kku_vouchers') || '[]'); } catch { return []; }
+  }
+  function saveVouchers(v) {
+    localStorage.setItem('kku_vouchers', JSON.stringify(v));
+  }
+
+  window.voucherTab = function(tab) {
+    const listP = document.getElementById('voucher-list-panel');
+    const addP  = document.getElementById('voucher-add-panel');
+    const tList = document.getElementById('vtab-list');
+    const tAdd  = document.getElementById('vtab-add');
+    if (tab === 'list') {
+      listP.style.display = ''; addP.style.display = 'none';
+      tList.style.background = '#0061C2'; tList.style.color = 'white'; tList.style.boxShadow = '0 4px 12px rgba(0,97,194,0.3)';
+      tAdd.style.background  = 'transparent'; tAdd.style.color = '#94a3b8'; tAdd.style.boxShadow = 'none';
+      renderVoucherList();
+    } else {
+      listP.style.display = 'none'; addP.style.display = '';
+      tAdd.style.background  = '#0061C2'; tAdd.style.color = 'white'; tAdd.style.boxShadow = '0 4px 12px rgba(0,97,194,0.3)';
+      tList.style.background = 'transparent'; tList.style.color = '#94a3b8'; tList.style.boxShadow = 'none';
+    }
+  };
+
+  window.vcSetType = function(type) {
+    const pct = document.getElementById('vc-type-pct');
+    const nom = document.getElementById('vc-type-nom');
+    const lbl = document.getElementById('vc-nilai-label');
+    window._vcType = type;
+    if (type === 'pct') {
+      pct.style.background = 'linear-gradient(135deg,#0061C2,#38bdf8)'; pct.style.color = 'white'; pct.style.boxShadow = '0 4px 12px rgba(0,97,194,0.3)';
+      nom.style.background = '#f1f5f9'; nom.style.color = '#94a3b8'; nom.style.boxShadow = 'none';
+      lbl.textContent = 'Nilai Diskon (%)';
+    } else {
+      nom.style.background = 'linear-gradient(135deg,#059669,#10b981)'; nom.style.color = 'white'; nom.style.boxShadow = '0 4px 12px rgba(5,150,105,0.3)';
+      pct.style.background = '#f1f5f9'; pct.style.color = '#94a3b8'; pct.style.boxShadow = 'none';
+      lbl.textContent = 'Nilai Diskon (Rp)';
+    }
+  };
+  window._vcType = 'pct';
+
+  function renderVoucherList() {
+    const vcs = getVouchers();
+    const el  = document.getElementById('voucher-list-content');
+    if (!el) return;
+    if (!vcs.length) {
+      el.innerHTML = '<div style="padding:32px;text-align:center;"><i class="fas fa-ticket" style="font-size:28px;color:#e2e8f0;"></i><p style="font-size:11px;font-weight:700;color:#94a3b8;margin-top:8px;">Belum ada voucher. Buat yang pertama!</p></div>';
+      return;
+    }
+    el.innerHTML = vcs.map(vc => {
+      const isExpired = vc.exp && vc.exp < _now();
+      const usedAll   = vc.maks > 0 && vc.used >= vc.maks;
+      const status    = isExpired ? 'KADALUARSA' : usedAll ? 'HABIS' : 'AKTIF';
+      const statusClr = isExpired || usedAll ? '#ef4444' : '#10b981';
+      return `
+        <div class="voucher-card mb-3">
+          <div class="voucher-hole-left"></div>
+          <div class="voucher-hole-right"></div>
+          <div style="display:flex;">
+            <div style="flex:1;padding:14px 16px 14px 16px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+                <span style="font-size:9px;font-weight:900;color:${statusClr};letter-spacing:0.08em;">● ${status}</span>
+                <button onclick="hapusVoucher('${vc.id}')" style="border:none;background:rgba(239,68,68,0.1);color:#ef4444;border-radius:8px;padding:3px 8px;font-size:9px;font-weight:900;cursor:pointer;">HAPUS</button>
+              </div>
+              <p style="font-size:18px;font-weight:900;color:#0061C2;letter-spacing:0.06em;">${vc.kode}</p>
+              <p style="font-size:11px;font-weight:700;color:var(--sb-text-sub);">Diskon ${vc.tipe==='pct' ? vc.nilai+'%' : 'Rp '+_fmt(vc.nilai)}</p>
+            </div>
+            <div style="width:90px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border-left:2px dashed #bfdbfe;">
+              <p style="font-size:8px;font-weight:900;color:#94a3b8;text-transform:uppercase;">Dipakai</p>
+              <p style="font-size:20px;font-weight:900;color:#0061C2;">${vc.used||0}${vc.maks>0?'/'+vc.maks:''}</p>
+              ${vc.exp ? `<p style="font-size:7.5px;font-weight:700;color:#94a3b8;">s/d ${vc.exp}</p>` : ''}
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  window.simpanVoucher = function() {
+    const kode  = (document.getElementById('vc-kode').value || '').trim().toUpperCase();
+    const nilai = Number(document.getElementById('vc-nilai').value) || 0;
+    const maks  = Number(document.getElementById('vc-maks').value) || 0;
+    const exp   = document.getElementById('vc-exp').value || '';
+    if (!kode || nilai <= 0) { _S()?.fire('Error', 'Kode dan nilai diskon wajib diisi!', 'warning'); return; }
+    const vcs = getVouchers();
+    if (vcs.find(v => v.kode === kode)) { _S()?.fire('Error', 'Kode voucher sudah ada!', 'warning'); return; }
+    vcs.push({ id: 'VC-'+Date.now(), kode, tipe: window._vcType||'pct', nilai, maks, exp, used: 0, tgl: _now() });
+    saveVouchers(vcs);
+    _S()?.fire({ icon:'success', title:'Voucher Dibuat!', text:`Kode "${kode}" siap digunakan.`, timer:2000, showConfirmButton:false });
+    document.getElementById('vc-kode').value = '';
+    document.getElementById('vc-nilai').value = '';
+    voucherTab('list');
+  };
+
+  window.hapusVoucher = function(id) {
+    _S()?.fire({ title:'Hapus Voucher?', icon:'warning', showCancelButton:true, confirmButtonColor:'#ef4444', confirmButtonText:'Hapus', cancelButtonText:'Batal' }).then(r => {
+      if (!r.isConfirmed) return;
+      saveVouchers(getVouchers().filter(v => v.id !== id));
+      renderVoucherList();
+    });
+  };
+
+  // Fungsi pakai voucher — dipanggil dari kasir
+  window.pakaiVoucher = function(kode, hargaJual) {
+    const vcs = getVouchers();
+    const vc  = vcs.find(v => v.kode === (kode||'').trim().toUpperCase());
+    if (!vc)  return { ok: false, msg: 'Kode voucher tidak ditemukan.' };
+    if (vc.exp && vc.exp < _now()) return { ok: false, msg: 'Voucher sudah kadaluarsa.' };
+    if (vc.maks > 0 && vc.used >= vc.maks) return { ok: false, msg: 'Kuota voucher sudah habis.' };
+    const diskon = vc.tipe === 'pct' ? Math.round(hargaJual * vc.nilai / 100) : Math.min(vc.nilai, hargaJual);
+    return { ok: true, diskon, vc, label: vc.tipe==='pct' ? `-${vc.nilai}%` : `-Rp ${_fmt(vc.nilai)}` };
+  };
+
+  window.konfirmasiVoucher = function(kode, hargaJual, cbApply) {
+    const res = window.pakaiVoucher(kode, hargaJual);
+    if (!res.ok) { _S()?.fire('Voucher Tidak Valid', res.msg, 'warning'); return; }
+    _S()?.fire({
+      icon: 'success',
+      title: `✅ Voucher "${res.vc.kode}" Berlaku!`,
+      html: `Diskon <b style="color:#ef4444;">Rp ${_fmt(res.diskon)}</b> (${res.label})<br>Harga jual jadi <b style="color:#0061C2;">Rp ${_fmt(hargaJual - res.diskon)}</b>`,
+      showCancelButton: true,
+      confirmButtonText: 'Pakai Diskon',
+      cancelButtonText: 'Batal',
+      confirmButtonColor: '#0061C2',
+    }).then(r => {
+      if (!r.isConfirmed) return;
+      // Catat penggunaan
+      const vcs = getVouchers();
+      const idx = vcs.findIndex(v => v.id === res.vc.id);
+      if (idx !== -1) { vcs[idx].used = (vcs[idx].used || 0) + 1; saveVouchers(vcs); }
+      if (typeof cbApply === 'function') cbApply(res.diskon, res.vc.kode);
+    });
+  };
+
+  window.bukaModalVoucher = function() {
+    voucherTab('list');
+    openModal('modal-voucher');
+  };
+
+  // ── Inject strip diskon ke form kasir digital & fisik ──
+  function injectDiskonStrip() {
+    ['kd-submit-area', 'kf-submit-area'].forEach(areaId => {
+      if (document.getElementById('kasir-diskon-strip-' + areaId)) return;
+      const area = document.getElementById(areaId);
+      if (!area) return;
+      const strip = document.createElement('div');
+      strip.id = 'kasir-diskon-strip-' + areaId;
+      strip.innerHTML = `
+        <div id="kasir-diskon-strip" style="border-radius:16px;overflow:hidden;border:1.5px solid rgba(239,68,68,0.2);background:linear-gradient(135deg,#fff5f5,#fef2f2);margin-bottom:10px;padding:12px 14px;">
+          <p style="font-size:9px;font-weight:900;color:#ef4444;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px;">🏷️ Voucher / Diskon</p>
+          <div style="display:flex;gap:8px;">
+            <input id="kasir-vc-input-${areaId}" class="kasir-field-input" placeholder="Kode voucher..." style="flex:1;background:#fff;border:1.5px solid #fecaca;border-radius:12px;padding:9px 12px;font-size:12px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;outline:none;color:#1e293b;">
+            <button onclick="triggerVoucherKasir('${areaId}')" style="padding:9px 16px;background:linear-gradient(135deg,#ef4444,#f87171);color:white;border-radius:12px;border:none;font-size:10px;font-weight:900;cursor:pointer;flex-shrink:0;">PAKAI</button>
+          </div>
+          <div id="kasir-vc-applied-${areaId}" style="display:none;margin-top:8px;background:rgba(239,68,68,0.1);border-radius:10px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;">
+            <p id="kasir-vc-label-${areaId}" style="font-size:10px;font-weight:800;color:#dc2626;"></p>
+            <button onclick="batalVoucher('${areaId}')" style="font-size:9px;font-weight:900;color:#ef4444;background:none;border:none;cursor:pointer;">✕ BATAL</button>
+          </div>
+        </div>`;
+      area.before(strip);
+    });
+  }
+
+  window.triggerVoucherKasir = function(areaId) {
+    const inp = document.getElementById('kasir-vc-input-' + areaId);
+    const kode = (inp?.value || '').trim().toUpperCase();
+    if (!kode) { _S()?.fire('Info', 'Masukkan kode voucher dulu!', 'info'); return; }
+    // Ambil harga jual saat ini
+    const jualEl = areaId.startsWith('kd') ? document.getElementById('kd-jual') : document.getElementById('kf-jual');
+    const jual   = Number(jualEl?.value || 0);
+    if (!jual)   { _S()?.fire('Info', 'Isi harga jual dulu sebelum pakai voucher!', 'info'); return; }
+    window.konfirmasiVoucher(kode, jual, (diskon, vcKode) => {
+      window._kasirDiskon = window._kasirDiskon || {};
+      window._kasirDiskon[areaId] = { diskon, vcKode };
+      const appliedDiv = document.getElementById('kasir-vc-applied-' + areaId);
+      const labelEl    = document.getElementById('kasir-vc-label-' + areaId);
+      if (appliedDiv) appliedDiv.style.display = 'flex';
+      if (labelEl) labelEl.textContent = `✅ ${vcKode}: -Rp ${_fmt(diskon)} diterapkan`;
+    });
+  };
+
+  window.batalVoucher = function(areaId) {
+    if (window._kasirDiskon) delete window._kasirDiskon[areaId];
+    const appliedDiv = document.getElementById('kasir-vc-applied-' + areaId);
+    if (appliedDiv) appliedDiv.style.display = 'none';
+    const inp = document.getElementById('kasir-vc-input-' + areaId);
+    if (inp) inp.value = '';
+  };
+
+  // ═══════════════════════════════════════════════════
+  // ③  REKONSILIASI DOMPET OTOMATIS
+  // ═══════════════════════════════════════════════════
+
+  window.bukaRekon = function() {
+    document.getElementById('rekon-result').innerHTML =
+      '<div style="padding:32px;text-align:center;"><i class="fas fa-info-circle" style="font-size:24px;color:#94a3b8;"></i><p style="font-size:11px;font-weight:700;color:#94a3b8;margin-top:8px;">Klik tombol untuk memulai rekonsiliasi</p></div>';
+    openModal('modal-rekon');
+  };
+
+  window.jalankanRekon = function() {
+    const el = document.getElementById('rekon-result');
+    el.innerHTML = '<div style="padding:24px;text-align:center;"><i class="fas fa-spinner fa-spin text-blue-400 text-2xl"></i><p style="font-size:10px;font-weight:700;color:#94a3b8;margin-top:6px;">Menghitung...</p></div>';
+
+    setTimeout(() => {
+      const dompet = window.db.dompet || [];
+      const mutasi = window.db.mutasi || [];
+      const trx    = window.db.transaksi || [];
+
+      let totalSelisih = 0;
+      const rows = dompet.map(w => {
+        // Hitung saldo dari mutasi
+        const mut = mutasi.filter(m => m.walletId === w.id);
+        const saldoDariMutasi = mut.reduce((s, m) => s + (m.tipe === 'in' ? Number(m.amount || 0) : -Number(m.amount || 0)), 0);
+
+        // Bandingkan dengan saldo buku
+        const saldoBuku  = Number(w.saldo || 0);
+        const selisih    = saldoBuku - saldoDariMutasi;
+        totalSelisih += Math.abs(selisih);
+
+        const ok = Math.abs(selisih) < 1;
+        return { nama: w.nama, saldoBuku, saldoDariMutasi, selisih, ok };
+      });
+
+      const allOk = totalSelisih < 1;
+      let html = `
+        <div style="padding:14px 16px;border-radius:16px;margin-bottom:12px;background:${allOk?'rgba(16,185,129,0.1)':'rgba(245,158,11,0.1)'};border:1.5px solid ${allOk?'rgba(16,185,129,0.2)':'rgba(245,158,11,0.2)'};">
+          <p style="font-size:12px;font-weight:900;color:${allOk?'#10b981':'#f59e0b'};">
+            ${allOk ? '✅ Semua dompet seimbang!' : `⚠️ Total selisih: Rp ${_fmt(totalSelisih)}`}
+          </p>
+          <p style="font-size:9px;font-weight:700;color:#94a3b8;margin-top:4px;">${rows.length} dompet diperiksa · ${rows.filter(r=>r.ok).length} seimbang</p>
+        </div>
+        <div style="background:var(--sb-bg);border-radius:16px;border:1px solid var(--sb-border);overflow:hidden;">`;
+
+      rows.forEach(r => {
+        html += `
+          <div class="rekon-row">
+            <div style="width:36px;height:36px;border-radius:12px;background:${r.ok?'rgba(16,185,129,0.1)':'rgba(239,68,68,0.1)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i class="fas ${r.ok?'fa-check':'fa-exclamation'}" style="font-size:12px;color:${r.ok?'#10b981':'#ef4444'};"></i>
+            </div>
+            <div style="flex:1;min-width:0;">
+              <p style="font-size:12px;font-weight:800;color:var(--sb-text-title);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.nama}</p>
+              <p style="font-size:9px;font-weight:700;color:var(--sb-text-sub);">Buku: Rp ${_fmt(r.saldoBuku)} · Mutasi: Rp ${_fmt(r.saldoDariMutasi)}</p>
+            </div>
+            <span class="${r.ok?'rekon-badge-ok':'rekon-badge-diff'}">${r.ok ? 'SEIMBANG' : `BEDA ${r.selisih>=0?'+':''}${_fmt(r.selisih)}`}</span>
+          </div>`;
+      });
+
+      html += '</div>';
+
+      if (!allOk) {
+        html += `
+          <button onclick="perbaikiSelisihRekon()" class="w-full mt-3 py-3.5 rounded-2xl text-[11px] font-black text-white border-0 cursor-pointer"
+            style="background:linear-gradient(135deg,#059669,#10b981);box-shadow:0 6px 18px rgba(5,150,105,0.3);">
+            <i class="fas fa-wrench mr-2"></i>AUTO KOREKSI SELISIH
+          </button>`;
+      }
+
+      el.innerHTML = html;
+    }, 600);
+  };
+
+  window.perbaikiSelisihRekon = function() {
+    _S()?.fire({
+      title: 'Auto Koreksi Selisih?',
+      html: 'Saldo buku akan dijadikan acuan. Mutasi penyesuaian akan ditambahkan secara otomatis.',
+      icon: 'question', showCancelButton: true,
+      confirmButtonText: 'Ya, Koreksi', cancelButtonText: 'Batal', confirmButtonColor: '#059669'
+    }).then(r => {
+      if (!r.isConfirmed) return;
+      const dompet = window.db.dompet || [];
+      const mutasi = window.db.mutasi || [];
+      let fixed = 0;
+      dompet.forEach(w => {
+        const mut = mutasi.filter(m => m.walletId === w.id);
+        const saldoDariMutasi = mut.reduce((s, m) => s + (m.tipe === 'in' ? Number(m.amount||0) : -Number(m.amount||0)), 0);
+        const selisih = Number(w.saldo||0) - saldoDariMutasi;
+        if (Math.abs(selisih) >= 1) {
+          window.db.mutasi.push({ id:'MUT-'+Date.now()+fixed, walletId: w.id, tipe: selisih>0?'in':'out', amount: Math.abs(selisih), ket:'REKON: Koreksi selisih otomatis', tgl: _now() });
+          fixed++;
+        }
+      });
+      window.sync?.();
+      _S()?.fire({ icon:'success', title:`${fixed} koreksi ditambahkan!`, timer:2500, showConfirmButton:false });
+      window.jalankanRekon();
+    });
+  };
+
+  // ═══════════════════════════════════════════════════
+  // ④  PUSH NOTIFIKASI PWA
+  // ═══════════════════════════════════════════════════
+
+  window.bukaNotifPWA = function() {
+    renderNotifPWA();
+    openModal('modal-notif-pwa');
+  };
+
+  function renderNotifPWA() {
+    const el = document.getElementById('notif-pwa-content');
+    if (!el) return;
+    const perm = Notification?.permission || 'tidak didukung';
+    const supported = 'Notification' in window && 'serviceWorker' in navigator;
+
+    const badgeClass = perm === 'granted' ? 'notif-perm-granted' : perm === 'denied' ? 'notif-perm-denied' : 'notif-perm-default';
+    const badgeIcon  = perm === 'granted' ? 'fa-check-circle' : perm === 'denied' ? 'fa-ban' : 'fa-clock';
+    const badgeLabel = perm === 'granted' ? 'DIIZINKAN' : perm === 'denied' ? 'DITOLAK' : 'BELUM DIIZINKAN';
+
+    el.innerHTML = `
+      <!-- Status -->
+      <div style="border-radius:16px;border:1.5px solid var(--sb-border);padding:16px;margin-bottom:16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <p style="font-size:11px;font-weight:900;color:var(--sb-text-title);">Status Izin Notifikasi</p>
+          <span class="notif-perm-badge ${badgeClass}"><i class="fas ${badgeIcon} text-[8px]"></i> ${badgeLabel}</span>
+        </div>
+        ${!supported ? '<p style="font-size:10px;font-weight:700;color:#ef4444;">Browser tidak mendukung notifikasi.</p>' : ''}
+        ${perm === 'denied' ? '<p style="font-size:10px;font-weight:700;color:#ef4444;">Izin ditolak. Aktifkan manual di pengaturan browser.</p>' : ''}
+      </div>
+
+      <!-- Tombol -->
+      ${perm !== 'granted' && supported && perm !== 'denied' ? `
+        <button onclick="mintaIzinNotif()" class="w-full py-3.5 rounded-2xl text-[12px] font-black text-white border-0 cursor-pointer mb-3"
+          style="background:linear-gradient(135deg,#0061C2,#0ea5e9);box-shadow:0 6px 18px rgba(0,97,194,0.35);">
+          <i class="fas fa-bell mr-2"></i>IZINKAN NOTIFIKASI
+        </button>` : ''}
+
+      ${perm === 'granted' ? `
+        <button onclick="testNotifPWA()" class="w-full py-3 rounded-2xl text-[11px] font-black text-white border-0 cursor-pointer mb-3"
+          style="background:linear-gradient(135deg,#059669,#10b981);box-shadow:0 4px 14px rgba(5,150,105,0.3);">
+          <i class="fas fa-paper-plane mr-2"></i>TEST KIRIM NOTIFIKASI
+        </button>` : ''}
+
+      <!-- Pengaturan notifikasi -->
+      <div style="border-radius:16px;border:1.5px solid var(--sb-border);overflow:hidden;">
+        ${[
+          { id:'notif_stok_menipis',  icon:'fa-box',               color:'#f59e0b', label:'Stok Menipis',         sub:'Notifikasi saat stok < batas minimal' },
+          { id:'notif_hutang_jatuh',  icon:'fa-file-invoice-dollar',color:'#ef4444', label:'Hutang Jatuh Tempo',   sub:'Ingatkan H-3 jatuh tempo hutang' },
+          { id:'notif_saldo_rendah',  icon:'fa-wallet',             color:'#8b5cf6', label:'Saldo Dompet Rendah',  sub:'Notifikasi jika saldo < Rp 100K' },
+          { id:'notif_transaksi_baru',icon:'fa-cash-register',      color:'#0061C2', label:'Konfirmasi Transaksi', sub:'Notifikasi tiap transaksi berhasil' },
+        ].map(item => {
+          const enabled = localStorage.getItem(item.id) !== 'off';
+          return `
+          <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--sb-border);">
+            <div style="width:38px;height:38px;border-radius:12px;background:rgba(${item.color==='#0061C2'?'0,97,194':'f59e0b'==='#f59e0b'?'245,158,11':item.color==='#ef4444'?'239,68,68':item.color==='#8b5cf6'?'139,92,246':'0,97,194'},0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <i class="fas ${item.icon}" style="font-size:13px;color:${item.color};"></i>
+            </div>
+            <div style="flex:1;">
+              <p style="font-size:11px;font-weight:800;color:var(--sb-text-title);">${item.label}</p>
+              <p style="font-size:9px;font-weight:700;color:var(--sb-text-sub);">${item.sub}</p>
+            </div>
+            <label style="position:relative;display:inline-block;width:44px;height:24px;flex-shrink:0;margin:0;">
+              <input type="checkbox" ${enabled?'checked':''} onchange="toggleNotifSetting('${item.id}',this.checked)"
+                style="opacity:0;width:0;height:0;position:absolute;">
+              <span style="position:absolute;cursor:pointer;inset:0;border-radius:100px;background:${enabled?'#0061C2':'#e2e8f0'};transition:0.3s;">
+                <span style="position:absolute;left:${enabled?'22px':'2px'};top:2px;width:20px;height:20px;background:white;border-radius:50%;transition:0.3s;box-shadow:0 2px 6px rgba(0,0,0,0.2);"></span>
+              </span>
+            </label>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <!-- PWA Install hint -->
+      <div style="margin-top:12px;border-radius:16px;background:rgba(0,97,194,0.06);border:1.5px solid rgba(0,97,194,0.12);padding:14px;">
+        <p style="font-size:10px;font-weight:900;color:#0061C2;margin-bottom:4px;">💡 Untuk notifikasi terbaik</p>
+        <p style="font-size:9px;font-weight:700;color:#64748b;">Install KonterKU sebagai PWA (Add to Home Screen) agar notifikasi background aktif saat app tertutup.</p>
+      </div>
+    `;
+  }
+
+  window.mintaIzinNotif = async function() {
+    if (!('Notification' in window)) { _S()?.fire('Info', 'Browser tidak mendukung notifikasi.', 'info'); return; }
+    const perm = await Notification.requestPermission();
+    if (perm === 'granted') {
+      _S()?.fire({ icon:'success', title:'Notifikasi Diizinkan!', text:'Anda akan menerima push notifikasi dari KonterKU.', timer:2500, showConfirmButton:false });
+      window.kirimNotif('KonterKU', 'Notifikasi aktif! ✅ Selamat menggunakan KonterKU.');
+    } else {
+      _S()?.fire('Ditolak', 'Izin notifikasi ditolak. Aktifkan manual di pengaturan browser.', 'warning');
+    }
+    renderNotifPWA();
+  };
+
+  window.kirimNotif = function(title, body, icon) {
+    if (Notification?.permission !== 'granted') return;
+    try {
+      new Notification(title, {
+        body,
+        icon: icon || (localStorage.getItem('k_struk_logo') || '/icon-192.png'),
+        badge: '/icon-96.png',
+        tag: 'konterku-' + Date.now(),
+        vibrate: [200, 100, 200],
+      });
+    } catch(e) { console.warn('[PWA Notif]', e.message); }
+  };
+
+  window.testNotifPWA = function() {
+    const storeName = localStorage.getItem('k_store_name') || 'KonterKU';
+    window.kirimNotif(storeName, '🎉 Test notifikasi berhasil! Push notifikasi aktif di perangkat ini.');
+    _S()?.fire({ icon:'success', title:'Notifikasi Dikirim!', text:'Cek notifikasi di perangkat Anda.', timer:2000, showConfirmButton:false });
+  };
+
+  window.toggleNotifSetting = function(id, enabled) {
+    localStorage.setItem(id, enabled ? 'on' : 'off');
+    renderNotifPWA();
+  };
+
+  // Hook ke sistem notif existing
+  function hookKirimNotifKeTranx() {
+    const _origSync = window.syncImmediate;
+    if (!_origSync) { setTimeout(hookKirimNotifKeTranx, 1000); return; }
+    window.syncImmediate = async function() {
+      const result = await _origSync.apply(this, arguments);
+      const enabled = localStorage.getItem('notif_transaksi_baru') !== 'off';
+      if (enabled && result) {
+        const trx = (window.db.transaksi || []);
+        if (trx.length) {
+          const last = trx[trx.length - 1];
+          const nama = (last.produk || '').replace(/^(DIG|FIS|EWL|ADJ):\s*/i, '');
+          window.kirimNotif('Transaksi Berhasil ✅', `${nama} · Rp ${_fmt(last.jual)}`);
+        }
+      }
+      return result;
+    };
+  }
+
+  // ═══════════════════════════════════════════════════
+  // ⑤  FOTO PRODUK DI KATALOG STOK
+  // ═══════════════════════════════════════════════════
+
+  function getFotoDb() {
+    try { return JSON.parse(localStorage.getItem('kku_foto_produk') || '{}'); } catch { return {}; }
+  }
+  function saveFotoDb(db) { localStorage.setItem('kku_foto_produk', JSON.stringify(db)); }
+
+  window.bukaFotoProduk = function(produkId) {
+    const inv  = window.db.inventory || [];
+    const prod = inv.find(p => p.id === produkId);
+    if (!prod) return;
+    const fotoDb = getFotoDb();
+    const foto   = fotoDb[produkId] || '';
+
+    document.getElementById('foto-produk-id').value = produkId;
+    document.getElementById('fp-produk-nama').textContent = '📦 ' + (prod.nama || '—');
+
+    const img  = document.getElementById('foto-preview-img');
+    const ph   = document.getElementById('foto-upload-placeholder');
+    const zone = document.getElementById('foto-upload-zone');
+    if (foto) {
+      img.src = foto; img.style.display = 'block'; ph.style.display = 'none';
+      zone.classList.add('has-foto');
+    } else {
+      img.src = ''; img.style.display = 'none'; ph.style.display = '';
+      zone.classList.remove('has-foto');
+    }
+    document.getElementById('foto-file-input').value = '';
+    window._fotoPending = foto || '';
+    openModal('modal-foto-produk');
+  };
+
+  window.handleFotoUpload = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 512000) { _S()?.fire('Terlalu Besar', 'Foto maksimal 500KB. Kompres dulu.', 'warning'); return; }
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      window._fotoPending = ev.target.result;
+      const img  = document.getElementById('foto-preview-img');
+      const ph   = document.getElementById('foto-upload-placeholder');
+      const zone = document.getElementById('foto-upload-zone');
+      img.src = ev.target.result; img.style.display = 'block'; ph.style.display = 'none';
+      zone.classList.add('has-foto');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  window.simpanFotoProduk = function() {
+    const id     = document.getElementById('foto-produk-id').value;
+    const fotoDb = getFotoDb();
+    if (window._fotoPending) fotoDb[id] = window._fotoPending;
+    saveFotoDb(fotoDb);
+    closeModal('modal-foto-produk');
+    _S()?.fire({ icon:'success', title:'Foto Disimpan!', timer:1800, showConfirmButton:false });
+    if (typeof window.renderStok === 'function') window.renderStok();
+  };
+
+  window.hapusFotoProduk = function() {
+    const id     = document.getElementById('foto-produk-id').value;
+    const fotoDb = getFotoDb();
+    delete fotoDb[id];
+    saveFotoDb(fotoDb);
+    window._fotoPending = '';
+    const img  = document.getElementById('foto-preview-img');
+    const ph   = document.getElementById('foto-upload-placeholder');
+    const zone = document.getElementById('foto-upload-zone');
+    img.src = ''; img.style.display = 'none'; ph.style.display = '';
+    zone.classList.remove('has-foto');
+    if (typeof window.renderStok === 'function') window.renderStok();
+  };
+
+  // Patch renderStok agar tampilkan foto & tombol kamera
+  function patchRenderStok() {
+    const _origRenderStok = window.renderStok;
+    if (!_origRenderStok) { setTimeout(patchRenderStok, 800); return; }
+    window.renderStok = function() {
+      _origRenderStok.apply(this, arguments);
+      // Tambahkan foto ke tiap card stok yang ada
+      setTimeout(() => {
+        const fotoDb = getFotoDb();
+        document.querySelectorAll('[data-stok-item-id]').forEach(card => {
+          if (card.dataset.fotoInjected) return;
+          card.dataset.fotoInjected = '1';
+          const pid = card.dataset.stokItemId;
+          const foto = fotoDb[pid];
+          const camBtn = document.createElement('button');
+          camBtn.title = 'Foto Produk';
+          camBtn.onclick = (e) => { e.stopPropagation(); window.bukaFotoProduk(pid); };
+          camBtn.style.cssText = 'position:absolute;bottom:8px;right:8px;width:28px;height:28px;border-radius:9px;background:rgba(0,97,194,0.1);border:1px solid rgba(0,97,194,0.2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;z-index:2;';
+          camBtn.innerHTML = foto ? '<i class="fas fa-image" style="color:#0061C2;"></i>' : '<i class="fas fa-camera" style="color:#94a3b8;"></i>';
+          if (foto) {
+            const thumb = document.createElement('img');
+            thumb.src = foto;
+            thumb.className = 'stok-foto-thumb';
+            thumb.style.cssText = 'position:absolute;top:8px;right:8px;width:36px;height:36px;border-radius:10px;object-fit:cover;border:1.5px solid rgba(0,97,194,0.2);z-index:1;';
+            card.style.position = 'relative';
+            card.appendChild(thumb);
+          }
+        });
+      }, 100);
+    };
+  }
+
+  // ═══════════════════════════════════════════════════
+  // ⑥  INJECT TOMBOL DI SIDEBAR & UI LAINNYA
+  // ═══════════════════════════════════════════════════
+
+  function injectSidebarMenu() {
+    // Tunggu sidebar menu list ada
+    const target = document.querySelector('.sidebar-panel .flex-1.py-2');
+    if (!target) { setTimeout(injectSidebarMenu, 600); return; }
+    if (document.getElementById('sb-menu-bisnis-lanjutan')) return;
+
+    const section = document.createElement('div');
+    section.id = 'sb-menu-bisnis-lanjutan';
+    section.innerHTML = `
+      <div class="sidebar-divider"></div>
+      <p class="sidebar-section-label">⚡ Fitur Bisnis</p>
+      <button onclick="bukaModalVoucher(); closeSidebar && closeSidebar();" class="sidebar-menu-item">
+        <div class="sidebar-icon-wrap" style="background:rgba(239,68,68,0.1);">
+          <i class="fas fa-ticket" style="color:#ef4444;"></i>
+        </div>
+        <div>
+          <p class="text-[12px] font-black" style="color:var(--sb-text-title);">Voucher & Diskon</p>
+          <p class="text-[9px] font-bold" style="color:var(--sb-text-sub);">Kelola kode promo toko</p>
+        </div>
+        <i class="fas fa-chevron-right text-xs ml-auto" style="color:var(--sb-chevron);"></i>
+      </button>
+      <button onclick="bukaRekon(); closeSidebar && closeSidebar();" class="sidebar-menu-item">
+        <div class="sidebar-icon-wrap" style="background:rgba(124,58,237,0.1);">
+          <i class="fas fa-calculator" style="color:#7c3aed;"></i>
+        </div>
+        <div>
+          <p class="text-[12px] font-black" style="color:var(--sb-text-title);">Rekonsiliasi Dompet</p>
+          <p class="text-[9px] font-bold" style="color:var(--sb-text-sub);">Cocokkan saldo otomatis</p>
+        </div>
+        <i class="fas fa-chevron-right text-xs ml-auto" style="color:var(--sb-chevron);"></i>
+      </button>
+      <button onclick="bukaNotifPWA(); closeSidebar && closeSidebar();" class="sidebar-menu-item">
+        <div class="sidebar-icon-wrap" style="background:rgba(0,97,194,0.1);">
+          <i class="fas fa-bell" style="color:#0061C2;"></i>
+        </div>
+        <div>
+          <p class="text-[12px] font-black" style="color:var(--sb-text-title);">Push Notifikasi PWA</p>
+          <p class="text-[9px] font-bold" style="color:var(--sb-text-sub);">Kelola alert perangkat</p>
+        </div>
+        <i class="fas fa-chevron-right text-xs ml-auto" style="color:var(--sb-chevron);"></i>
+      </button>
+    `;
+    target.appendChild(section);
+    console.log('[KonterKU Bisnis Lanjutan] Menu sidebar disuntik ✓');
+  }
+
+  // Tombol di dashboard / shortcut cepat
+  function injectDashboardShortcuts() {
+    const target = document.querySelector('#view-dashboard .grid.grid-cols-2');
+    if (!target) { setTimeout(injectDashboardShortcuts, 800); return; }
+    if (document.getElementById('dash-btn-voucher')) return;
+
+    const vBtn = document.createElement('button');
+    vBtn.id = 'dash-btn-voucher';
+    vBtn.onclick = window.bukaModalVoucher;
+    vBtn.className = 'bg-white rounded-[18px] p-4 text-left border border-slate-100';
+    vBtn.style.cssText = 'box-shadow:0 2px 12px rgba(0,0,0,0.04);cursor:pointer;';
+    vBtn.innerHTML = `
+      <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,rgba(239,68,68,0.12),rgba(248,113,113,0.08));display:flex;align-items:center;justify-content:center;margin-bottom:10px;">
+        <i class="fas fa-ticket" style="color:#ef4444;font-size:14px;"></i>
+      </div>
+      <p class="text-slate-700 font-black text-[12px]">Voucher</p>
+      <p class="text-slate-400 font-bold text-[9px] mt-0.5">Diskon & Promo</p>`;
+
+    const rekonBtn = document.createElement('button');
+    rekonBtn.id = 'dash-btn-rekon';
+    rekonBtn.onclick = window.bukaRekon;
+    rekonBtn.className = 'bg-white rounded-[18px] p-4 text-left border border-slate-100';
+    rekonBtn.style.cssText = 'box-shadow:0 2px 12px rgba(0,0,0,0.04);cursor:pointer;';
+    rekonBtn.innerHTML = `
+      <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(168,85,247,0.08));display:flex;align-items:center;justify-content:center;margin-bottom:10px;">
+        <i class="fas fa-calculator" style="color:#7c3aed;font-size:14px;"></i>
+      </div>
+      <p class="text-slate-700 font-black text-[12px]">Rekonsiliasi</p>
+      <p class="text-slate-400 font-bold text-[9px] mt-0.5">Cocokkan Saldo</p>`;
+
+    target.appendChild(vBtn);
+    target.appendChild(rekonBtn);
+  }
+
+  // ═══════════════════════════════════════════════════
+  // BOOT: Jalankan semua modul setelah app siap
+  // ═══════════════════════════════════════════════════
+  waitApp(() => {
+    patchRenderStok();
+    patchSidebarPelanggan();
+    hookKirimNotifKeTranx();
+    injectSidebarMenu();
+    injectDashboardShortcuts();
+    setTimeout(injectDiskonStrip, 1500);
+    console.log('[KonterKU Bisnis Lanjutan v1.0] Semua modul aktif ✓');
+  });
+
+  // Expose ke window untuk akses eksternal
+  window.KonterKUBisnis = {
+    bukaProfilPelanggan: window.bukaProfilPelanggan,
+    bukaModalVoucher:    window.bukaModalVoucher,
+    pakaiVoucher:        window.pakaiVoucher,
+    bukaRekon:           window.bukaRekon,
+    bukaNotifPWA:        window.bukaNotifPWA,
+    kirimNotif:          window.kirimNotif,
+    bukaFotoProduk:      window.bukaFotoProduk,
+    getVouchers,
+  };
+
+})();
+</script>
+<!-- ================================================================
+     END MODUL BISNIS LANJUTAN KonterKU v1.0
+================================================================ -->
+
 </body>
 </html>
