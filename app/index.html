@@ -13432,7 +13432,10 @@ ${t.tipe === 'ewallet' ? `
             <p class="text-[9px] text-slate-400 font-bold">${c.phone ? '📱 '+c.phone : 'Tanpa nomor'} &nbsp;·&nbsp; ${trxCount} transaksi</p>
           </div>
           <div class="flex gap-1.5 flex-shrink-0">
-            <button onclick="editCustomerFromSidebar('${c.id}')" class="w-8 h-8 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center cursor-pointer border-0 hover:bg-blue-100 transition-colors">
+            <button onclick="window.open('tukar-poin.html?id=${c.id}','_blank')" class="w-8 h-8 bg-violet-50 text-violet-500 rounded-xl flex items-center justify-center cursor-pointer border-0 hover:bg-violet-100 transition-colors" title="Tukar Poin">
+              <i class="fas fa-gift text-[10px]"></i>
+            </button>
+            <button onclick="editCustomerFromSidebar('${c.id}')" class="w-8 h-8 bg-blue-50 text-blue-500 rounded-xl flex items-center justify-center cursor-pointer border-0 hover:bg-blue-100 transition-colors" title="Edit">
               <i class="fas fa-edit text-[10px]"></i>
             </button>
           </div>
