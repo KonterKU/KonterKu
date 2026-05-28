@@ -4627,13 +4627,29 @@
                       <p style="font-size:10px;font-weight:900;color:#7c3aed;margin:0;">🎯 Poin per Jenis Transaksi</p>
                       <span style="font-size:8px;font-weight:700;color:#94a3b8;">Input manual</span>
                     </div>
-                    <p style="font-size:8px;font-weight:700;color:#94a3b8;margin:0 0 10px;">Atur nama transaksi & berapa poin yang diberikan. Muncul sebagai pilihan di kasir.</p>
+                    <p style="font-size:8px;font-weight:700;color:#94a3b8;margin:0 0 10px;">Atur nama transaksi & berapa poin yang diberikan. Bisa diikat ke kategori produk agar poin otomatis terisi saat kasir memilih produk tersebut.</p>
                     <div style="display:flex;flex-direction:column;gap:6px;" id="poin-per-trx-list">
                       <!-- diisi oleh JS -->
                     </div>
                     <button onclick="tambahItemPoinTrx()"
                       style="margin-top:10px;width:100%;padding:8px;border-radius:10px;border:2px dashed rgba(124,58,237,0.4);background:rgba(124,58,237,0.04);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:900;color:#7c3aed;">
                       <i class="fas fa-plus" style="font-size:9px;"></i> Tambah Jenis Transaksi
+                    </button>
+                  </div>
+
+                  <!-- Daftar Hadiah Penukaran -->
+                  <div style="background:#fff;border-radius:14px;padding:12px 14px;border:1.5px solid #ede9fe;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                      <p style="font-size:10px;font-weight:900;color:#7c3aed;margin:0;">🎁 Daftar Hadiah Penukaran</p>
+                      <span style="font-size:8px;font-weight:700;color:#94a3b8;">Tampil di halaman tukar poin</span>
+                    </div>
+                    <p style="font-size:8px;font-weight:700;color:#94a3b8;margin:0 0 10px;">Atur nama hadiah & berapa poin yang dibutuhkan pelanggan untuk menukarnya.</p>
+                    <div style="display:flex;flex-direction:column;gap:6px;" id="poin-hadiah-list">
+                      <!-- diisi oleh JS -->
+                    </div>
+                    <button onclick="tambahItemHadiah()"
+                      style="margin-top:10px;width:100%;padding:8px;border-radius:10px;border:2px dashed rgba(5,150,105,0.4);background:rgba(5,150,105,0.04);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:900;color:#059669;">
+                      <i class="fas fa-plus" style="font-size:9px;"></i> Tambah Hadiah
                     </button>
                   </div>
 
@@ -10840,6 +10856,8 @@
         if (item) {
           document.getElementById('kd-modal').value = item.modal;
           document.getElementById('kd-jual').value = item.jual;
+          // Auto-detect kategori produk → refresh section poin
+          if (window.refreshKasirPoinSection) window.refreshKasirPoinSection(item.kategori || null);
         }
         updateKasirLaba('digital');
       } else {
@@ -10848,6 +10866,8 @@
         if (item) {
           document.getElementById('kf-modal').value = item.modal;
           document.getElementById('kf-jual').value = item.jual;
+          // Auto-detect kategori produk → refresh section poin
+          if (window.refreshKasirPoinSection) window.refreshKasirPoinSection(item.kategori || null);
         }
         updateKasirLaba('fisik');
       }
@@ -21134,6 +21154,11 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
       { nama: 'Beli HP',                 poin: 100 },
       { nama: 'Print Dokumen',           poin: 1  },
       { nama: 'Cetak Foto',              poin: 3  },
+    ],
+    daftarHadiah: [             // hadiah yang bisa ditukar pelanggan
+      { nama: 'Headset',        poin: 250 },
+      { nama: 'Minyak Goreng 2L', poin: 500 },
+      { nama: 'Beras 10 Kg',    poin: 750 },
     ]
   };
 
@@ -21172,6 +21197,7 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
     updateToggleUI(!!cfg.aktif);
     if (nilaiTk) nilaiTk.value = cfg.nilaiTukar || 1000;
     renderBonusTrxList(cfg.bonusTrx || []);
+    renderHadiahList(cfg.daftarHadiah || []);
   };
 
   function updateToggleUI(aktif) {
@@ -21185,28 +21211,58 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
     refreshKasirPoinSection();
   }
 
+  /* ── Ambil semua kategori unik dari db.inventory ── */
+  function getKategoriList() {
+    if (!window.db || !window.db.inventory) return [];
+    const cats = new Set();
+    window.db.inventory.forEach(p => { if (p.kategori) cats.add(p.kategori); });
+    return Array.from(cats).sort();
+  }
+
   function renderBonusTrxList(list) {
     const wrap = document.getElementById('poin-per-trx-list');
     if (!wrap) return;
-    wrap.innerHTML = list.map((item, i) => `
-      <div style="display:flex;align-items:center;gap:8px;">
-        <input type="text" value="${item.nama || ''}" placeholder="Nama transaksi (cth: Pulsa)"
-          onchange="updateBonusTrxItem(${i},'nama',this.value)"
-          style="flex:1;border:1.5px solid #e2e8f0;border-radius:10px;padding:7px 10px;font-size:10px;font-weight:700;outline:none;font-family:'Plus Jakarta Sans',sans-serif;"
-          onfocus="this.style.borderColor='#7c3aed'" onblur="this.style.borderColor='#e2e8f0'">
-        <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
-          <input type="number" value="${item.poin || 1}" min="1" placeholder="Poin"
-            onchange="updateBonusTrxItem(${i},'poin',parseInt(this.value)||1)"
-            style="width:54px;border:1.5px solid #e2e8f0;border-radius:10px;padding:7px 6px;font-size:11px;font-weight:900;text-align:center;outline:none;font-family:'Plus Jakarta Sans',sans-serif;"
+    const kategoriList = getKategoriList();
+    const katOptions = ['<option value="">— Tidak diikat —</option>',
+      ...kategoriList.map(k => `<option value="${k}">${k}</option>`)
+    ].join('');
+
+    wrap.innerHTML = list.map((item, i) => {
+      const selectedKat = item.kategori || '';
+      const katOptsRendered = ['<option value="">— Tidak diikat —</option>',
+        ...kategoriList.map(k => `<option value="${k}"${k===selectedKat?' selected':''}>${k}</option>`)
+      ].join('');
+      return `
+      <div style="background:#f8faff;border:1.5px solid #ede9fe;border-radius:12px;padding:10px 10px 8px;">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+          <input type="text" value="${item.nama || ''}" placeholder="Nama transaksi (cth: Bayar PDAM)"
+            onchange="updateBonusTrxItem(${i},'nama',this.value)"
+            style="flex:1;border:1.5px solid #e2e8f0;border-radius:10px;padding:7px 10px;font-size:10px;font-weight:700;outline:none;font-family:'Plus Jakarta Sans',sans-serif;"
             onfocus="this.style.borderColor='#7c3aed'" onblur="this.style.borderColor='#e2e8f0'">
-          <span style="font-size:9px;font-weight:700;color:#7c3aed;">poin</span>
+          <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
+            <input type="number" value="${item.poin || 1}" min="1" placeholder="Poin"
+              onchange="updateBonusTrxItem(${i},'poin',parseInt(this.value)||1)"
+              style="width:54px;border:1.5px solid #e2e8f0;border-radius:10px;padding:7px 6px;font-size:11px;font-weight:900;text-align:center;outline:none;font-family:'Plus Jakarta Sans',sans-serif;"
+              onfocus="this.style.borderColor='#7c3aed'" onblur="this.style.borderColor='#e2e8f0'">
+            <span style="font-size:9px;font-weight:700;color:#7c3aed;">poin</span>
+          </div>
+          <button onclick="hapusBonusTrxItem(${i})"
+            style="width:28px;height:28px;border-radius:8px;border:none;background:rgba(239,68,68,0.1);color:#ef4444;cursor:pointer;font-size:10px;flex-shrink:0;">
+            <i class="fas fa-trash"></i>
+          </button>
         </div>
-        <button onclick="hapusBonusTrxItem(${i})"
-          style="width:28px;height:28px;border-radius:8px;border:none;background:rgba(239,68,68,0.1);color:#ef4444;cursor:pointer;font-size:10px;flex-shrink:0;">
-          <i class="fas fa-trash"></i>
-        </button>
-      </div>`
-    ).join('');
+        <div style="display:flex;align-items:center;gap:6px;">
+          <i class="fas fa-tag" style="font-size:9px;color:#7c3aed;flex-shrink:0;"></i>
+          <span style="font-size:9px;font-weight:700;color:#64748b;white-space:nowrap;">Ikat ke Kategori:</span>
+          <select onchange="updateBonusTrxItem(${i},'kategori',this.value)"
+            style="flex:1;border:1.5px solid #e2e8f0;border-radius:8px;padding:4px 8px;font-size:9px;font-weight:700;outline:none;font-family:'Plus Jakarta Sans',sans-serif;color:#1e293b;background:#fff;"
+            onfocus="this.style.borderColor='#7c3aed'" onblur="this.style.borderColor='#e2e8f0'">
+            ${katOptsRendered}
+          </select>
+        </div>
+        ${selectedKat ? `<p style="font-size:8px;color:#7c3aed;font-weight:700;margin:5px 0 0;"><i class="fas fa-circle-check" style="margin-right:3px;"></i>Produk kategori "<b>${selectedKat}</b>" otomatis dapat <b>${item.poin||1} poin</b></p>` : `<p style="font-size:8px;color:#94a3b8;font-weight:700;margin:5px 0 0;"><i class="fas fa-circle-info" style="margin-right:3px;"></i>Tidak diikat — kasir pilih manual</p>`}
+      </div>`;
+    }).join('');
   }
 
   window.updateBonusTrxItem = function(idx, key, val) {
@@ -21225,9 +21281,61 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
   window.tambahItemPoinTrx = function() {
     const cfg = getPoinCfg();
     if (!cfg.bonusTrx) cfg.bonusTrx = [];
-    cfg.bonusTrx.push({ nama: '', poin: 1 });
+    cfg.bonusTrx.push({ nama: '', poin: 1, kategori: '' });
     savePoinCfg(cfg);
     renderBonusTrxList(cfg.bonusTrx);
+  };
+
+  /* ── Daftar Hadiah ── */
+  function renderHadiahList(list) {
+    const wrap = document.getElementById('poin-hadiah-list');
+    if (!wrap) return;
+    if (!list || list.length === 0) {
+      wrap.innerHTML = '<p style="font-size:9px;color:#94a3b8;font-weight:700;text-align:center;padding:8px 0;">Belum ada hadiah. Klik tombol di bawah untuk menambah.</p>';
+      return;
+    }
+    wrap.innerHTML = list.map((item, i) => `
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="text" value="${item.nama || ''}" placeholder="Nama hadiah (cth: Headset)"
+          onchange="updateHadiahItem(${i},'nama',this.value)"
+          style="flex:1;border:1.5px solid #e2e8f0;border-radius:10px;padding:7px 10px;font-size:10px;font-weight:700;outline:none;font-family:'Plus Jakarta Sans',sans-serif;"
+          onfocus="this.style.borderColor='#059669'" onblur="this.style.borderColor='#e2e8f0'">
+        <div style="display:flex;align-items:center;gap:4px;flex-shrink:0;">
+          <input type="number" value="${item.poin || 100}" min="1" placeholder="Poin"
+            onchange="updateHadiahItem(${i},'poin',parseInt(this.value)||1)"
+            style="width:60px;border:1.5px solid #e2e8f0;border-radius:10px;padding:7px 6px;font-size:11px;font-weight:900;text-align:center;outline:none;font-family:'Plus Jakarta Sans',sans-serif;"
+            onfocus="this.style.borderColor='#059669'" onblur="this.style.borderColor='#e2e8f0'">
+          <span style="font-size:9px;font-weight:700;color:#059669;">pts</span>
+        </div>
+        <button onclick="hapusHadiahItem(${i})"
+          style="width:28px;height:28px;border-radius:8px;border:none;background:rgba(239,68,68,0.1);color:#ef4444;cursor:pointer;font-size:10px;flex-shrink:0;">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>`
+    ).join('');
+  }
+
+  window.updateHadiahItem = function(idx, key, val) {
+    const cfg = getPoinCfg();
+    if (!cfg.daftarHadiah) cfg.daftarHadiah = [];
+    if (cfg.daftarHadiah[idx]) cfg.daftarHadiah[idx][key] = val;
+    savePoinCfg(cfg);
+  };
+
+  window.hapusHadiahItem = function(idx) {
+    const cfg = getPoinCfg();
+    if (!cfg.daftarHadiah) cfg.daftarHadiah = [];
+    cfg.daftarHadiah.splice(idx, 1);
+    savePoinCfg(cfg);
+    renderHadiahList(cfg.daftarHadiah);
+  };
+
+  window.tambahItemHadiah = function() {
+    const cfg = getPoinCfg();
+    if (!cfg.daftarHadiah) cfg.daftarHadiah = [];
+    cfg.daftarHadiah.push({ nama: '', poin: 100 });
+    savePoinCfg(cfg);
+    renderHadiahList(cfg.daftarHadiah);
   };
 
   /* ── Simpan setting dari form ── */
@@ -21246,7 +21354,7 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
   };
 
   /* ── Section poin di kasir ── */
-  window.refreshKasirPoinSection = function() {
+  window.refreshKasirPoinSection = function(autoKategori) {
     const cfg     = getPoinCfg();
     const section = document.getElementById('kasir-poin-section');
     if (!section) return;
@@ -21259,9 +21367,22 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
     if (sel) {
       sel.innerHTML = '<option value="">-- Pilih atau skip --</option>' +
         (cfg.bonusTrx || []).map((t, i) =>
-          `<option value="${i}">${t.nama} (+${t.poin} poin)</option>`
+          `<option value="${i}">${t.nama} (+${t.poin} poin)${t.kategori ? ' ['+t.kategori+']' : ''}</option>`
         ).join('');
-      // Sync label
+
+      // Auto-select jika ada kategori yang cocok
+      if (autoKategori) {
+        const matchIdx = (cfg.bonusTrx || []).findIndex(t => t.kategori && t.kategori === autoKategori);
+        if (matchIdx !== -1) {
+          sel.value = String(matchIdx);
+          const t = cfg.bonusTrx[matchIdx];
+          const span = label ? label.querySelector('span') : null;
+          if (span) span.textContent = t.nama + ' (+' + t.poin + ' poin)';
+          window.updateKasirPoinPreview();
+        }
+      }
+
+      // Sync label on change
       sel.onchange = function() {
         const idx = parseInt(this.value);
         const span = label ? label.querySelector('span') : null;

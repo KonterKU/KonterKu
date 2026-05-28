@@ -440,6 +440,24 @@ async function loadPelanggan(storeId) {
   }
 }
 
+/* Muat konfigurasi poin dari Firestore (tersimpan di dalam field db.poinConfig) */
+async function loadPoinConfig(sId) {
+  if (!sId) return;
+  try {
+    let raw = null;
+    if (pelangganMode === 'user_stores') {
+      const d = await window._db.collection('user_stores').doc(sId).get();
+      raw = d.exists ? (d.data().db?.poinConfig || d.data().poinConfig || null) : null;
+    } else {
+      const d = await window._db.collection('stores').doc(sId).get();
+      raw = d.exists ? (d.data().db?.poinConfig || d.data().poinConfig || null) : null;
+    }
+    if (raw) {
+      poinCfg = Object.assign({ nilaiTukar: 1000, daftarHadiah: [], bonusTrx: [] }, raw);
+    }
+  } catch(e) { console.warn('loadPoinConfig error:', e); }
+}
+
 /* Cari storeId dari user yg login — disesuaikan dengan struktur Firestore index.html */
 async function getStoreId(uid) {
   // ── Cara 1: stores/{uid} langsung (pola utama index.html) ──
@@ -515,6 +533,7 @@ document.addEventListener('click', e => {
 ───────────────────────────────────────────── */
 let selectedId    = null;
 let pelangganMode = 'subcol'; // 'subcol' | 'array' | 'user_stores'
+let poinCfg       = { nilaiTukar: 1000, daftarHadiah: [], bonusTrx: [] };
 let storeId    = null;
 
 function pilihPelanggan(id) {
@@ -540,11 +559,15 @@ function renderKartu(c) {
     progressMsg = `${fmt(tierNext.min - poin)} poin lagi menuju ${tierNext.icon} ${tierNext.nama}`;
   }
 
-  // Nilai konversi (default 100 poin = Rp 1.000)
-  const nilaiPer100  = 1000; // bisa dibaca dari Firestore config
+  // Nilai konversi dari config owner
+  const nilaiPer100  = poinCfg.nilaiTukar || 1000;
   const nilaiDiskon  = Math.floor(poin / 100) * nilaiPer100;
   const poinTukar    = Math.floor(poin / 100) * 100;
   const bisaTukar    = poin >= 100;
+
+  // Hadiah tersedia dari config owner
+  const daftarHadiah = (poinCfg.daftarHadiah || []).filter(h => h.nama && h.poin > 0);
+  const hadiahBisaDitukar = daftarHadiah.filter(h => poin >= h.poin);
 
   // Riwayat penukaran (dari array redeemHistory jika ada)
   const riwayat = (c.redeemHistory || []).slice(-10).reverse();
@@ -554,7 +577,7 @@ function renderKartu(c) {
         <div class="riwayat-item">
           <div class="ri-icon minus"><i class="fas fa-gift"></i></div>
           <div>
-            <div class="ri-desc">Tukar poin → Diskon Rp ${fmt(r.nilaiDiskon)}</div>
+            <div class="ri-desc">${r.hadiah ? "🎁 Tukar poin → " + r.hadiah : "💸 Tukar poin → Diskon Rp " + fmt(r.nilaiDiskon)}</div>
             <div class="ri-date">${r.tgl ? new Date(r.tgl).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) : '-'}</div>
           </div>
           <div class="ri-poin minus">−${fmt(r.poinDipakai)} pts</div>
@@ -597,31 +620,88 @@ function renderKartu(c) {
         <div class="tier-msg">${progressMsg}</div>
       </div>
 
-      <!-- Info konversi -->
+      <!-- Pilihan Penukaran -->
       <div class="konversi-box">
-        <div class="konv-title"><i class="fas fa-exchange-alt" style="margin-right:6px;"></i>Nilai Penukaran Poin</div>
-        <div class="konv-row">
-          <span class="konv-lbl">Poin yang bisa ditukar</span>
-          <span class="konv-val">${fmt(poinTukar)} pts</span>
-        </div>
-        <div class="konv-row">
-          <span class="konv-lbl">Nilai diskon didapat</span>
-          <span class="konv-diskon">Rp ${fmt(nilaiDiskon)}</span>
-        </div>
-        ${poin % 100 > 0 ? `<div class="konv-row">
-          <span class="konv-lbl">Sisa poin (tidak ditukar)</span>
-          <span class="konv-val" style="color:#64748b;">${fmt(poin % 100)} pts</span>
-        </div>` : ''}
-        <div class="konv-note">100 poin = Rp ${fmt(nilaiPer100)} diskon</div>
+        <div class="konv-title"><i class="fas fa-gift" style="margin-right:6px;"></i>Pilihan Penukaran Poin</div>
+
+        ${daftarHadiah.length > 0 ? `
+          <!-- Tab hadiah + diskon -->
+          <div style="display:flex;gap:6px;margin-bottom:12px;">
+            <button id="tab-hadiah" onclick="switchTab('hadiah')"
+              style="flex:1;padding:7px;border-radius:10px;font-size:10px;font-weight:900;cursor:pointer;border:1.5px solid #059669;background:#059669;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;">
+              🎁 Tukar Hadiah
+            </button>
+            <button id="tab-diskon" onclick="switchTab('diskon')"
+              style="flex:1;padding:7px;border-radius:10px;font-size:10px;font-weight:900;cursor:pointer;border:1.5px solid rgba(124,58,237,0.3);background:transparent;color:#7c3aed;font-family:'Plus Jakarta Sans',sans-serif;">
+              💸 Tukar Diskon
+            </button>
+          </div>
+
+          <!-- Panel Hadiah -->
+          <div id="panel-hadiah">
+            ${daftarHadiah.map((h, i) => {
+              const bisa = poin >= h.poin;
+              const sisa = poin - h.poin;
+              return `<div style="display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;margin-bottom:6px;border:1.5px solid ${bisa ? 'rgba(5,150,105,0.25)' : 'rgba(255,255,255,0.07)'};background:${bisa ? 'rgba(5,150,105,0.07)' : 'rgba(255,255,255,0.03)'};">
+                <div style="width:36px;height:36px;border-radius:10px;background:${bisa ? 'linear-gradient(135deg,#059669,#34d399)' : 'rgba(255,255,255,0.06)'};display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🎁</div>
+                <div style="flex:1;min-width:0;">
+                  <div style="font-size:11px;font-weight:900;color:${bisa ? '#e2e8f0' : '#475569'};">${h.nama}</div>
+                  <div style="font-size:9px;font-weight:700;color:${bisa ? '#34d399' : '#64748b'};margin-top:1px;">${fmt(h.poin)} poin ${bisa ? `· sisa ${fmt(sisa)} pts` : `· kurang ${fmt(h.poin - poin)} pts`}</div>
+                </div>
+                <button onclick="tukarHadiah(${i})" ${bisa ? '' : 'disabled'}
+                  style="padding:7px 12px;border-radius:10px;font-size:9px;font-weight:900;cursor:${bisa ? 'pointer' : 'not-allowed'};border:none;background:${bisa ? 'linear-gradient(135deg,#059669,#34d399)' : 'rgba(255,255,255,0.05)'};color:${bisa ? '#fff' : '#475569'};font-family:'Plus Jakarta Sans',sans-serif;opacity:${bisa ? '1' : '0.5'};">
+                  ${bisa ? 'Tukar' : 'Kurang'}
+                </button>
+              </div>`;
+            }).join('')}
+          </div>
+
+          <!-- Panel Diskon -->
+          <div id="panel-diskon" style="display:none;">
+            <div class="konv-row">
+              <span class="konv-lbl">Poin yang bisa ditukar</span>
+              <span class="konv-val">${fmt(poinTukar)} pts</span>
+            </div>
+            <div class="konv-row">
+              <span class="konv-lbl">Nilai diskon didapat</span>
+              <span class="konv-diskon">Rp ${fmt(nilaiDiskon)}</span>
+            </div>
+            ${poin % 100 > 0 ? `<div class="konv-row">
+              <span class="konv-lbl">Sisa poin</span>
+              <span class="konv-val" style="color:#64748b;">${fmt(poin % 100)} pts</span>
+            </div>` : ''}
+            <div class="konv-note">100 poin = Rp ${fmt(nilaiPer100)} diskon</div>
+            <button class="btn-tukar" id="btn-tukar" onclick="tukarDiskon()" style="margin:10px 0 0;" ${bisaTukar ? '' : 'disabled'}>
+              ${bisaTukar
+                ? `<i class="fas fa-percentage"></i> Tukar ${fmt(poinTukar)} Poin → Diskon Rp ${fmt(nilaiDiskon)}`
+                : `<i class="fas fa-lock"></i> Minimal 100 poin untuk ditukar`}
+            </button>
+          </div>
+        ` : `
+          <!-- Tidak ada hadiah dikonfigurasi — tampilkan diskon saja -->
+          <div class="konv-row">
+            <span class="konv-lbl">Poin yang bisa ditukar</span>
+            <span class="konv-val">${fmt(poinTukar)} pts</span>
+          </div>
+          <div class="konv-row">
+            <span class="konv-lbl">Nilai diskon didapat</span>
+            <span class="konv-diskon">Rp ${fmt(nilaiDiskon)}</span>
+          </div>
+          ${poin % 100 > 0 ? `<div class="konv-row">
+            <span class="konv-lbl">Sisa poin (tidak ditukar)</span>
+            <span class="konv-val" style="color:#64748b;">${fmt(poin % 100)} pts</span>
+          </div>` : ''}
+          <div class="konv-note">100 poin = Rp ${fmt(nilaiPer100)} diskon</div>
+        `}
       </div>
 
-      <!-- Tombol tukar -->
-      <button class="btn-tukar" id="btn-tukar" onclick="tukarPoin()" ${bisaTukar ? '' : 'disabled'}>
+      ${daftarHadiah.length === 0 ? `
+      <!-- Tombol tukar diskon (fallback tanpa hadiah) -->
+      <button class="btn-tukar" id="btn-tukar" onclick="tukarDiskon()" ${bisaTukar ? '' : 'disabled'}>
         ${bisaTukar
           ? `<i class="fas fa-gift"></i> Tukar ${fmt(poinTukar)} Poin → Diskon Rp ${fmt(nilaiDiskon)}`
-          : `<i class="fas fa-lock"></i> Minimal 100 poin untuk ditukar`
-        }
-      </button>
+          : `<i class="fas fa-lock"></i> Minimal 100 poin untuk ditukar`}
+      </button>` : ''}
 
       <!-- Riwayat penukaran -->
       <div class="riwayat-wrap">
@@ -640,19 +720,92 @@ function renderKartu(c) {
 }
 
 /* ─────────────────────────────────────────────
-   TUKAR POIN
+   SWITCH TAB HADIAH / DISKON
 ───────────────────────────────────────────── */
-async function tukarPoin() {
+function switchTab(tab) {
+  const ph = document.getElementById('panel-hadiah');
+  const pd = document.getElementById('panel-diskon');
+  const th = document.getElementById('tab-hadiah');
+  const td = document.getElementById('tab-diskon');
+  if (!ph || !pd) return;
+  if (tab === 'hadiah') {
+    ph.style.display = 'block'; pd.style.display = 'none';
+    if (th) { th.style.background='#059669'; th.style.color='#fff'; th.style.borderColor='#059669'; }
+    if (td) { td.style.background='transparent'; td.style.color='#7c3aed'; td.style.borderColor='rgba(124,58,237,0.3)'; }
+  } else {
+    ph.style.display = 'none'; pd.style.display = 'block';
+    if (td) { td.style.background='#7c3aed'; td.style.color='#fff'; td.style.borderColor='#7c3aed'; }
+    if (th) { th.style.background='transparent'; th.style.color='#059669'; th.style.borderColor='rgba(5,150,105,0.3)'; }
+  }
+}
+
+/* ─────────────────────────────────────────────
+   TUKAR HADIAH
+───────────────────────────────────────────── */
+async function tukarHadiah(hadiahIdx) {
+  const c = pelangganList.find(x => x.id === selectedId);
+  if (!c) return;
+  const poin    = Number(c.poin || 0);
+  const hadiah  = (poinCfg.daftarHadiah || [])[hadiahIdx];
+  if (!hadiah) return;
+  if (poin < hadiah.poin) {
+    Swal.fire({ icon:'info', title:'Poin Kurang', text:`Butuh ${fmt(hadiah.poin)} poin, kamu punya ${fmt(poin)} poin.`, customClass:{popup:'swal2-ku'} });
+    return;
+  }
+  const sisaPoin = poin - hadiah.poin;
+
+  const res = await Swal.fire({
+    title: 'Konfirmasi Tukar Hadiah',
+    html: `
+      <div style="text-align:center;padding:8px 0;">
+        <div style="font-size:40px;margin-bottom:8px;">🎁</div>
+        <div style="font-size:18px;font-weight:900;color:#fff;margin-bottom:4px;">${hadiah.nama}</div>
+        <div style="font-size:11px;color:#94a3b8;font-weight:700;margin-bottom:14px;">akan ditukar dengan</div>
+        <div style="background:rgba(5,150,105,0.08);border:1.5px solid rgba(5,150,105,0.25);border-radius:16px;padding:16px;">
+          <div style="font-size:28px;font-weight:900;background:linear-gradient(135deg,#34d399,#059669);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${fmt(hadiah.poin)} poin</div>
+          ${sisaPoin > 0 ? `<div style="font-size:10px;color:#64748b;font-weight:700;margin-top:6px;">Sisa ${fmt(sisaPoin)} poin tetap tersimpan</div>` : '<div style="font-size:10px;color:#ef4444;font-weight:700;margin-top:6px;">Semua poin habis</div>'}
+        </div>
+      </div>`,
+    showCancelButton: true,
+    confirmButtonText: '🎁 Ambil Hadiah',
+    cancelButtonText: 'Batal',
+    confirmButtonColor: '#059669',
+    customClass: { popup: 'swal2-ku' }
+  });
+
+  if (!res.isConfirmed) return;
+
+  try {
+    const newPoin = sisaPoin;
+    const redeemEntry = {
+      tgl: new Date().toISOString(),
+      poinDipakai: hadiah.poin,
+      nilaiDiskon: 0,
+      hadiah: hadiah.nama,
+      tipe: 'hadiah'
+    };
+    await _doSavePoin(newPoin, redeemEntry);
+    showToast(`Hadiah "${hadiah.nama}" berhasil ditukar! 🎁`, '🎁');
+  } catch (err) {
+    console.error(err);
+    Swal.fire({ icon:'error', title:'Gagal', text:'Terjadi kesalahan: '+err.message, customClass:{popup:'swal2-ku'} });
+  }
+}
+
+/* ─────────────────────────────────────────────
+   TUKAR DISKON
+───────────────────────────────────────────── */
+async function tukarDiskon() {
   const c = pelangganList.find(x => x.id === selectedId);
   if (!c) return;
   const poin       = Number(c.poin || 0);
-  const nilaiPer100 = 1000;
+  const nilaiPer100 = poinCfg.nilaiTukar || 1000;
   const nilaiDiskon = Math.floor(poin / 100) * nilaiPer100;
   const poinDipakai = Math.floor(poin / 100) * 100;
   const sisaPoin    = poin % 100;
 
   const res = await Swal.fire({
-    title: 'Konfirmasi Penukaran',
+    title: 'Konfirmasi Penukaran Diskon',
     html: `
       <div style="text-align:center;padding:8px 0;">
         <div style="font-size:36px;font-weight:900;background:linear-gradient(135deg,#a78bfa,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">${fmt(poinDipakai)}</div>
@@ -676,17 +829,23 @@ async function tukarPoin() {
 
   if (!res.isConfirmed) return;
 
-  // Update Firestore
   try {
-    document.getElementById('btn-tukar').disabled = true;
-    document.getElementById('btn-tukar').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses…';
-
     const newPoin = sisaPoin;
-    const redeemEntry = {
-      tgl: new Date().toISOString(),
-      poinDipakai,
-      nilaiDiskon,
-    };
+    const redeemEntry = { tgl: new Date().toISOString(), poinDipakai, nilaiDiskon, tipe: 'diskon' };
+    await _doSavePoin(newPoin, redeemEntry);
+    showToast(`Tukar berhasil! Diskon Rp ${fmt(nilaiDiskon)} siap dipakai`, '🎁');
+  } catch (err) {
+    console.error(err);
+    Swal.fire({ icon:'error', title:'Gagal', text:'Terjadi kesalahan: '+err.message, customClass:{popup:'swal2-ku'} });
+  }
+}
+
+/* ─────────────────────────────────────────────
+   HELPER: simpan poin ke Firestore + local
+───────────────────────────────────────────── */
+async function _doSavePoin(newPoin, redeemEntry) {
+  const btnTukar = document.getElementById('btn-tukar');
+  if (btnTukar) { btnTukar.disabled = true; btnTukar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses…'; }
 
     // Update local list dulu
     const idx = pelangganList.findIndex(x => x.id === selectedId);
@@ -753,14 +912,8 @@ async function tukarPoin() {
       }
     }
 
-    showToast(`Tukar berhasil! Diskon Rp ${fmt(nilaiDiskon)} siap dipakai`, '🎁');
-    renderKartu(pelangganList[idx !== -1 ? idx : 0]);
-
-  } catch (err) {
-    console.error(err);
-    Swal.fire({ icon:'error', title:'Gagal', text:'Terjadi kesalahan: '+err.message, customClass:{popup:'swal2-ku'} });
-    document.getElementById('btn-tukar').disabled = false;
-  }
+    const updatedCust = pelangganList[idx !== -1 ? idx : 0];
+    if (updatedCust) renderKartu(updatedCust);
 }
 
 /* ─────────────────────────────────────────────
@@ -790,6 +943,7 @@ async function tukarPoin() {
       return;
     }
     await loadPelanggan(storeId);
+    await loadPoinConfig(storeId);
     // Cek apakah ada ?id= di URL (deep link dari halaman utama)
     const urlParams = new URLSearchParams(window.location.search);
     const preId = urlParams.get('id');
