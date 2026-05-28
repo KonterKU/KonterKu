@@ -14714,21 +14714,39 @@ ${t.tipe === 'ewallet' ? `
   })();
 
   // =====================================================
-  // PATCH: sync() → auto-simpan ke user_stores
+  // PATCH: sync() + syncImmediate() → auto-simpan ke user_stores
+  // [FIX] syncImmediate dipakai kasir — harus ikut update user_stores
+  // agar Monitor Cabang owner bisa melihat data kasir
   // =====================================================
   (function() {
+    function _saveToUserStores() {
+      const activeId = localStorage.getItem('k_active_store_id');
+      if (activeId && typeof window.db !== 'undefined' && typeof saveCurrentStoreData === 'function') {
+        saveCurrentStoreData(activeId, window.db).catch(() => {});
+      }
+    }
+
     function patchSync() {
       if (typeof sync !== 'function') { setTimeout(patchSync, 200); return; }
       const _origSync = sync;
       window.sync = async function() {
         await _origSync();
-        const activeId = localStorage.getItem('k_active_store_id');
-        if (activeId && typeof window.db !== 'undefined') {
-          saveCurrentStoreData(activeId, window.db).catch(() => {});
-        }
+        _saveToUserStores();
       };
     }
     patchSync();
+
+    // [FIX] Patch syncImmediate juga — kasir pakai fungsi ini
+    function patchSyncImmediate() {
+      if (typeof syncImmediate !== 'function') { setTimeout(patchSyncImmediate, 200); return; }
+      const _origSyncImmediate = syncImmediate;
+      window.syncImmediate = async function() {
+        const result = await _origSyncImmediate();
+        _saveToUserStores();
+        return result;
+      };
+    }
+    patchSyncImmediate();
   })();
 
   // =====================================================
