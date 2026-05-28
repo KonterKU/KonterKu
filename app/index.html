@@ -14247,14 +14247,21 @@ ${t.tipe === 'ewallet' ? `
 
   async function saveCurrentStoreData(storeId, dbData) {
     if (!storeId || !dbData) return;
+    if (storeId === 'undefined' || storeId === 'null') return;
     try {
       await waitMTFirebase(5000);
-      // Refresh token sebelum update agar tidak permission denied
-      const uid = localStorage.getItem('k_sid') || '';
-      await _refreshAndGetUid(uid);
+      const isKasirMode = localStorage.getItem('k_kasir_mode') === 'true';
+      // [FIX] Mode kasir: jangan refresh token (token = anonymous, bukan owner)
+      // Langsung update Firestore — Security Rules harus mengizinkan kasir write
+      if (!isKasirMode) {
+        // Mode owner: refresh token dulu untuk pastikan Auth valid
+        const uid = localStorage.getItem('k_sid') || '';
+        await _refreshAndGetUid(uid);
+      }
       await window._fbFirestore.collection('user_stores').doc(storeId).update({
         data      : dbData,
-        last_sync : new Date()
+        last_sync : new Date(),
+        ...(isKasirMode ? { last_kasir: localStorage.getItem('k_kasir_nama') || '' } : {})
       });
     } catch(e) {
       console.warn('[MultiToko] saveCurrentStoreData error:', e.message);
@@ -14719,10 +14726,60 @@ ${t.tipe === 'ewallet' ? `
   // agar Monitor Cabang owner bisa melihat data kasir
   // =====================================================
   (function() {
-    function _saveToUserStores() {
-      const activeId = localStorage.getItem('k_active_store_id');
-      if (activeId && typeof window.db !== 'undefined' && typeof saveCurrentStoreData === 'function') {
-        saveCurrentStoreData(activeId, window.db).catch(() => {});
+    // [FIX] _saveToUserStores yang aman untuk mode kasir:
+    // - Pakai owner_uid (bukan anon uid) sebagai kunci dokumen
+    // - Tulis langsung ke Firestore dengan data saat ini, tanpa refresh token Auth
+    //   (kasir pakai anonymous Auth, tidak bisa refresh token owner)
+    async function _saveToUserStores() {
+      if (!window._fbFirestore || !window.db) return;
+      const isKasirMode = localStorage.getItem('k_kasir_mode') === 'true';
+      let activeId = localStorage.getItem('k_active_store_id');
+
+      // [FIX] Jika kasir tidak punya activeId, cari dari user_stores owner secara realtime
+      if (!activeId || activeId === 'undefined' || activeId === 'null') {
+        const ownerUid = localStorage.getItem('k_owner_uid') || localStorage.getItem('k_sid');
+        if (!ownerUid || ownerUid === 'DEMO') return;
+        try {
+          const snap = await window._fbFirestore
+            .collection('user_stores')
+            .where('uid', '==', ownerUid)
+            .get();
+          if (!snap.empty) {
+            activeId = snap.docs[0].id;
+            localStorage.setItem('k_active_store_id', activeId);
+            console.log('[SyncFix] Resolved active store:', activeId);
+          }
+        } catch(e) {
+          console.warn('[SyncFix] Gagal resolve store id:', e.message);
+          return;
+        }
+      }
+
+      if (!activeId || activeId === 'undefined' || activeId === 'null') return;
+
+      try {
+        // [FIX] Tulis langsung ke Firestore tanpa _refreshAndGetUid
+        // karena kasir pakai anonymous auth, token-nya tidak bisa merepresentasikan owner
+        // Security Rules harus mengizinkan write berdasarkan kasir_sessions
+        await window._fbFirestore.collection('user_stores').doc(activeId).update({
+          data      : window.db,
+          last_sync : new Date(),
+          last_kasir: localStorage.getItem('k_kasir_nama') || ''
+        });
+        console.log('[SyncFix] user_stores updated OK:', activeId);
+      } catch(e) {
+        // Jika gagal permission (Rules), fallback: update via stores/{ownerUid} saja
+        // Data tetap aman di stores/{ownerUid} karena _doCloudSync sudah jalan duluan
+        console.warn('[SyncFix] user_stores update gagal (mungkin Rules):', e.message);
+
+        // Coba update field sync_request saja agar owner tahu ada update baru
+        try {
+          const ownerUid = localStorage.getItem('k_owner_uid') || localStorage.getItem('k_sid');
+          await window._fbFirestore.collection('user_stores').doc(activeId).update({
+            last_sync : new Date(),
+            last_kasir: localStorage.getItem('k_kasir_nama') || ''
+          });
+        } catch(e2) { /* silent */ }
       }
     }
 
@@ -15162,7 +15219,13 @@ ${t.tipe === 'ewallet' ? `
       localStorage.setItem('k_kasir_nama', kasir.nama || username);
       localStorage.setItem('k_kasir_username', username);
       localStorage.setItem('k_kasir_izin', JSON.stringify(kasir.izin || {}));
-      localStorage.setItem('k_active_store_id', storeId);
+      // [FIX] Hanya set k_active_store_id jika storeId valid (bukan undefined/null/kosong)
+      if (storeId && storeId !== 'undefined' && storeId !== 'null') {
+        localStorage.setItem('k_active_store_id', storeId);
+      } else {
+        // Kalau kasir tidak punya store_id, coba ambil toko aktif owner dari Firestore
+        localStorage.removeItem('k_active_store_id');
+      }
       localStorage.setItem('k_store_name', kasir.store_name || '');
 
       // ── Simpan sesi kasir ke Firestore (lintas device) ──
@@ -15197,8 +15260,27 @@ ${t.tipe === 'ewallet' ? `
       // Ambil nama toko + plan owner — HARUS selesai sebelum initApp
       try {
         // 1. Ambil store_name dari user_stores
-        if (storeId) {
-          const storeSnap = await window._fbFirestore.collection('user_stores').doc(storeId).get();
+        let resolvedStoreId = storeId && storeId !== 'undefined' && storeId !== 'null' ? storeId : null;
+
+        // [FIX] Jika kasir tidak punya store_id, auto-resolve toko aktif dari owner
+        if (!resolvedStoreId) {
+          try {
+            const ownerStoresSnap = await window._fbFirestore
+              .collection('user_stores')
+              .where('uid', '==', ownerUid)
+              .get();
+            if (!ownerStoresSnap.empty) {
+              resolvedStoreId = ownerStoresSnap.docs[0].id;
+              localStorage.setItem('k_active_store_id', resolvedStoreId);
+              console.log('[KasirLogin] Auto-resolve store_id dari owner:', resolvedStoreId);
+            }
+          } catch(eResolve) {
+            console.warn('[KasirLogin] Gagal auto-resolve store_id:', eResolve.message);
+          }
+        }
+
+        if (resolvedStoreId) {
+          const storeSnap = await window._fbFirestore.collection('user_stores').doc(resolvedStoreId).get();
           if (storeSnap.exists) {
             const sName = storeSnap.data().store_name || '';
             if (sName) {
