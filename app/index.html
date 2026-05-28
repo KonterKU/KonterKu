@@ -4121,6 +4121,7 @@
               <p class="text-[12px] font-black text-slate-800">Kelola Kasir</p>
               <p class="text-[9px] text-slate-400 font-bold">Tambah & atur akun kasir</p>
             </div>
+            <span id="kelola-kasir-plan-badge" class="px-1.5 py-0.5 rounded-md font-black mr-1" style="font-size:7px;background:rgba(5,150,105,0.15);color:#10b981;border:1px solid rgba(5,150,105,0.25);display:none;">PRO ⭐</span>
             <i class="fas fa-chevron-right text-slate-300 text-[9px]"></i>
           </button>
 
@@ -4158,7 +4159,7 @@
               <p class="text-[12px] font-black text-slate-800">Poin Pelanggan</p>
               <p class="text-[9px] text-slate-400 font-bold">Konfigurasi reward & sistem poin</p>
             </div>
-            <span style="font-size:7px;font-weight:900;background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;padding:2px 7px;border-radius:20px;margin-right:4px;flex-shrink:0;">OWNER</span>
+            <span id="poin-pelanggan-plan-badge" class="px-1.5 py-0.5 rounded-md font-black mr-1" style="font-size:7px;background:rgba(5,150,105,0.15);color:#10b981;border:1px solid rgba(5,150,105,0.25);display:none;">PRO ⭐</span>
             <i class="fas fa-chevron-right text-slate-300 text-[9px]"></i>
           </button>
 
@@ -6584,30 +6585,33 @@
             <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(6,182,212,0.12);">
               <i class="fas fa-chart-line text-cyan-500 text-sm"></i>
             </div>
-            <div>
+            <div class="flex-1 min-w-0">
               <p class="text-[11px] font-black" style="color:var(--sb-text-title);">Laporan</p>
               <p class="text-[8px] font-bold" style="color:var(--sb-text-sub);">Grafik & analisis</p>
             </div>
+            <span id="laporan-pro-badge" class="px-1.5 py-0.5 rounded-md font-black flex-shrink-0" style="font-size:7px;background:rgba(5,150,105,0.15);color:#10b981;border:1px solid rgba(5,150,105,0.25);display:none;">PRO ⭐</span>
           </button>
           <!-- Pelanggan -->
           <button onclick="openSidebarMenu('pelanggan')" class="flex items-center gap-3 p-4 rounded-2xl active:scale-95 transition-all cursor-pointer text-left w-full border-0" style="background:var(--sb-bg);border:1px solid var(--sb-border);box-shadow:0 2px 8px rgba(0,0,0,0.06);">
             <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(244,63,94,0.12);">
               <i class="fas fa-users text-rose-500 text-sm"></i>
             </div>
-            <div>
+            <div class="flex-1 min-w-0">
               <p class="text-[11px] font-black" style="color:var(--sb-text-title);">Pelanggan</p>
               <p class="text-[8px] font-bold" style="color:var(--sb-text-sub);" id="customer-count-label">0 terdaftar</p>
             </div>
+            <span id="pelanggan-pro-badge" class="px-1.5 py-0.5 rounded-md font-black flex-shrink-0" style="font-size:7px;background:rgba(5,150,105,0.15);color:#10b981;border:1px solid rgba(5,150,105,0.25);display:none;">PRO ⭐</span>
           </button>
           <!-- Catatan -->
           <button onclick="openSidebarMenu('catatan')" class="flex items-center gap-3 p-4 rounded-2xl active:scale-95 transition-all cursor-pointer text-left w-full border-0" style="background:var(--sb-bg);border:1px solid var(--sb-border);box-shadow:0 2px 8px rgba(0,0,0,0.06);">
             <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(245,158,11,0.12);">
               <i class="fas fa-sticky-note text-amber-500 text-sm"></i>
             </div>
-            <div>
+            <div class="flex-1 min-w-0">
               <p class="text-[11px] font-black" style="color:var(--sb-text-title);">Catatan</p>
               <p class="text-[8px] font-bold" style="color:var(--sb-text-sub);" id="note-count-label-dash">0 catatan</p>
             </div>
+            <span id="catatan-pro-badge" class="px-1.5 py-0.5 rounded-md font-black flex-shrink-0" style="font-size:7px;background:rgba(5,150,105,0.15);color:#10b981;border:1px solid rgba(5,150,105,0.25);display:none;">PRO ⭐</span>
           </button>
           <!-- Cabang (hanya tampil untuk pemilik/admin, bukan kasir) -->
           <button id="shortcut-cabang" onclick="openMonitorCabang()" class="flex items-center gap-3 p-4 rounded-2xl active:scale-95 transition-all cursor-pointer text-left w-full border-0" style="background:linear-gradient(135deg,rgba(0,97,194,0.10),rgba(56,189,248,0.08));border:1px solid rgba(0,97,194,0.2);box-shadow:0 2px 8px rgba(0,0,0,0.06);">
@@ -8395,7 +8399,7 @@
 
     const _FEATURE_LABEL = {
       hutang: 'Hutang Piutang',
-      ekspor_pdf: 'Ekspor Laporan PDF',
+      ekspor_pdf: 'Laporan & Ekspor PDF',
       pantau_stok: 'Pantau Stok Realtime',
       notif_stok: 'Notifikasi Stok Menipis',
       cloud_sync: 'Multi-Device Cloud Sync',
@@ -8403,6 +8407,10 @@
       limit_produk: 'Tambah Produk',
       limit_dompet: 'Tambah Dompet',
       setting_struk: 'Setting Struk Thermal',
+      kelola_kasir: 'Kelola Kasir Karyawan',
+      poin_pelanggan: 'Sistem Poin Pelanggan',
+      catatan_premium: 'Catatan Bisnis',
+      manajemen_pelanggan: 'Manajemen Pelanggan',
     };
 
     function showUpgradeModal(featureKey, minPlan, onUnlock) {
@@ -11435,7 +11443,26 @@
       const wrap = document.getElementById('struk-setting-body');
       const lockEl = document.getElementById('struk-setting-lock');
 
-      // Semua user bisa akses setting struk
+      // Hanya PRO & UNLIMITED yang bisa akses setting struk
+      if (!_isPlanPro()) {
+        if (wrap)   wrap.style.display = 'none';
+        if (lockEl) {
+          lockEl.style.display = 'block';
+          lockEl.innerHTML = `
+            <div style="margin:16px 0;padding:20px;border-radius:18px;background:rgba(16,185,129,0.06);border:1.5px solid rgba(16,185,129,0.2);text-align:center;">
+              <div style="width:48px;height:48px;border-radius:14px;background:rgba(16,185,129,0.12);border:1.5px solid rgba(16,185,129,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;">
+                <i class="fas fa-lock" style="font-size:18px;color:#10b981;"></i>
+              </div>
+              <p style="font-size:13px;font-weight:900;color:#065f46;margin:0 0 4px;">Setting Struk Thermal</p>
+              <p style="font-size:10px;color:rgba(0,0,0,0.45);font-weight:600;line-height:1.5;margin:0 0 14px;">Kustomisasi struk (logo, alamat, tagline)<br>tersedia untuk paket <b style="color:#10b981;">PRO ⭐ & UNLIMITED 🔥</b></p>
+              <button onclick="showUpgradeModal('setting_struk','pro')"
+                style="padding:10px 24px;border-radius:12px;border:0;background:linear-gradient(135deg,#10b981,#34d399);color:white;font-weight:900;font-size:11px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 6px 18px rgba(16,185,129,0.35);">
+                <i class="fas fa-crown mr-2"></i>Upgrade ke PRO
+              </button>
+            </div>`;
+        }
+        return;
+      }
       if (wrap)   wrap.style.display = 'block';
       if (lockEl) lockEl.style.display = 'none';
 
@@ -13055,16 +13082,25 @@ ${t.tipe === 'ewallet' ? `
       }
 
       else if (menu === 'catatan') {
+        // ── FEATURE GATE: minimal PRO ──
+        { const _r = ({trial:0,basic:1,pro:2,unlimited:3})[localStorage.getItem('k_plan')||'trial']??0;
+          if (_r < 2) { showUpgradeModal('catatan_premium','pro'); return; } }
         renderSidebarNotes();
         openModal('modal-sidebar-catatan');
       }
 
       else if (menu === 'laporan') {
+        // ── FEATURE GATE: minimal PRO ──
+        { const _r = ({trial:0,basic:1,pro:2,unlimited:3})[localStorage.getItem('k_plan')||'trial']??0;
+          if (_r < 2) { showUpgradeModal('ekspor_pdf','pro'); return; } }
         renderSidebarLaporan();
         openModal('modal-sidebar-laporan');
       }
 
       else if (menu === 'pelanggan') {
+        // ── FEATURE GATE: minimal PRO ──
+        { const _r = ({trial:0,basic:1,pro:2,unlimited:3})[localStorage.getItem('k_plan')||'trial']??0;
+          if (_r < 2) { showUpgradeModal('manajemen_pelanggan','pro'); return; } }
         renderSidebarCustomers();
         openModal('modal-sidebar-pelanggan');
       }
@@ -14342,6 +14378,13 @@ ${t.tipe === 'ewallet' ? `
       if (absensiBadge) {
         absensiBadge.style.display = rank < 2 ? 'inline' : 'none';
       }
+
+      // ── 4b. Badge PRO Kelola Kasir, Poin Pelanggan, Laporan, Pelanggan, Catatan ──
+      ['kelola-kasir-plan-badge','poin-pelanggan-plan-badge',
+       'laporan-pro-badge','pelanggan-pro-badge','catatan-pro-badge'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el) el.style.display = rank < 2 ? 'inline' : 'none';
+      });
 
       // ── 5. View hutang: paywall blur overlay jika < basic ──
       const viewHutang = document.getElementById('view-hutang');
@@ -15891,6 +15934,9 @@ ${t.tipe === 'ewallet' ? `
         (_getMySwal()||Swal).fire('Akses Ditolak', 'Hanya pemilik toko yang bisa mengelola kasir.', 'warning');
         return;
       }
+      // ── FEATURE GATE: minimal PRO ──
+      { const _r = ({trial:0,basic:1,pro:2,unlimited:3})[localStorage.getItem('k_plan')||'trial']??0;
+        if (_r < 2) { showUpgradeModal('kelola_kasir','pro'); return; } }
       closeSidebar();
       openKelolaKasirModal();
       return;
@@ -15901,6 +15947,9 @@ ${t.tipe === 'ewallet' ? `
         (_getMySwal()||Swal).fire('Akses Ditolak', 'Hanya pemilik toko yang bisa mengatur sistem poin.', 'warning');
         return;
       }
+      // ── FEATURE GATE: minimal PRO ──
+      { const _r = ({trial:0,basic:1,pro:2,unlimited:3})[localStorage.getItem('k_plan')||'trial']??0;
+        if (_r < 2) { showUpgradeModal('poin_pelanggan','pro'); return; } }
       closeSidebar && closeSidebar();
       // Buka modal Setting lalu scroll ke poin setting
       if (_origOpenSidebarMenu) _origOpenSidebarMenu('setting');
