@@ -6400,16 +6400,6 @@
           </div>
         </div>
 
-        <!-- Catatan -->
-        <div>
-          <div class="flex justify-between items-center mb-4">
-            <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest">Catatan Toko</h4>
-            <button onclick="openAddNoteModal()" class="w-8 h-8 bg-amber-500 text-white rounded-lg flex items-center justify-center shadow-lg shadow-amber-200 cursor-pointer border-0">
-              <i class="fas fa-plus text-[10px]"></i>
-            </button>
-          </div>
-          <div id="notes-list-dashboard" class="space-y-3"></div>
-        </div>
       </section>
 
       <!-- ===== VIEW: KASIR ===== -->
@@ -8345,6 +8335,7 @@
 
     function renderNotes() {
       const list = document.getElementById('notes-list-dashboard');
+      if (!list) return; // Catatan Toko tidak ditampilkan di dashboard
       if (!db.notes) db.notes = [];
       const sorted = [...db.notes].sort((a, b) => {
         if (a.pinned && !b.pinned) return -1;
@@ -19081,17 +19072,6 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
   .pelanggan-pro-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.08); }
   [data-theme="dark"] .pelanggan-pro-card { background: #1e293b; border-color: rgba(255,255,255,0.06); }
 
-  /* ── Rekonsiliasi ── */
-  .rekon-row {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 16px; border-bottom: 1px solid var(--sb-border);
-    transition: background 0.15s;
-  }
-  .rekon-row:hover { background: rgba(0,97,194,0.04); }
-  .rekon-row:last-child { border-bottom: none; }
-  .rekon-badge-ok  { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.2); border-radius: 8px; padding: 2px 8px; font-size: 9px; font-weight: 900; }
-  .rekon-badge-diff { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.2); border-radius: 8px; padding: 2px 8px; font-size: 9px; font-weight: 900; }
-
   /* ── PWA Notif badge ── */
   .notif-perm-badge {
     display: inline-flex; align-items: center; gap: 6px;
@@ -19178,22 +19158,6 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
   </div>
 </div>
 
-<!-- ③ MODAL: Rekonsiliasi Dompet -->
-<div id="modal-rekon" class="modal-overlay">
-  <div class="modal-content" style="max-height:92vh;">
-    <div class="flex justify-between items-center mb-5">
-      <div>
-        <h4 class="text-lg font-black" style="color:var(--sb-text-title);">🔄 Rekonsiliasi Dompet</h4>
-        <p class="text-[9px] font-bold text-slate-400 mt-0.5">Cocokkan saldo buku vs fisik otomatis</p>
-      </div>
-      <button onclick="closeModal('modal-rekon')" class="text-slate-400 text-xl cursor-pointer border-0 bg-transparent"><i class="fas fa-times"></i></button>
-    </div>
-    <button onclick="jalankanRekon()" class="w-full py-3 rounded-2xl font-black text-[11px] text-white border-0 cursor-pointer mb-4" style="background:linear-gradient(135deg,#7c3aed,#a855f7);box-shadow:0 6px 18px rgba(124,58,237,0.35);">
-      <i class="fas fa-calculator mr-2"></i>JALANKAN REKONSILIASI OTOMATIS
-    </button>
-    <div id="rekon-result"></div>
-  </div>
-</div>
 
 <!-- ④ MODAL: PWA Notifikasi -->
 <div id="modal-notif-pwa" class="modal-overlay">
@@ -19523,104 +19487,6 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
   };
 
   // ═══════════════════════════════════════════════════
-  // ③  REKONSILIASI DOMPET OTOMATIS
-  // ═══════════════════════════════════════════════════
-
-  window.bukaRekon = function() {
-    document.getElementById('rekon-result').innerHTML =
-      '<div style="padding:32px;text-align:center;"><i class="fas fa-info-circle" style="font-size:24px;color:#94a3b8;"></i><p style="font-size:11px;font-weight:700;color:#94a3b8;margin-top:8px;">Klik tombol untuk memulai rekonsiliasi</p></div>';
-    openModal('modal-rekon');
-  };
-
-  window.jalankanRekon = function() {
-    const el = document.getElementById('rekon-result');
-    el.innerHTML = '<div style="padding:24px;text-align:center;"><i class="fas fa-spinner fa-spin text-blue-400 text-2xl"></i><p style="font-size:10px;font-weight:700;color:#94a3b8;margin-top:6px;">Menghitung...</p></div>';
-
-    setTimeout(() => {
-      const dompet = window.db.dompet || [];
-      const mutasi = window.db.mutasi || [];
-      const trx    = window.db.transaksi || [];
-
-      let totalSelisih = 0;
-      const rows = dompet.map(w => {
-        // Hitung saldo dari mutasi
-        const mut = mutasi.filter(m => m.walletId === w.id);
-        const saldoDariMutasi = mut.reduce((s, m) => s + (m.tipe === 'in' ? Number(m.amount || 0) : -Number(m.amount || 0)), 0);
-
-        // Bandingkan dengan saldo buku
-        const saldoBuku  = Number(w.saldo || 0);
-        const selisih    = saldoBuku - saldoDariMutasi;
-        totalSelisih += Math.abs(selisih);
-
-        const ok = Math.abs(selisih) < 1;
-        return { nama: w.nama, saldoBuku, saldoDariMutasi, selisih, ok };
-      });
-
-      const allOk = totalSelisih < 1;
-      let html = `
-        <div style="padding:14px 16px;border-radius:16px;margin-bottom:12px;background:${allOk?'rgba(16,185,129,0.1)':'rgba(245,158,11,0.1)'};border:1.5px solid ${allOk?'rgba(16,185,129,0.2)':'rgba(245,158,11,0.2)'};">
-          <p style="font-size:12px;font-weight:900;color:${allOk?'#10b981':'#f59e0b'};">
-            ${allOk ? '✅ Semua dompet seimbang!' : `⚠️ Total selisih: Rp ${_fmt(totalSelisih)}`}
-          </p>
-          <p style="font-size:9px;font-weight:700;color:#94a3b8;margin-top:4px;">${rows.length} dompet diperiksa · ${rows.filter(r=>r.ok).length} seimbang</p>
-        </div>
-        <div style="background:var(--sb-bg);border-radius:16px;border:1px solid var(--sb-border);overflow:hidden;">`;
-
-      rows.forEach(r => {
-        html += `
-          <div class="rekon-row">
-            <div style="width:36px;height:36px;border-radius:12px;background:${r.ok?'rgba(16,185,129,0.1)':'rgba(239,68,68,0.1)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <i class="fas ${r.ok?'fa-check':'fa-exclamation'}" style="font-size:12px;color:${r.ok?'#10b981':'#ef4444'};"></i>
-            </div>
-            <div style="flex:1;min-width:0;">
-              <p style="font-size:12px;font-weight:800;color:var(--sb-text-title);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${r.nama}</p>
-              <p style="font-size:9px;font-weight:700;color:var(--sb-text-sub);">Buku: Rp ${_fmt(r.saldoBuku)} · Mutasi: Rp ${_fmt(r.saldoDariMutasi)}</p>
-            </div>
-            <span class="${r.ok?'rekon-badge-ok':'rekon-badge-diff'}">${r.ok ? 'SEIMBANG' : `BEDA ${r.selisih>=0?'+':''}${_fmt(r.selisih)}`}</span>
-          </div>`;
-      });
-
-      html += '</div>';
-
-      if (!allOk) {
-        html += `
-          <button onclick="perbaikiSelisihRekon()" class="w-full mt-3 py-3.5 rounded-2xl text-[11px] font-black text-white border-0 cursor-pointer"
-            style="background:linear-gradient(135deg,#059669,#10b981);box-shadow:0 6px 18px rgba(5,150,105,0.3);">
-            <i class="fas fa-wrench mr-2"></i>AUTO KOREKSI SELISIH
-          </button>`;
-      }
-
-      el.innerHTML = html;
-    }, 600);
-  };
-
-  window.perbaikiSelisihRekon = function() {
-    _S()?.fire({
-      title: 'Auto Koreksi Selisih?',
-      html: 'Saldo buku akan dijadikan acuan. Mutasi penyesuaian akan ditambahkan secara otomatis.',
-      icon: 'question', showCancelButton: true,
-      confirmButtonText: 'Ya, Koreksi', cancelButtonText: 'Batal', confirmButtonColor: '#059669'
-    }).then(r => {
-      if (!r.isConfirmed) return;
-      const dompet = window.db.dompet || [];
-      const mutasi = window.db.mutasi || [];
-      let fixed = 0;
-      dompet.forEach(w => {
-        const mut = mutasi.filter(m => m.walletId === w.id);
-        const saldoDariMutasi = mut.reduce((s, m) => s + (m.tipe === 'in' ? Number(m.amount||0) : -Number(m.amount||0)), 0);
-        const selisih = Number(w.saldo||0) - saldoDariMutasi;
-        if (Math.abs(selisih) >= 1) {
-          window.db.mutasi.push({ id:'MUT-'+Date.now()+fixed, walletId: w.id, tipe: selisih>0?'in':'out', amount: Math.abs(selisih), ket:'REKON: Koreksi selisih otomatis', tgl: _now() });
-          fixed++;
-        }
-      });
-      window.sync?.();
-      _S()?.fire({ icon:'success', title:`${fixed} koreksi ditambahkan!`, timer:2500, showConfirmButton:false });
-      window.jalankanRekon();
-    });
-  };
-
-  // ═══════════════════════════════════════════════════
   // ④  PUSH NOTIFIKASI PWA
   // ═══════════════════════════════════════════════════
 
@@ -19770,16 +19636,6 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
     section.innerHTML = `
       <div class="sidebar-divider"></div>
       <p class="sidebar-section-label">⚡ Fitur Bisnis</p>
-      <button onclick="bukaRekon(); closeSidebar && closeSidebar();" class="sidebar-menu-item">
-        <div class="sidebar-icon-wrap" style="background:rgba(124,58,237,0.1);">
-          <i class="fas fa-calculator" style="color:#7c3aed;"></i>
-        </div>
-        <div>
-          <p class="text-[12px] font-black" style="color:var(--sb-text-title);">Rekonsiliasi Dompet</p>
-          <p class="text-[9px] font-bold" style="color:var(--sb-text-sub);">Cocokkan saldo otomatis</p>
-        </div>
-        <i class="fas fa-chevron-right text-xs ml-auto" style="color:var(--sb-chevron);"></i>
-      </button>
       <button onclick="bukaNotifPWA(); closeSidebar && closeSidebar();" class="sidebar-menu-item">
         <div class="sidebar-icon-wrap" style="background:rgba(0,97,194,0.1);">
           <i class="fas fa-bell" style="color:#0061C2;"></i>
@@ -19797,23 +19653,7 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
 
   // Tombol di dashboard / shortcut cepat
   function injectDashboardShortcuts() {
-    const target = document.querySelector('#view-dashboard .grid.grid-cols-2');
-    if (!target) { setTimeout(injectDashboardShortcuts, 800); return; }
-    if (document.getElementById('dash-btn-rekon')) return;
-
-    const rekonBtn = document.createElement('button');
-    rekonBtn.id = 'dash-btn-rekon';
-    rekonBtn.onclick = window.bukaRekon;
-    rekonBtn.className = 'bg-white rounded-[18px] p-4 text-left border border-slate-100';
-    rekonBtn.style.cssText = 'box-shadow:0 2px 12px rgba(0,0,0,0.04);cursor:pointer;';
-    rekonBtn.innerHTML = `
-      <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(168,85,247,0.08));display:flex;align-items:center;justify-content:center;margin-bottom:10px;">
-        <i class="fas fa-calculator" style="color:#7c3aed;font-size:14px;"></i>
-      </div>
-      <p class="text-slate-700 font-black text-[12px]">Rekonsiliasi</p>
-      <p class="text-slate-400 font-bold text-[9px] mt-0.5">Cocokkan Saldo</p>`;
-
-    target.appendChild(rekonBtn);
+    // Rekonsiliasi dihapus — tidak ada shortcut yang diinject
   }
 
   // ═══════════════════════════════════════════════════
@@ -19833,7 +19673,7 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
     bukaProfilPelanggan: window.bukaProfilPelanggan,
     bukaModalVoucher:    window.bukaModalVoucher,
     pakaiVoucher:        window.pakaiVoucher,
-    bukaRekon:           window.bukaRekon,
+    bukaRekon:           undefined,
     bukaNotifPWA:        window.bukaNotifPWA,
     kirimNotif:          window.kirimNotif,
     getVouchers,
