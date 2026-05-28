@@ -9296,10 +9296,18 @@
     }
 
     // ---- FIREBASE: Resolve UID yang benar ----
-    // Selalu gunakan UID dari Firebase Auth yang aktif agar cocok dengan Security Rules.
+    // Mode kasir: selalu pakai owner_uid (pemilik toko) agar data masuk ke dokumen yang benar.
+    // Mode admin/owner: pakai UID dari Firebase Auth yang aktif (= uid pemilik).
     // Fallback ke storeId hanya jika tidak ada user yang login (mode demo/offline).
     function _resolveStoreId(storeId) {
-      if (window._fbAuth && window._fbAuth.currentUser) {
+      // [FIX] Jika mode kasir, pakai owner_uid dari localStorage (bukan UID anonymous)
+      const isKasirMode = localStorage.getItem('k_kasir_mode') === 'true';
+      if (isKasirMode) {
+        const ownerUid = localStorage.getItem('k_owner_uid') || localStorage.getItem('k_sid');
+        if (ownerUid && ownerUid !== 'DEMO') return ownerUid;
+      }
+      // Mode owner/admin normal: pakai currentUser.uid dari Firebase Auth
+      if (window._fbAuth && window._fbAuth.currentUser && !window._fbAuth.currentUser.isAnonymous) {
         return window._fbAuth.currentUser.uid;
       }
       return storeId; // fallback ke storeId dari localStorage (bisa 'DEMO')
@@ -12287,8 +12295,10 @@ ${t.tipe === 'ewallet' ? `
            'k_kasir_mode','k_kasir_id','k_kasir_nama','k_kasir_username','k_kasir_izin',
            'k_kasir_anon_uid','k_struk_alamat','k_struk_tagline','k_struk_logo'
           ].forEach(k => localStorage.removeItem(k));
+          // [FIX] Jangan hapus konterku_db_ saat kasir logout — data sudah tersync ke Firestore
+          // Owner yang logout boleh hapus cache lokal, kasir tidak perlu
           Object.keys(localStorage).forEach(k => {
-            if (k.startsWith('konterku_db_') || k.startsWith('ktg_')) localStorage.removeItem(k);
+            if (k.startsWith('ktg_')) localStorage.removeItem(k);
           });
           location.reload();
         }
@@ -15130,8 +15140,9 @@ ${t.tipe === 'ewallet' ? `
           last_seen      : new Date(),
           is_active      : true,
         };
-        // Doc ID = anonUid (= request.auth.uid) agar Rules bisa validasi
-        const sessDocId = anonUid || deviceId;
+        // [FIX] Doc ID = deviceId agar konsisten lintas reload (anonUid bisa berubah tiap sesi)
+        // anonUid tetap disimpan di dalam dokumen untuk keperluan Rules validasi
+        const sessDocId = deviceId;
         await window._fbFirestore
           .collection('kasir_sessions')
           .doc(sessDocId)
@@ -15317,7 +15328,8 @@ ${t.tipe === 'ewallet' ? `
           } catch(e) { console.warn('[Logout] Gagal hapus sesi Firestore:', e.message); }
         }
         if (window._fbAuth) window._fbAuth.signOut().catch(()=>{});
-        // Bersihkan SEMUA data sesi
+        // [FIX] Bersihkan HANYA data sesi kasir — jangan hapus konterku_db_ (data toko owner)
+        // karena kasir hanya memakai data milik owner, bukan data sendiri
         const _kKeys = [
           'k_logged','k_token','k_sid','k_email',
           'k_store_name','k_plan','k_expired_date',
@@ -15327,8 +15339,10 @@ ${t.tipe === 'ewallet' ? `
           'k_kasir_anon_uid','k_struk_alamat','k_struk_tagline','k_struk_logo'
         ];
         _kKeys.forEach(k => localStorage.removeItem(k));
+        // [FIX] Tidak hapus konterku_db_* — data tersebut milik owner toko
+        // dan sudah ter-sync ke Firestore. Hapus hanya ktg_ (kategori sementara)
         Object.keys(localStorage).forEach(k => {
-          if (k.startsWith('konterku_db_') || k.startsWith('ktg_')) localStorage.removeItem(k);
+          if (k.startsWith('ktg_')) localStorage.removeItem(k);
         });
         location.reload();
       }
@@ -15455,7 +15469,7 @@ ${t.tipe === 'ewallet' ? `
         localStorage.setItem('k_active_store_id',  sess.store_id || '');
         localStorage.setItem('k_store_name',       storeName);
         localStorage.setItem('k_plan',             planLabel);
-        localStorage.setItem('k_session_doc_id',   restoredAnonUid || deviceId);
+        localStorage.setItem('k_session_doc_id',   deviceId); // [FIX] selalu pakai deviceId agar konsisten
         if (expiredDate) localStorage.setItem('k_expired_date', expiredDate);
 
         // Langsung masuk ke app
