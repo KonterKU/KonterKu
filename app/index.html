@@ -14163,6 +14163,18 @@ ${t.bayar ? `
         if (fileLabel) fileLabel.textContent = 'Pilih file gambar...';
         openModal('modal-sidebar-perpanjang');
       }
+
+      // ── SUPPLIER & RESTOK — langsung di sini, tidak perlu hook ──
+      else if (menu === 'supplier') {
+        document.getElementById('sidebar-overlay').classList.remove('open');
+        document.body.style.overflow = '';
+        if (typeof openSidebarMenuSupplier === 'function') {
+          openSidebarMenuSupplier();
+        } else {
+          // Fallback: buka modal langsung
+          openModal('modal-sidebar-supplier');
+        }
+      }
     }
 
     // ═══════════════════════════════════════════════════════════════
@@ -23894,7 +23906,7 @@ function renderHutangSupplier() {
       + '<div style="height:100%;width:' + progress + '%;background:linear-gradient(90deg,#10b981,#34d399);border-radius:100px;transition:width 0.4s;"></div></div>'
       + '<p style="font-size:8px;font-weight:700;color:#94a3b8;margin:3px 0 0;">Sudah dibayar ' + progress + '%</p>'
       + '</div></div>'
-      + '<button onclick="openBayarHutangSupplier('' + r.id + '')" style="margin-top:10px;width:100%;padding:9px;border-radius:10px;background:linear-gradient(135deg,#059669,#34d399);border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:900;color:white;display:flex;align-items:center;justify-content:center;gap:6px;">'
+      + '<button onclick="openBayarHutangSupplier(\'' + r.id + '\')" style="margin-top:10px;width:100%;padding:9px;border-radius:10px;background:linear-gradient(135deg,#059669,#34d399);border:none;cursor:pointer;font-size:10px;font-weight:900;color:white;display:flex;align-items:center;justify-content:center;gap:6px;">'
       + '<i class="fas fa-money-bill-wave"></i> Bayar Hutang Ini</button></div>';
   }).join('');
 
@@ -24311,33 +24323,40 @@ function prosesBayarHutangSupplier() {
   });
 }
 
-// ─── HOOK KE openSidebarMenu & openModal (jalankan setelah semua script dimuat) ───
-// Menggunakan setTimeout agar berjalan SETELAH semua load-event & hook lain selesai
-function _patchSupplierMenuHook() {
-  // Hook openSidebarMenu — gunakan flag agar tidak double-patch
-  if (typeof window.openSidebarMenu === 'function' && !window._supplierMenuHooked) {
-    window._supplierMenuHooked = true;
-    const _orig = window.openSidebarMenu;
-    window.openSidebarMenu = function(menu) {
-      if (menu === 'supplier') { openSidebarMenuSupplier(); return; }
-      return _orig(menu);
-    };
-  }
-  // Hook openModal — hanya intercept modal-catat-restok, BUKAN modal-form-supplier
-  if (typeof window.openModal === 'function' && !window._supplierModalHooked) {
-    window._supplierModalHooked = true;
+// ─── EXPOSE semua fungsi supplier ke window agar onclick di HTML bisa menemukannya ───
+window.setSupplierTab            = setSupplierTab;
+window.openSidebarMenuSupplier   = openSidebarMenuSupplier;
+window.populateRiwayatFilter     = populateRiwayatFilter;
+window.renderSupplierList        = renderSupplierList;
+window.renderRiwayatBeli         = renderRiwayatBeli;
+window.renderHutangSupplier      = renderHutangSupplier;
+window.openTambahSupplierForm    = openTambahSupplierForm;
+window.editSupplier              = editSupplier;
+window.simpanSupplier            = simpanSupplier;
+window.hapusSupplier             = hapusSupplier;
+window.populateSupplierDropdowns = populateSupplierDropdowns;
+window.updateSupplierCountLabel  = updateSupplierCountLabel;
+window.openRestokModal           = openRestokModal;
+window.onRestokSupplierChange    = onRestokSupplierChange;
+window.onRestokProdukChange      = onRestokProdukChange;
+window.hitungHPPBaru             = hitungHPPBaru;
+window.setRestokStatus           = setRestokStatus;
+window.simpanCatatanRestok       = simpanCatatanRestok;
+window.openBayarHutangSupplier   = openBayarHutangSupplier;
+window.prosesBayarHutangSupplier = prosesBayarHutangSupplier;
+window.fmtRp                     = window.fmtRp || fmtRp;
+
+// ─── HOOK openModal untuk modal-catat-restok ───
+// (menu 'supplier' sudah ditangani langsung di openSidebarMenu di atas)
+window.addEventListener('load', function() {
+  if (typeof window.openModal === 'function' && !window._restokModalHooked) {
+    window._restokModalHooked = true;
     const _origOM = window.openModal;
     window.openModal = function(id) {
       if (id === 'modal-catat-restok') { openRestokModal(); return _origOM(id); }
       return _origOM(id);
     };
   }
-}
-// Jalankan saat load selesai, lalu ulangi dengan delay agar menang dari hook lain
-window.addEventListener('load', function() {
-  setTimeout(_patchSupplierMenuHook, 100);
-  setTimeout(_patchSupplierMenuHook, 500);
-  setTimeout(_patchSupplierMenuHook, 1200);
 });
 
 // ─── INIT SAAT APP SIAP ───
@@ -24349,7 +24368,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 800);
 });
 
-// Pastikan db.supplier & db.riwayat_restok terisi setelah load
+// Pastikan db.supplier & db.riwayat_restok terisi setelah load penuh
 window.addEventListener('load', function() {
   setTimeout(function() {
     if (!db.supplier)       db.supplier = [];
@@ -24366,13 +24385,11 @@ window.addEventListener('load', function() {
 <script>
 window.addEventListener('load', function() {
   // ─── Tunggu semua fungsi utama siap ───
-  function _applyHutangPatch() {
-    // Jangan patch ulang jika sudah
-    if (window._hutangTokoPatched) return;
+  setTimeout(function() {
 
     // ── 1. Patch setManualHutangType ──
+    // Saat tipe = 'toko', isi dropdown dengan data supplier
     if (typeof window.setManualHutangType === 'function') {
-      window._hutangTokoPatched = true;
       const _origSetType = window.setManualHutangType;
       window.setManualHutangType = function(type) {
         _origSetType(type);
@@ -24381,8 +24398,8 @@ window.addEventListener('load', function() {
     }
 
     // ── 2. Patch openModalManualHutang ──
-    if (typeof window.openModalManualHutang === 'function' && !window._hutangModalPatched) {
-      window._hutangModalPatched = true;
+    // Pastikan dropdown sudah ter-refresh saat modal dibuka
+    if (typeof window.openModalManualHutang === 'function') {
       const _origOpen = window.openModalManualHutang;
       window.openModalManualHutang = function() {
         _origOpen();
@@ -24393,10 +24410,8 @@ window.addEventListener('load', function() {
         }, 50);
       };
     }
-  }
-  setTimeout(_applyHutangPatch, 200);
-  setTimeout(_applyHutangPatch, 800);
-  setTimeout(_applyHutangPatch, 1600);
+
+  }, 800);
 });
 
 // ─── Helper: isi dropdown sesuai tipe ───
