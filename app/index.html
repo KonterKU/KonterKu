@@ -263,7 +263,7 @@
       background: linear-gradient(160deg, #061540 0%, #0a1f50 45%, #0d2d6b 100%);
       position: relative;
       overflow: hidden;
-      padding-bottom: 64px;
+      padding-bottom: 36px;
       border-radius: 0 0 48px 48px;
       box-shadow: 0 14px 40px rgba(6,21,64,0.65), 0 4px 16px rgba(0,0,0,0.40);
     }
@@ -2145,7 +2145,7 @@
       transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease, margin 0.3s ease;
     }
     #header-card-saldo.saldo-visible {
-      max-height: 220px;
+      max-height: 260px;
       opacity: 1;
       margin-bottom: 0 !important;
     }
@@ -4766,7 +4766,7 @@
 
           <!-- ===== SETTING STRUK THERMAL ===== -->
           <div class="rounded-2xl overflow-hidden border border-violet-100" style="background:linear-gradient(135deg,#faf5ff,#f5f3ff);">
-            <div class="px-4 pt-4 pb-3 flex items-center gap-3 border-b border-violet-100">
+            <div class="px-4 pt-4 pb-3 flex items-center gap-3 border-b border-violet-100" style="cursor:pointer;" onclick="toggleSettingSection('struk-setting-body','chevron-struk')">
               <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
                 style="background:linear-gradient(135deg,#7c3aed,#a855f7);box-shadow:0 4px 12px rgba(124,58,237,0.3);">
                 <i class="fas fa-print text-white" style="font-size:13px;"></i>
@@ -4775,9 +4775,10 @@
                 <p class="text-[11px] font-black text-slate-800">Setting Struk Thermal</p>
                 <p class="text-[8px] font-bold text-slate-400">Logo & alamat tampil di struk 58mm</p>
               </div>
+              <i id="chevron-struk" class="fas fa-chevron-down" style="font-size:12px;color:#7c3aed;transition:transform 0.3s;"></i>
             </div>
             <div id="struk-setting-lock" style="display:none;"></div>
-            <div id="struk-setting-body" class="p-4 space-y-4">
+            <div id="struk-setting-body" class="p-4 space-y-4" style="display:none;">
               <!-- Upload Logo -->
               <div>
                 <label style="font-size:9px;font-weight:900;color:#7c3aed;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:8px;">
@@ -4835,7 +4836,7 @@
 
           <!-- ===== PENGATURAN NOTIFIKASI ===== -->
           <div class="rounded-2xl overflow-hidden border border-amber-100" style="background:linear-gradient(135deg,#fffbeb,#fef3c7);">
-            <div class="px-4 pt-4 pb-3 flex items-center gap-3 border-b border-amber-100">
+            <div class="px-4 pt-4 pb-3 flex items-center gap-3 border-b border-amber-100" style="cursor:pointer;" onclick="toggleSettingSection('notif-setting-body','chevron-notif')">
               <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
                 style="background:linear-gradient(135deg,#d97706,#f59e0b);box-shadow:0 4px 12px rgba(217,119,6,0.3);">
                 <i class="fas fa-bell text-white" style="font-size:13px;"></i>
@@ -4844,8 +4845,9 @@
                 <p class="text-[11px] font-black text-slate-800">Pengaturan Notifikasi</p>
                 <p class="text-[8px] font-bold text-slate-400">Atur notifikasi push & peringatan stok</p>
               </div>
+              <i id="chevron-notif" class="fas fa-chevron-down" style="font-size:12px;color:#d97706;transition:transform 0.3s;"></i>
             </div>
-            <div class="p-4 space-y-3">
+            <div id="notif-setting-body" class="p-4 space-y-3" style="display:none;">
               <!-- Baris notif stok menipis -->
               <div style="background:#fff;border-radius:14px;padding:12px 14px;border:1.5px solid #fde68a;display:flex;align-items:center;gap:12px;">
                 <div style="width:32px;height:32px;border-radius:10px;background:rgba(245,158,11,0.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -6818,6 +6820,12 @@
             <span id="status-text">ONLINE</span>
           </div>
 
+          <!-- Tombol Toggle Aset -->
+          <button id="btn-toggle-aset" onclick="toggleAsetCard()" title="Sembunyikan / Tampilkan Aset"
+            style="display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:12px;background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.18);cursor:pointer;flex-shrink:0;transition:background 0.2s;">
+            <i id="icon-toggle-aset" class="fas fa-eye-slash" style="font-size:13px;color:rgba(255,255,255,0.70);"></i>
+          </button>
+
           <!-- Toggle Tema — dipindah dari sidebar -->
           <button id="theme-toggle-btn" class="header-desktop-only" onclick="toggleAppTheme()" aria-label="Toggle tema"
             style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px 4px 6px;
@@ -6850,8 +6858,10 @@
       </div>
 
       <!-- CARD SALDO — PREMIUM BUKU LINK STYLE -->
-      <div id="header-card-saldo" class="relative z-10 mx-4" style="margin-bottom:-28px;">
-        <div class="relative overflow-hidden" style="border-radius:24px;background:linear-gradient(145deg,#0d2a60 0%,#0a1f4e 60%,#071440 100%);border:1px solid rgba(255,255,255,0.13);box-shadow:0 16px 48px rgba(6,21,64,0.55),0 4px 16px rgba(0,0,0,0.35);">
+      <div id="header-card-saldo" class="relative z-10 mx-4 mb-0">
+
+        <!-- Card Aset — bisa disembunyikan -->
+        <div id="aset-card-body" class="relative overflow-hidden" style="border-radius:24px;background:linear-gradient(145deg,#0d2a60 0%,#0a1f4e 60%,#071440 100%);border:1px solid rgba(255,255,255,0.13);box-shadow:0 16px 48px rgba(6,21,64,0.55),0 4px 16px rgba(0,0,0,0.35);transition:opacity 0.3s ease;opacity:1;">
 
           <!-- Dekorasi lingkaran -->
           <div class="absolute pointer-events-none" style="right:-30px;top:-30px;width:140px;height:140px;border-radius:50%;border:1px solid rgba(56,189,248,0.08);"></div>
@@ -6888,29 +6898,29 @@
           <div style="height:1px;background:rgba(255,255,255,0.07);"></div>
 
           <!-- Baris stat: Piutang & Hutang -->
-          <div style="display:grid;grid-template-columns:1fr 1px 1fr;">
-            <div style="padding:12px 18px;display:flex;flex-direction:column;gap:3px;">
+          <div style="display:grid;grid-template-columns:1fr 1px 1fr;width:100%;box-sizing:border-box;">
+            <div style="padding:12px 16px;display:flex;flex-direction:column;gap:3px;min-width:0;overflow:hidden;">
               <div style="display:flex;align-items:center;gap:5px;">
-                <i class="fas fa-arrow-up" style="font-size:9px;color:#34d399;"></i>
+                <i class="fas fa-arrow-up" style="font-size:9px;color:#34d399;flex-shrink:0;"></i>
                 <span style="font-size:9px;font-weight:700;color:rgba(52,211,153,0.60);text-transform:uppercase;letter-spacing:0.06em;">Piutang</span>
               </div>
-              <p id="stat-piutang" style="font-size:14px;font-weight:800;color:#6ee7b7;letter-spacing:-0.3px;line-height:1;margin:0;">Rp 0</p>
+              <p id="stat-piutang" style="font-size:14px;font-weight:800;color:#6ee7b7;letter-spacing:-0.3px;line-height:1;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Rp 0</p>
             </div>
-            <div style="background:rgba(255,255,255,0.07);"></div>
-            <div style="padding:12px 18px;display:flex;flex-direction:column;gap:3px;">
+            <div style="background:rgba(255,255,255,0.07);width:1px;flex-shrink:0;"></div>
+            <div style="padding:12px 16px;display:flex;flex-direction:column;gap:3px;min-width:0;overflow:hidden;">
               <div style="display:flex;align-items:center;gap:5px;">
-                <i class="fas fa-arrow-down" style="font-size:9px;color:#fb923c;"></i>
+                <i class="fas fa-arrow-down" style="font-size:9px;color:#fb923c;flex-shrink:0;"></i>
                 <span style="font-size:9px;font-weight:700;color:rgba(251,146,60,0.60);text-transform:uppercase;letter-spacing:0.06em;">Hutang</span>
               </div>
-              <p id="stat-hutang" style="font-size:14px;font-weight:800;color:#fdba74;letter-spacing:-0.3px;line-height:1;margin:0;">Rp 0</p>
+              <p id="stat-hutang" style="font-size:14px;font-weight:800;color:#fdba74;letter-spacing:-0.3px;line-height:1;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Rp 0</p>
             </div>
           </div>
-        </div>
+        </div><!-- end aset-card-body -->
       </div>
 
     </header>
 
-    <main class="px-6" style="padding-top:42px;">
+    <main class="px-6" style="padding-top:16px;">
 
       <!-- ===== VIEW: DASHBOARD ===== -->
       <section id="view-dashboard" class="view-section active space-y-6">
@@ -8730,6 +8740,40 @@
     }
 
     // ---- NAVIGASI ----
+    // ── TOGGLE SECTION PENGATURAN (accordion) ──
+    function toggleSettingSection(bodyId, chevronId) {
+      const body    = document.getElementById(bodyId);
+      const chevron = document.getElementById(chevronId);
+      if (!body) return;
+      const isHidden = body.style.display === 'none' || body.style.display === '';
+      body.style.display = isHidden ? 'block' : 'none';
+      if (chevron) chevron.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
+
+    // ── TOGGLE CARD ASET ──
+    function toggleAsetCard() {
+      const card = document.getElementById("aset-card-body");
+      const icon = document.getElementById("icon-toggle-aset");
+      const hidden = localStorage.getItem("aset_card_hidden") === "1";
+      if (hidden) {
+        card.style.display = "block";
+        icon.className = "fas fa-eye-slash";
+        localStorage.setItem("aset_card_hidden", "0");
+      } else {
+        card.style.display = "none";
+        icon.className = "fas fa-eye";
+        localStorage.setItem("aset_card_hidden", "1");
+      }
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+      if (localStorage.getItem("aset_card_hidden") === "1") {
+        const c = document.getElementById("aset-card-body");
+        const ic = document.getElementById("icon-toggle-aset");
+        if (c) c.style.display = "none";
+        if (ic) ic.className = "fas fa-eye";
+      }
+    });
+
     function showView(v) {
       // ── FEATURE GATE: cek paket sebelum navigasi ──
       const plan = localStorage.getItem('k_plan') || 'trial';
