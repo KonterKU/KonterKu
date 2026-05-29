@@ -7226,8 +7226,8 @@
                 <i class="fas fa-note-sticky" style="color:#94a3b8;"></i>
               </div>
               <div class="flex-1">
-                <p class="kasir-field-label">Keterangan / No HP / SN</p>
-                <input type="text" id="kd-note" class="kasir-field-input" placeholder="Opsional...">
+                <p class="kasir-field-label">No. HP Tujuan / SN / Keterangan</p>
+                <input type="text" id="kd-note" class="kasir-field-input" placeholder="Contoh: 08123456789 atau SN-xxx...">
               </div>
             </div>
           </div>
@@ -7475,6 +7475,37 @@
               <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.15);padding-top:8px;">
                 <span style="font-size:10px;font-weight:900;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.06em;">Total Pembayaran</span>
                 <span id="kf-total-final" style="font-size:18px;font-weight:900;color:white;">Rp 0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bayar & Kembalian -->
+          <div id="kf-bayar-box" class="kasir-field-card" style="border-color:rgba(16,185,129,0.3);background:linear-gradient(135deg,#f0fdf4,#dcfce7);">
+            <div class="kasir-field-row" style="border:none;padding-bottom:8px;">
+              <div class="kasir-field-icon" style="background:rgba(16,185,129,0.12);">
+                <i class="fas fa-money-bills" style="color:#10b981;"></i>
+              </div>
+              <div class="flex-1">
+                <p class="kasir-field-label" style="color:#065f46;font-weight:900;letter-spacing:0.05em;">BAYAR & KEMBALIAN</p>
+              </div>
+            </div>
+            <div class="kasir-field-row" style="border:none;gap:8px;">
+              <div style="flex:1;background:white;border:1.5px solid #6ee7b7;border-radius:12px;padding:9px 12px;display:flex;align-items:center;gap:6px;">
+                <i class="fas fa-hand-holding-dollar" style="color:#10b981;font-size:10px;"></i>
+                <div style="flex:1;">
+                  <p style="font-size:9px;font-weight:900;color:#065f46;margin:0 0 2px;text-transform:uppercase;letter-spacing:0.04em;">Uang Bayar</p>
+                  <input type="number" id="kf-bayar" class="kasir-field-input"
+                    placeholder="0" min="0" inputmode="numeric"
+                    style="background:transparent;padding:0;font-size:14px;font-weight:900;color:#065f46;border:none;outline:none;width:100%;"
+                    oninput="hitungKembalianFisik()">
+                </div>
+              </div>
+              <div style="flex:1;background:white;border:1.5px solid #6ee7b7;border-radius:12px;padding:9px 12px;display:flex;align-items:center;gap:6px;">
+                <i class="fas fa-coins" style="color:#f59e0b;font-size:10px;"></i>
+                <div style="flex:1;">
+                  <p style="font-size:9px;font-weight:900;color:#065f46;margin:0 0 2px;text-transform:uppercase;letter-spacing:0.04em;">Kembalian</p>
+                  <p id="kf-kembalian" style="font-size:14px;font-weight:900;color:#f59e0b;margin:0;">Rp 0</p>
+                </div>
               </div>
             </div>
           </div>
@@ -10032,6 +10063,31 @@
       const tEl = document.getElementById('kf-total-final');
       if (rEl) rEl.innerHTML = rincian;
       if (tEl) tEl.textContent = 'Rp ' + _fmt(total);
+      hitungKembalianFisik();
+    }
+
+    function hitungKembalianFisik() {
+      const jualDasar     = Number(document.getElementById('kf-jual')?.value) || 0;
+      const diskonVal     = Number(document.getElementById('kf-diskon-val')?.value) || 0;
+      const diskonTipe    = document.getElementById('kf-diskon-tipe')?.value || 'rp';
+      const biayaTambahan = Number(document.getElementById('kf-biaya-tambahan')?.value) || 0;
+      const diskonNominal = diskonTipe === 'pct' ? Math.round(jualDasar * diskonVal / 100) : diskonVal;
+      const total         = Math.max(0, jualDasar - diskonNominal) + biayaTambahan;
+
+      const bayar     = Number(document.getElementById('kf-bayar')?.value) || 0;
+      const kembalian = bayar > 0 ? bayar - total : 0;
+      const elKem = document.getElementById('kf-kembalian');
+      if (!elKem) return;
+      if (bayar <= 0) {
+        elKem.textContent = 'Rp 0';
+        elKem.style.color = '#f59e0b';
+      } else if (kembalian < 0) {
+        elKem.textContent = '− Rp ' + _fmt(Math.abs(kembalian));
+        elKem.style.color = '#ef4444';
+      } else {
+        elKem.textContent = 'Rp ' + _fmt(kembalian);
+        elKem.style.color = '#10b981';
+      }
     }
 
     function resetKasirForms() {
@@ -10046,9 +10102,10 @@
       if (man) man.value = "";
       ['kd-laba-row','kf-laba-row'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display='none'; });
       // Reset fisik extra fields
-      ['kf-diskon-val','kf-biaya-tambahan'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+      ['kf-diskon-val','kf-biaya-tambahan','kf-bayar'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
       const _kfDiskonTipe = document.getElementById('kf-diskon-tipe'); if(_kfDiskonTipe) _kfDiskonTipe.value='rp';
       const _kfPrv = document.getElementById('kf-total-preview'); if(_kfPrv) _kfPrv.classList.add('hidden');
+      const _kfKem = document.getElementById('kf-kembalian'); if(_kfKem) { _kfKem.textContent='Rp 0'; _kfKem.style.color='#f59e0b'; }
       const ewlCalc = document.getElementById('ewl-calc-row');
       if (ewlCalc) ewlCalc.classList.add('hidden');
       const ewlLive = document.getElementById('ewl-profit-live');
@@ -11929,10 +11986,13 @@
         } else {
           db.hutang.push({ id: 'H-'+Date.now(), tipe: 'pelanggan', nama: cust, jumlah: jual, tgl, ket: 'FIS: '+productName+' '+note });
         }
+        const _kfBayarVal = Number(document.getElementById('kf-bayar')?.value) || 0;
+        const _kfKembalianVal = _kfBayarVal > 0 ? _kfBayarVal - jual : 0;
         db.transaksi.push({
           id: 'TR-'+Date.now(), tgl, produk: 'FIS: '+productName, modal, jual,
           pelanggan: cust, status, walletModal: null, walletJual: wpId, pRef: pid, tipe: 'fisik', note,
-          diskon: diskonNominal, biayaTambahan
+          diskon: diskonNominal, biayaTambahan,
+          bayar: _kfBayarVal || undefined, kembalian: _kfBayarVal > 0 ? _kfKembalianVal : undefined
         });
       }
 
@@ -12122,13 +12182,29 @@
                          : t.tipe === 'digital'  ? 'DIGITAL' : 'FISIK';
         const namaProduk = (t.produk || '-').replace(/^(DIG:|FIS:|EWL:)\s*/i, '');
 
-        // Waktu WIB
-        const now   = new Date();
-        const wib   = new Date(now.getTime() + now.getTimezoneOffset()*60000 + 3600000*7);
-        const pad2  = x => String(x).padStart(2,'0');
-        const bulan = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-        const waktu = `${pad2(wib.getDate())} ${bulan[wib.getMonth()]} ${wib.getFullYear()} ` +
-                      `${pad2(wib.getHours())}:${pad2(wib.getMinutes())}`;
+        // Waktu dari tanggal transaksi asli (bukan waktu cetak ulang)
+        const tglRaw = t.tgl || '';
+        const bulan  = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+        let waktu = tglRaw;
+        if (tglRaw && tglRaw.match(/^\d{4}-\d{2}-\d{2}$/)) {
+          const [y, mo, d] = tglRaw.split('-');
+          waktu = `${d} ${bulan[parseInt(mo,10)-1]} ${y}`;
+        }
+
+        // Metode bayar = nama dompet penerima
+        const metodeBayar = (() => {
+          if (t.status !== 'Lunas') return 'Belum Lunas';
+          const wId = t.walletJual || t.walletBayar || '';
+          if (!wId) return 'Tunai';
+          if (typeof db !== 'undefined' && db.dompet) {
+            const w = db.dompet.find(d => d.id === wId);
+            if (w) return w.nama;
+          }
+          return 'Tunai';
+        })();
+
+        // Keterangan / note (nomor HP, SN, dsb)
+        const noteText = (t.note || '').trim();
 
         const bytes = [];
         const $ = (...x) => bytes.push(build(...x));
@@ -12166,23 +12242,45 @@
         $(...CMD.BOLD_OFF, ...CMD.ALIGN_LEFT);
         $(enc(divider()), NL);
 
-        // ── Produk & pelanggan ───────────────────────────
-        $(...CMD.BOLD_ON);
-        $(enc(namaProduk.substring(0, COLS)), NL);
-        $(...CMD.BOLD_OFF);
+        // ── Info transaksi & produk ──────────────────────
         if (kasirName) $(enc(padLine('Kasir', kasirName)), NL);
         $(enc(padLine('Pelanggan', t.pelanggan || 'Umum')), NL);
-        $(enc(padLine('Tanggal',   t.tgl || '-')), NL);
+        $(enc(padLine('Tanggal',   waktu || t.tgl || '-')), NL);
         $(enc(divider()), NL);
-        $(enc(center(namaProduk.substring(0, COLS))), NL);
+        $(...CMD.ALIGN_CENTER, ...CMD.BOLD_ON);
+        $(enc(namaProduk.substring(0, COLS)), NL);
+        $(...CMD.BOLD_OFF);
         $(enc(center(`Qty: ${t.qty||1} pcs`)), NL);
+        $(...CMD.ALIGN_LEFT);
 
-        // ── Rincian harga (TANPA info modal) ────────────
+        // ── Keterangan (nomor HP / SN) — langsung setelah produk ───
+        if (noteText) {
+          // Word wrap
+          const nWords = noteText.split(' ');
+          let nLine = '';
+          nWords.forEach(w => {
+            const test = nLine ? nLine + ' ' + w : w;
+            if (test.length > COLS) { $(enc(padLine('Ket', nLine.substring(0, COLS-4))), NL); nLine = w; }
+            else nLine = test;
+          });
+          if (nLine) $(enc(padLine('Ket', nLine.substring(0, COLS-4))), NL);
+        }
+
+        // ── Rincian harga ────────────────────────────────
+        $(enc(divider()), NL);
         if (t.tipe === 'ewallet') {
           $(enc(padLine('Nominal',     rp(t.nominal))), NL);
           $(enc(padLine('Admin Bank',  rp(t.adminBank))), NL);
           $(...CMD.BOLD_ON);
           $(enc(padLine('Total Bayar', rp(t.jual))), NL);
+          $(...CMD.BOLD_OFF);
+        } else if (t.tipe === 'fisik') {
+          const hargaDasar = Number(t.jual) + (Number(t.diskon)||0) - (Number(t.biayaTambahan)||0);
+          $(enc(padLine('Harga Dasar', rp(hargaDasar))), NL);
+          if (t.diskon)        $(enc(padLine('Diskon',        '- ' + rp(t.diskon))), NL);
+          if (t.biayaTambahan) $(enc(padLine('Biaya Tambahan', rp(t.biayaTambahan))), NL);
+          $(...CMD.BOLD_ON);
+          $(enc(padLine('Harga Jual', rp(t.jual))), NL);
           $(...CMD.BOLD_OFF);
         } else {
           $(...CMD.BOLD_ON);
@@ -12196,28 +12294,19 @@
         $(enc(padLine('TOTAL', rp(t.jual))), NL);
         $(...CMD.BOLD_OFF);
 
+        // ── Metode Bayar ─────────────────────────────────
+        $(enc(padLine('Metode Bayar', metodeBayar)), NL);
+        if (t.bayar) {
+          $(enc(padLine('Uang Bayar',  rp(t.bayar))), NL);
+          const kemVal = t.kembalian || 0;
+          $(enc(padLine('Kembalian', (kemVal < 0 ? '- ' : '') + rp(Math.abs(kemVal)))), NL);
+        }
+
         // ── Status ───────────────────────────────────────
+        $(enc(divider()), NL);
         $(...CMD.ALIGN_CENTER, ...CMD.BOLD_ON);
         $(enc(isLunas ? '*** LUNAS ***' : '-- BELUM LUNAS --'), NL);
         $(...CMD.BOLD_OFF);
-
-        // ── Keterangan ───────────────────────────────────
-        if (t.note && t.note.trim()) {
-          $(enc(divider()), NL);
-          $(...CMD.BOLD_ON);
-          $(...CMD.ALIGN_LEFT);
-          $(enc('Keterangan:'), NL);
-          $(...CMD.BOLD_OFF);
-          // Word wrap keterangan ke COLS karakter
-          const words = t.note.trim().split(' ');
-          let line = '';
-          words.forEach(w => {
-            const test = line ? line + ' ' + w : w;
-            if (test.length > COLS) { $(enc(line), NL); line = w; }
-            else line = test;
-          });
-          if (line) $(enc(line), NL);
-        }
 
         $(enc(divider('=')), NL);
 
@@ -12363,7 +12452,24 @@
             const wib2    = new Date(now2.getTime() + now2.getTimezoneOffset()*60000 + 3600000*7);
             const p2      = x => String(x).padStart(2,'0');
             const bulan   = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-            const tglStr  = `${p2(wib2.getDate())} ${bulan[wib2.getMonth()]} ${wib2.getFullYear()}, ${p2(wib2.getHours())}:${p2(wib2.getMinutes())}`;
+            // Gunakan tanggal transaksi asli
+            const tglRaw2 = t2.tgl || '';
+            let tglStr = tglRaw2;
+            if (tglRaw2 && tglRaw2.match(/^\d{4}-\d{2}-\d{2}$/)) {
+              const [ty, tmo, td] = tglRaw2.split('-');
+              tglStr = `${td} ${bulan[parseInt(tmo,10)-1]} ${ty}`;
+            }
+            // Metode bayar = nama dompet penerima
+            const metodeBayar2 = (() => {
+              if (t2.status !== 'Lunas') return 'Belum Lunas';
+              const wId = t2.walletJual || t2.walletBayar || '';
+              if (!wId) return 'Tunai';
+              if (typeof db !== 'undefined' && db.dompet) {
+                const w = db.dompet.find(d => d.id === wId);
+                if (w) return w.nama;
+              }
+              return 'Tunai';
+            })();
 
             // ── Kalkulasi tinggi ──
             let H = PAD;
@@ -12385,12 +12491,10 @@
             H += 34 + 18;                      // total box + status
             H += 10 + 1 + 10;
             H += 18 + 18;                      // metode, jumlah bayar
-            // keterangan (estimasi — dibatasi 200 karakter ~3 baris)
+            // note/keterangan inline setelah produk
             if (t2.note && t2.note.trim()) {
-              H += 10 + 1 + 10;               // gap + divider + gap
-              H += 18;                         // header KETERANGAN
-              const estLines = Math.ceil(t2.note.trim().length / 32) || 1;
-              H += estLines * 16;
+              const estNoteLines = Math.ceil(t2.note.trim().length / 28) || 1;
+              H += estNoteLines * 16;
             }
             H += 10 + 1 + 14;                  // gap + divider + tagline
             if (!t2.note || !t2.note.trim()) {} // no extra
@@ -12496,8 +12600,24 @@
             cx.fillText(`Qty: ${qtyVal} pcs`, W/2, y + 12);
             y += 16;
 
-            if (t2.nomor)   { cx.font=`400 10px ${SANS}`; cx.fillStyle='#94a3b8'; cx.textAlign='left'; cx.fillText('No: '+t2.nomor, PAD, y+12); y+=16; }
             if (t2.nominal) { cx.font=`400 10px ${SANS}`; cx.fillStyle='#94a3b8'; cx.textAlign='left'; cx.fillText('Nominal: '+rp2(t2.nominal), PAD, y+12); y+=16; }
+
+            // Keterangan / nomor HP / SN langsung di bawah produk
+            if (t2.note && t2.note.trim()) {
+              cx.font = `400 10px ${SANS}`;
+              cx.fillStyle = '#475569';
+              cx.textAlign = 'left';
+              const nwWords = t2.note.trim().split(' ');
+              let nwLine = '';
+              nwWords.forEach(word => {
+                const test = nwLine ? nwLine + ' ' + word : word;
+                if (cx.measureText(test).width > W - PAD*2 - 50) {
+                  cx.fillText('Ket: ' + nwLine, PAD, y + 12);
+                  y += 16; nwLine = word;
+                } else { nwLine = test; }
+              });
+              if (nwLine) { cx.fillText('Ket: ' + nwLine, PAD, y + 12); y += 16; }
+            }
 
             y += 10; drawDiv(); y += 16;
 
@@ -12527,33 +12647,12 @@
             y += 10; drawDiv(); y += 10;
 
             // Pembayaran
-            drawRow('Metode Pembayaran', isL ? 'Tunai' : 'Belum Bayar');
+            drawRow('Metode Bayar', metodeBayar2);
             drawRow('Jumlah Bayar', rp2(jual), true);
-
-            // Keterangan (jika ada)
-            if (t2.note && t2.note.trim()) {
-              y += 10; drawDiv(); y += 10;
-              cx.font = `700 10px ${SANS}`;
-              cx.fillStyle = '#475569';
-              cx.textAlign = 'left';
-              cx.fillText('KETERANGAN', PAD, y + 12);
-              y += 18;
-              // Word wrap keterangan
-              const noteWords = t2.note.trim().split(' ');
-              let noteLine = '';
-              cx.font = `400 11px ${SANS}`;
-              cx.fillStyle = '#0f172a';
-              noteWords.forEach(word => {
-                const test = noteLine ? noteLine + ' ' + word : word;
-                if (cx.measureText(test).width > W - PAD*2) {
-                  cx.fillText(noteLine, PAD, y + 13);
-                  y += 16;
-                  noteLine = word;
-                } else {
-                  noteLine = test;
-                }
-              });
-              if (noteLine) { cx.fillText(noteLine, PAD, y + 13); y += 16; }
+            if (t2.bayar) {
+              drawRow('Uang Bayar', rp2(t2.bayar));
+              const kemVal2 = t2.kembalian || 0;
+              drawRow('Kembalian', (kemVal2 < 0 ? '− ' : '') + rp2(Math.abs(kemVal2)), true, kemVal2 >= 0 ? '#15803d' : '#dc2626');
             }
 
             y += 10; drawDiv(); y += 14;
@@ -12652,11 +12751,28 @@
                          : t.tipe === 'digital'  ? 'DIGITAL' : 'FISIK';
         const namaProduk = (t.produk || '-').replace(/^(DIG:|FIS:|EWL:)\s*/i, '');
 
-        const now  = new Date();
-        const wib  = new Date(now.getTime() + now.getTimezoneOffset()*60000 + 3600000*7);
-        const pad2 = x => String(x).padStart(2,'0');
-        const waktu = `${pad2(wib.getDate())}/${pad2(wib.getMonth()+1)}/${wib.getFullYear()} ` +
-                      `${pad2(wib.getHours())}:${pad2(wib.getMinutes())}`;
+        // Waktu dari tanggal transaksi asli (bukan waktu cetak ulang)
+        const tglRaw = t.tgl || '';
+        let waktu = tglRaw;
+        if (tglRaw && tglRaw.match(/^\d{4}-\d{2}-\d{2}$/)) {
+          const [y, mo, d] = tglRaw.split('-');
+          waktu = `${d}/${mo}/${y}`;
+        }
+
+        // Metode bayar = nama dompet penerima
+        const metodeBayar = (() => {
+          if (!isLunas) return 'Belum Lunas';
+          const wId = t.walletJual || t.walletBayar || '';
+          if (!wId) return 'Tunai';
+          if (typeof db !== 'undefined' && db.dompet) {
+            const w = db.dompet.find(d => d.id === wId);
+            if (w) return w.nama;
+          }
+          return 'Tunai';
+        })();
+
+        // Keterangan / note (nomor HP, SN, dsb)
+        const noteText = (t.note || '').trim();
 
         const alamatLines = alamat
           ? alamat.split('\n').map(l => `<p class="addr-line">${l}</p>`).join('')
@@ -12926,14 +13042,19 @@
 <hr class="rule-dash">
 
 <div class="info-row">
+  <span class="info-lbl">Kasir</span>
+  <span class="info-dots"></span>
+  <span class="info-val">${kasirName||'adm'}</span>
+</div>
+<div class="info-row">
   <span class="info-lbl">Pelanggan</span>
   <span class="info-dots"></span>
   <span class="info-val">${t.pelanggan||'Umum'}</span>
 </div>
 <div class="info-row">
-  <span class="info-lbl">Tgl Transaksi</span>
+  <span class="info-lbl">Tanggal</span>
   <span class="info-dots"></span>
-  <span class="info-val">${t.tgl||'-'}</span>
+  <span class="info-val">${waktu||t.tgl||'-'}</span>
 </div>
 
 <hr class="rule-dash">
@@ -12943,6 +13064,13 @@
   <div class="product-name" style="text-align:center;">${namaProduk}</div>
   <div style="font-size:7.5pt;color:var(--ink-soft);font-weight:500;margin-top:2px;">Qty: ${t.qty||1} pcs</div>
 </div>
+
+${noteText ? `
+<div class="info-row" style="margin-top:3px;">
+  <span class="info-lbl">Ket</span>
+  <span class="info-dots"></span>
+  <span class="info-val" style="white-space:normal;text-align:right;max-width:65%;">${noteText}</span>
+</div>` : ''}
 
 <hr class="rule-dash">
 
@@ -12960,6 +13088,18 @@ ${t.tipe === 'ewallet' ? `
   <span class="price-lbl">Total Bayar</span>
   <span class="price-val">${rp(t.jual)}</span>
 </div>
+` : t.tipe === 'fisik' ? `
+<div class="price-row">
+  <span class="price-lbl">Harga Dasar</span>
+  <span class="price-val">${rp(Number(t.jual)+(Number(t.diskon)||0)-(Number(t.biayaTambahan)||0))}</span>
+</div>
+${t.diskon ? `<div class="price-row"><span class="price-lbl" style="color:#dc2626;">Diskon</span><span class="price-val" style="color:#dc2626;">- ${rp(t.diskon)}</span></div>` : ''}
+${t.biayaTambahan ? `<div class="price-row"><span class="price-lbl">Biaya Tambahan</span><span class="price-val">${rp(t.biayaTambahan)}</span></div>` : ''}
+<hr class="rule-thin">
+<div class="price-row">
+  <span class="price-lbl">Harga Jual</span>
+  <span class="price-val">${rp(t.jual)}</span>
+</div>
 ` : `
 <div class="price-row">
   <span class="price-lbl">Harga</span>
@@ -12972,6 +13112,24 @@ ${t.tipe === 'ewallet' ? `
   <span class="total-lbl">TOTAL</span>
   <span class="total-val">${rp(t.jual)}</span>
 </div>
+
+<!-- METODE BAYAR -->
+<div class="info-row" style="margin-top:5px;">
+  <span class="info-lbl">Metode Bayar</span>
+  <span class="info-dots"></span>
+  <span class="info-val">${metodeBayar}</span>
+</div>
+${t.bayar ? `
+<div class="info-row">
+  <span class="info-lbl">Uang Bayar</span>
+  <span class="info-dots"></span>
+  <span class="info-val">${rp(t.bayar)}</span>
+</div>
+<div class="info-row">
+  <span class="info-lbl" style="font-weight:700;">Kembalian</span>
+  <span class="info-dots"></span>
+  <span class="info-val" style="color:${(t.kembalian||0)>=0?'#15803d':'#dc2626'};font-weight:800;">${(t.kembalian||0)>=0?'':'− '}${rp(Math.abs(t.kembalian||0))}</span>
+</div>` : ''}
 
 <!-- STATUS -->
 <div class="status-wrap">
