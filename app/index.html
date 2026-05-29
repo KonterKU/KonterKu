@@ -10024,7 +10024,7 @@
       prv.classList.remove('hidden');
 
       let rincian = '';
-      if (jualDasar > 0)       rincian += `Harga Jual: Rp ${_fmt(jualDasar)}<br>`;
+      if (jualDasar > 0)       rincian += `Harga: Rp ${_fmt(jualDasar)}<br>`;
       if (diskonNominal > 0)   rincian += `Diskon${diskonTipe==='pct'?' ('+diskonVal+'%)':''}: − Rp ${_fmt(diskonNominal)}<br>`;
       if (biayaTambahan > 0)   rincian += `Biaya Tambahan: + Rp ${_fmt(biayaTambahan)}<br>`;
 
@@ -12139,6 +12139,13 @@
         // Open cash drawer BEFORE print if requested
         if (openDrawer) { $(...CMD.CASH_DRAWER); }
 
+        // ── Logo (jika ada, kirim sebagai ESC/POS raster bitmap) ──
+        if (opts.logoBytes) {
+          $(...CMD.ALIGN_CENTER);
+          $(opts.logoBytes);
+          $(NL);
+        }
+
         // ── Header ──────────────────────────────────────
         $(...CMD.ALIGN_CENTER, ...CMD.BOLD_ON, ...CMD.DOUBLE_ON);
         $(enc(storeName), NL);
@@ -12177,7 +12184,7 @@
           $(...CMD.BOLD_OFF);
         } else {
           $(...CMD.BOLD_ON);
-          $(enc(padLine('Harga Jual', rp(t.jual))), NL);
+          $(enc(padLine('Harga', rp(t.jual))), NL);
           $(...CMD.BOLD_OFF);
         }
 
@@ -12893,82 +12900,65 @@
 <div class="header">
   <div class="store-name">${storeName}</div>
   ${alamatLines}
-</div>
-
-<div style="font-size:7.5pt;line-height:1.6;margin:3px 0 4px;">
-  <div>${storeName}</div>
-  ${kasirName ? `<div>Kasir : ${kasirName}</div>` : ''}
-  <div>${waktu}</div>
+  ${kasirName ? `<p class="meta-row">Kasir: ${kasirName}</p>` : ''}
+  <p class="meta-row">${waktu}</p>
+  <p class="tx-id">No: ${t.id}</p>
 </div>
 
 <hr class="rule-solid">
 
-<!-- JUDUL TRANSAKSI -->
-<div class="type-wrap" style="padding:3px 0;">
-  <div style="font-size:9.5pt;font-weight:700;letter-spacing:0.04em;line-height:1.3;">${tipeLabel === 'E-WALLET / TRANSFER' ? 'TRANSFER / E-WALLET' : 'PEMBELIAN ' + tipeLabel}</div>
-  <div style="font-size:7pt;color:var(--ink-mid);margin-top:1px;">No. Transaksi: ${t.id}</div>
+<!-- TIPE -->
+<div class="type-wrap">
+  <span class="type-badge">${tipeLabel}</span>
 </div>
 
-<hr class="rule-solid">
-
-<!-- DETAIL TRANSAKSI — format label : nilai -->
-<table style="width:100%;border-collapse:collapse;font-size:8pt;line-height:1.7;">
-  <tr>
-    <td style="width:36%;vertical-align:top;color:var(--ink-mid);">ID TRX</td>
-    <td style="width:4%;vertical-align:top;text-align:center;">:</td>
-    <td style="vertical-align:top;font-weight:600;">${t.id}</td>
-  </tr>
-  <tr>
-    <td style="vertical-align:top;color:var(--ink-mid);">PRODUK</td>
-    <td style="vertical-align:top;text-align:center;">:</td>
-    <td style="vertical-align:top;font-weight:600;">${namaProduk}</td>
-  </tr>
-  ${t.pelanggan ? `<tr>
-    <td style="vertical-align:top;color:var(--ink-mid);">NO HP</td>
-    <td style="vertical-align:top;text-align:center;">:</td>
-    <td style="vertical-align:top;font-weight:600;">${t.pelanggan}</td>
-  </tr>` : ''}
-  ${t.nomor && !t.pelanggan ? `<tr>
-    <td style="vertical-align:top;color:var(--ink-mid);">NO HP</td>
-    <td style="vertical-align:top;text-align:center;">:</td>
-    <td style="vertical-align:top;font-weight:600;">${t.nomor}</td>
-  </tr>` : ''}
-  ${t.tgl ? `<tr>
-    <td style="vertical-align:top;color:var(--ink-mid);">TGL</td>
-    <td style="vertical-align:top;text-align:center;">:</td>
-    <td style="vertical-align:top;">${t.tgl}</td>
-  </tr>` : ''}
-  ${t.tipe === 'ewallet' ? `
-  <tr>
-    <td style="vertical-align:top;color:var(--ink-mid);">NOMINAL</td>
-    <td style="vertical-align:top;text-align:center;">:</td>
-    <td style="vertical-align:top;font-weight:600;">${rp(t.nominal)}</td>
-  </tr>
-  <tr>
-    <td style="vertical-align:top;color:var(--ink-mid);">ADMIN</td>
-    <td style="vertical-align:top;text-align:center;">:</td>
-    <td style="vertical-align:top;">${rp(t.adminBank)}</td>
-  </tr>` : ''}
-  <tr>
-    <td style="vertical-align:top;color:var(--ink-mid);">HARGA</td>
-    <td style="vertical-align:top;text-align:center;">:</td>
-    <td style="vertical-align:top;font-weight:700;">${rp(t.jual)}</td>
-  </tr>
-</table>
-
-<hr class="rule-solid">
-
-<!-- SERIAL NUMBER (jika ada) -->
-${t.sn || t.serialNumber ? `
-<div style="text-align:center;padding:4px 0 3px;">
-  <div style="font-size:7.5pt;letter-spacing:0.1em;margin-bottom:3px;">** Serial Number **</div>
-  <div style="font-size:13pt;font-weight:700;letter-spacing:0.04em;font-family:'DM Mono','Courier New',monospace;word-break:break-all;">${t.sn || t.serialNumber}</div>
-</div>
 <hr class="rule-dash">
-` : ''}
+
+<!-- PRODUK -->
+<div class="product-name">${namaProduk}</div>
+
+<div class="info-row">
+  <span class="info-lbl">Pelanggan</span>
+  <span class="info-dots"></span>
+  <span class="info-val">${t.pelanggan||'Umum'}</span>
+</div>
+<div class="info-row">
+  <span class="info-lbl">Tgl Transaksi</span>
+  <span class="info-dots"></span>
+  <span class="info-val">${t.tgl||'-'}</span>
+</div>
+
+<hr class="rule-dash">
+
+${t.tipe === 'ewallet' ? `
+<div class="price-row">
+  <span class="price-lbl">Nominal</span>
+  <span class="price-val">${rp(t.nominal)}</span>
+</div>
+<div class="price-row">
+  <span class="price-lbl">Admin Bank</span>
+  <span class="price-val">${rp(t.adminBank)}</span>
+</div>
+<hr class="rule-thin">
+<div class="price-row">
+  <span class="price-lbl">Total Bayar</span>
+  <span class="price-val">${rp(t.jual)}</span>
+</div>
+` : `
+<div class="price-row">
+  <span class="price-lbl">Harga</span>
+  <span class="price-val">${rp(t.jual)}</span>
+</div>
+`}
+
+<!-- TOTAL BLOCK -->
+<div class="total-block">
+  <span class="total-lbl">TOTAL</span>
+  <span class="total-val">${rp(t.jual)}</span>
+</div>
 
 <!-- STATUS -->
-<div class="status-wrap" style="margin:4px 0;">
+<div class="status-wrap">
   <span class="status-badge ${isLunas ? 'lunas' : 'hutang'}">
     ${isLunas ? '✓ LUNAS' : '⚠ BELUM LUNAS'}
   </span>
@@ -13017,6 +13007,56 @@ ${t.sn || t.serialNumber ? `
       const isPro     = _isPlanPro();
 
       const opts = { storeName, kasirName, alamat, tagline, autoCut, openDrawer, isPro };
+
+      // ── Konversi logo base64 → ESC/POS raster bitmap ────────────
+      const logoB64Raw = localStorage.getItem('k_struk_logo') || '';
+      if (logoB64Raw) {
+        try {
+          await new Promise(resolve => {
+            const img = new Image();
+            img.onload = () => {
+              try {
+                // Scale logo ke max 200px lebar, proporsional
+                const maxW = 200;
+                const scale = Math.min(1, maxW / img.naturalWidth);
+                const w = Math.floor(img.naturalWidth * scale);
+                const h = Math.floor(img.naturalHeight * scale);
+                const cv = document.createElement('canvas');
+                cv.width = w; cv.height = h;
+                const cx = cv.getContext('2d');
+                cx.fillStyle = '#ffffff';
+                cx.fillRect(0, 0, w, h);
+                cx.drawImage(img, 0, 0, w, h);
+                const imgData = cx.getImageData(0, 0, w, h).data;
+                // GS v 0 — raster bit image
+                const bytesPerRow = Math.ceil(w / 8);
+                const bmp = [];
+                for (let y2 = 0; y2 < h; y2++) {
+                  for (let bx = 0; bx < bytesPerRow; bx++) {
+                    let byte = 0;
+                    for (let bit = 0; bit < 8; bit++) {
+                      const px = bx * 8 + bit;
+                      if (px < w) {
+                        const idx = (y2 * w + px) * 4;
+                        const gray = 0.299 * imgData[idx] + 0.587 * imgData[idx+1] + 0.114 * imgData[idx+2];
+                        if (gray < 128) byte |= (0x80 >> bit);
+                      }
+                    }
+                    bmp.push(byte);
+                  }
+                }
+                // GS v 0 header
+                const xL = bytesPerRow & 0xFF, xH = (bytesPerRow >> 8) & 0xFF;
+                const yL = h & 0xFF, yH = (h >> 8) & 0xFF;
+                opts.logoBytes = new Uint8Array([0x1D, 0x76, 0x30, 0x00, xL, xH, yL, yH, ...bmp]);
+              } catch(e) { /* logo gagal, lanjut tanpa */ }
+              resolve();
+            };
+            img.onerror = () => resolve();
+            img.src = logoB64Raw;
+          });
+        } catch(e) { /* skip */ }
+      }
 
       // Deteksi Android
       const isAndroid = /android/i.test(navigator.userAgent);
