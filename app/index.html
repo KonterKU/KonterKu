@@ -8342,9 +8342,9 @@
             <button onclick="setManualHutangType('toko')" id="m-h-type-toko" class="flex-1 py-2 text-[9px] font-black rounded-lg cursor-pointer border-0" style="color:#64748b;background:transparent;">HUTANG TOKO</button>
           </div>
           <div>
-            <label>Nama (Pelanggan/Supplier)</label>
+            <label id="m-h-nama-label">Nama (Pelanggan/Kreditur)</label>
             <select id="m-h-customer-select" class="input-premium" onchange="toggleManualDebtName()"></select>
-            <input type="text" id="m-h-nama-manual" class="input-premium mt-2 hidden" placeholder="Masukkan nama manual di sini...">
+            <input type="text" id="m-h-nama-manual" class="input-premium mt-2 hidden" placeholder="Ketik nama kreditur di sini...">
           </div>
           <div><label>Jumlah Hutang</label><input type="number" id="m-h-jumlah" class="input-premium" placeholder="0"></div>
           <div id="container-h-wallet">
@@ -9505,13 +9505,22 @@
     }
 
     async function saveManualHutang() {
-      const selVal = document.getElementById('m-h-customer-select').value;
-      let nama = selVal;
-      if (selVal === 'manual') {
-        nama = document.getElementById('m-h-nama-manual').value.trim();
+      const selEl = document.getElementById('m-h-customer-select');
+      const selVal = selEl ? selEl.value : '';
+      const manEl = document.getElementById('m-h-nama-manual');
+      let nama = '';
+
+      // Jika dropdown disembunyikan (toko tanpa supplier) → ambil dari input manual langsung
+      if (selEl && selEl.style.display === 'none') {
+        nama = manEl ? manEl.value.trim() : '';
+        if (!nama) { (_getMySwal()||Swal).fire('Gagal', 'Nama kreditur harus diisi!', 'error'); return; }
+      } else if (selVal === 'manual') {
+        nama = manEl ? manEl.value.trim() : '';
         if (!nama) { (_getMySwal()||Swal).fire('Gagal', 'Nama harus diisi!', 'error'); return; }
       } else if (!selVal) {
         (_getMySwal()||Swal).fire('Gagal', 'Silakan pilih pelanggan!', 'error'); return;
+      } else {
+        nama = selVal;
       }
       const jumlah = Number(document.getElementById('m-h-jumlah').value);
       const wId = document.getElementById('m-h-wallet').value;
@@ -24595,15 +24604,18 @@ window.addEventListener('load', function() {
 // ─── Helper: isi dropdown sesuai tipe ───
 function _refreshHutangCustomerSelect(type) {
   const sel = document.getElementById('m-h-customer-select');
+  const man = document.getElementById('m-h-nama-manual');
   if (!sel) return;
 
   if (type === 'toko') {
     // Isi dari db.supplier
     const suppliers = db.supplier || [];
     if (suppliers.length === 0) {
-      sel.innerHTML = `<option value="">-- Belum ada supplier --</option>
-        <option value="manual">✏️ Tulis Manual...</option>`;
+      // Tidak ada supplier → sembunyikan dropdown, langsung tampilkan input manual
+      sel.style.display = 'none';
+      if (man) { man.classList.remove('hidden'); man.placeholder = 'Ketik nama kreditur di sini...'; }
     } else {
+      sel.style.display = '';
       const opts = suppliers.map(s => {
         // Tampilkan hutang aktif kalau ada
         const hutangAktif = (db.riwayat_restok || [])
@@ -24612,26 +24624,23 @@ function _refreshHutangCustomerSelect(type) {
         const label = s.nama + (hutangAktif > 0 ? ' ⚠️ hutang Rp ' + (hutangAktif).toLocaleString('id-ID') : '');
         return `<option value="${s.nama}" data-sup-id="${s.id}">${label}</option>`;
       }).join('');
-      sel.innerHTML = `<option value="">-- Pilih Supplier --</option>${opts}<option value="manual">✏️ Tulis Manual...</option>`;
+      sel.innerHTML = `<option value="">-- Pilih Kreditur --</option>${opts}<option value="manual">✏️ Tulis Manual...</option>`;
     }
 
-    // Update placeholder label
-    const lbl = document.getElementById('m-h-customer-select')?.previousElementSibling;
-    const labelEl = sel.closest('.space-y-4')?.querySelector('label');
-    if (labelEl && labelEl.textContent.includes('Nama')) {
-      labelEl.textContent = 'Nama Supplier';
-    }
+    // Update label via id (lebih andal dari querySelector)
+    const labelEl = document.getElementById('m-h-nama-label');
+    if (labelEl) labelEl.textContent = 'Nama Kreditur';
 
   } else {
     // Tipe pelanggan — kembalikan ke daftar pelanggan
+    sel.style.display = '';
+    if (man) { man.classList.add('hidden'); man.value = ''; }
     const pelanggan = db.pelanggan || [];
     const cOpts = pelanggan.map(c => `<option value="${c.nama}">${c.nama}</option>`).join('');
     sel.innerHTML = `<option value="">-- Pilih Pelanggan --</option>${cOpts}<option value="manual">✏️ Tulis Manual...</option>`;
 
-    const labelEl = sel.closest('.space-y-4')?.querySelector('label');
-    if (labelEl && labelEl.textContent.includes('Nama')) {
-      labelEl.textContent = 'Nama (Pelanggan/Supplier)';
-    }
+    const labelEl = document.getElementById('m-h-nama-label');
+    if (labelEl) labelEl.textContent = 'Nama (Pelanggan/Kreditur)';
   }
 }
 </script>
