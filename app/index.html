@@ -24312,9 +24312,11 @@ function prosesBayarHutangSupplier() {
 }
 
 // ─── HOOK KE openSidebarMenu & openModal (jalankan setelah semua script dimuat) ───
-window.addEventListener('load', function() {
-  // Hook openSidebarMenu
-  if (typeof window.openSidebarMenu === 'function') {
+// Menggunakan setTimeout agar berjalan SETELAH semua load-event & hook lain selesai
+function _patchSupplierMenuHook() {
+  // Hook openSidebarMenu — gunakan flag agar tidak double-patch
+  if (typeof window.openSidebarMenu === 'function' && !window._supplierMenuHooked) {
+    window._supplierMenuHooked = true;
     const _orig = window.openSidebarMenu;
     window.openSidebarMenu = function(menu) {
       if (menu === 'supplier') { openSidebarMenuSupplier(); return; }
@@ -24322,14 +24324,20 @@ window.addEventListener('load', function() {
     };
   }
   // Hook openModal — hanya intercept modal-catat-restok, BUKAN modal-form-supplier
-  if (typeof window.openModal === 'function') {
+  if (typeof window.openModal === 'function' && !window._supplierModalHooked) {
+    window._supplierModalHooked = true;
     const _origOM = window.openModal;
     window.openModal = function(id) {
-      if (id === 'modal-catat-restok') openRestokModal();
-      // Perbaikan: jangan intercept modal-form-supplier agar tombol Simpan berfungsi normal
+      if (id === 'modal-catat-restok') { openRestokModal(); return _origOM(id); }
       return _origOM(id);
     };
   }
+}
+// Jalankan saat load selesai, lalu ulangi dengan delay agar menang dari hook lain
+window.addEventListener('load', function() {
+  setTimeout(_patchSupplierMenuHook, 100);
+  setTimeout(_patchSupplierMenuHook, 500);
+  setTimeout(_patchSupplierMenuHook, 1200);
 });
 
 // ─── INIT SAAT APP SIAP ───
@@ -24341,11 +24349,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 800);
 });
 
-// Patch saveData agar db.supplier & db.riwayat_restok ikut tersimpan
-const _origSaveData = typeof saveData === 'function' ? saveData : null;
-// Tidak perlu override karena saveData menyimpan seluruh db object
-
-// Ensure setelah loadData, supplier & riwayat_restok terisi
+// Pastikan db.supplier & db.riwayat_restok terisi setelah load
 window.addEventListener('load', function() {
   setTimeout(function() {
     if (!db.supplier)       db.supplier = [];
@@ -24362,11 +24366,13 @@ window.addEventListener('load', function() {
 <script>
 window.addEventListener('load', function() {
   // ─── Tunggu semua fungsi utama siap ───
-  setTimeout(function() {
+  function _applyHutangPatch() {
+    // Jangan patch ulang jika sudah
+    if (window._hutangTokoPatched) return;
 
     // ── 1. Patch setManualHutangType ──
-    // Saat tipe = 'toko', isi dropdown dengan data supplier
     if (typeof window.setManualHutangType === 'function') {
+      window._hutangTokoPatched = true;
       const _origSetType = window.setManualHutangType;
       window.setManualHutangType = function(type) {
         _origSetType(type);
@@ -24375,8 +24381,8 @@ window.addEventListener('load', function() {
     }
 
     // ── 2. Patch openModalManualHutang ──
-    // Pastikan dropdown sudah ter-refresh saat modal dibuka
-    if (typeof window.openModalManualHutang === 'function') {
+    if (typeof window.openModalManualHutang === 'function' && !window._hutangModalPatched) {
+      window._hutangModalPatched = true;
       const _origOpen = window.openModalManualHutang;
       window.openModalManualHutang = function() {
         _origOpen();
@@ -24387,8 +24393,10 @@ window.addEventListener('load', function() {
         }, 50);
       };
     }
-
-  }, 800);
+  }
+  setTimeout(_applyHutangPatch, 200);
+  setTimeout(_applyHutangPatch, 800);
+  setTimeout(_applyHutangPatch, 1600);
 });
 
 // ─── Helper: isi dropdown sesuai tipe ───
