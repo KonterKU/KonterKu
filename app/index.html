@@ -7263,6 +7263,34 @@
             </div>
           </div>
 
+
+          <!-- ── BAYAR & KEMBALIAN ── -->
+          <div id="kd-bayar-section" class="kasir-field-card" style="border-color:#0061C233;background:linear-gradient(135deg,#f0fdf4,#f7fffe);padding:0;overflow:hidden;">
+            <!-- Header -->
+            <div style="background:#0061C210;padding:10px 14px 8px;border-bottom:1px solid #0061C222;display:flex;align-items:center;gap:8px;">
+              <div style="width:28px;height:28px;border-radius:10px;background:#0061C218;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <i class="fas fa-money-bills" style="color:#0061C2;font-size:11px;"></i>
+              </div>
+              <p style="font-size:10px;font-weight:900;color:#0061C2;letter-spacing:0.06em;text-transform:uppercase;margin:0;">Pembayaran</p>
+            </div>
+            <div style="padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px;">
+              <!-- Tombol nominal cepat -->
+              <div id="kd-quick-btns" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+              <!-- Input jumlah bayar -->
+              <div style="background:white;border:2px solid #0061C244;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:8px;" id="kd-bayar-wrap">
+                <span style="font-size:11px;font-weight:900;color:#0061C2;">Rp</span>
+                <input type="number" id="kd-bayar" inputmode="numeric" placeholder="Jumlah bayar..."
+                  style="flex:1;border:none;outline:none;font-size:15px;font-weight:900;color:#0f172a;background:transparent;font-family:inherit;"
+                  oninput="hitungKembalian('kd')">
+              </div>
+              <!-- Kembalian -->
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:white;border-radius:10px;border:1.5px solid #e2e8f0;">
+                <span style="font-size:11px;font-weight:700;color:#64748b;">Kembalian</span>
+                <span id="kd-kembalian" style="font-size:14px;font-weight:900;color:#94a3b8;">Rp 0</span>
+              </div>
+            </div>
+          </div>
+
           <!-- Tombol Tambah ke Keranjang Gabungan -->
           <button onclick="tambahKeKeranjang('digital')" class="kasir-add-btn">
             <i class="fas fa-plus-circle"></i> TAMBAH KE KERANJANG
@@ -7479,33 +7507,30 @@
             </div>
           </div>
 
-          <!-- Bayar & Kembalian -->
-          <div id="kf-bayar-box" class="kasir-field-card" style="border-color:rgba(16,185,129,0.3);background:linear-gradient(135deg,#f0fdf4,#dcfce7);">
-            <div class="kasir-field-row" style="border:none;padding-bottom:8px;">
-              <div class="kasir-field-icon" style="background:rgba(16,185,129,0.12);">
-                <i class="fas fa-money-bills" style="color:#10b981;"></i>
+
+          <!-- ── BAYAR & KEMBALIAN ── -->
+          <div id="kf-bayar-section" class="kasir-field-card" style="border-color:#10b98133;background:linear-gradient(135deg,#f0fdf4,#f7fffe);padding:0;overflow:hidden;">
+            <!-- Header -->
+            <div style="background:#10b98110;padding:10px 14px 8px;border-bottom:1px solid #10b98122;display:flex;align-items:center;gap:8px;">
+              <div style="width:28px;height:28px;border-radius:10px;background:#10b98118;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <i class="fas fa-money-bills" style="color:#10b981;font-size:11px;"></i>
               </div>
-              <div class="flex-1">
-                <p class="kasir-field-label" style="color:#065f46;font-weight:900;letter-spacing:0.05em;">BAYAR & KEMBALIAN</p>
-              </div>
+              <p style="font-size:10px;font-weight:900;color:#10b981;letter-spacing:0.06em;text-transform:uppercase;margin:0;">Pembayaran</p>
             </div>
-            <div class="kasir-field-row" style="border:none;gap:8px;">
-              <div style="flex:1;background:white;border:1.5px solid #6ee7b7;border-radius:12px;padding:9px 12px;display:flex;align-items:center;gap:6px;">
-                <i class="fas fa-hand-holding-dollar" style="color:#10b981;font-size:10px;"></i>
-                <div style="flex:1;">
-                  <p style="font-size:9px;font-weight:900;color:#065f46;margin:0 0 2px;text-transform:uppercase;letter-spacing:0.04em;">Uang Bayar</p>
-                  <input type="number" id="kf-bayar" class="kasir-field-input"
-                    placeholder="0" min="0" inputmode="numeric"
-                    style="background:transparent;padding:0;font-size:14px;font-weight:900;color:#065f46;border:none;outline:none;width:100%;"
-                    oninput="hitungKembalianFisik()">
-                </div>
+            <div style="padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px;">
+              <!-- Tombol nominal cepat -->
+              <div id="kf-quick-btns" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+              <!-- Input jumlah bayar -->
+              <div style="background:white;border:2px solid #10b98144;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:8px;" id="kf-bayar-wrap">
+                <span style="font-size:11px;font-weight:900;color:#10b981;">Rp</span>
+                <input type="number" id="kf-bayar" inputmode="numeric" placeholder="Jumlah bayar..."
+                  style="flex:1;border:none;outline:none;font-size:15px;font-weight:900;color:#0f172a;background:transparent;font-family:inherit;"
+                  oninput="hitungKembalian('kf')">
               </div>
-              <div style="flex:1;background:white;border:1.5px solid #6ee7b7;border-radius:12px;padding:9px 12px;display:flex;align-items:center;gap:6px;">
-                <i class="fas fa-coins" style="color:#f59e0b;font-size:10px;"></i>
-                <div style="flex:1;">
-                  <p style="font-size:9px;font-weight:900;color:#065f46;margin:0 0 2px;text-transform:uppercase;letter-spacing:0.04em;">Kembalian</p>
-                  <p id="kf-kembalian" style="font-size:14px;font-weight:900;color:#f59e0b;margin:0;">Rp 0</p>
-                </div>
+              <!-- Kembalian -->
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:white;border-radius:10px;border:1.5px solid #e2e8f0;">
+                <span style="font-size:11px;font-weight:700;color:#64748b;">Kembalian</span>
+                <span id="kf-kembalian" style="font-size:14px;font-weight:900;color:#94a3b8;">Rp 0</span>
               </div>
             </div>
           </div>
@@ -7611,7 +7636,7 @@
                 <div class="flex items-center gap-1">
                   <span class="text-[10px] font-black text-slate-400">Rp</span>
                   <input type="number" id="ke-nominal" class="kasir-field-input" placeholder="0"
-                    oninput="updateEwalletCalc()">
+                    oninput="updateEwalletCalc();if(typeof renderQuickBayarBtns==='function')renderQuickBayarBtns('ke')">
                 </div>
               </div>
             </div>
@@ -7729,6 +7754,34 @@
                   <option value="Lunas">✅ Lunas</option>
                   <option value="Hutang">⏳ Hutang</option>
                 </select>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- ── BAYAR & KEMBALIAN ── -->
+          <div id="ke-bayar-section" class="kasir-field-card" style="border-color:#7c3aed33;background:linear-gradient(135deg,#f0fdf4,#f7fffe);padding:0;overflow:hidden;">
+            <!-- Header -->
+            <div style="background:#7c3aed10;padding:10px 14px 8px;border-bottom:1px solid #7c3aed22;display:flex;align-items:center;gap:8px;">
+              <div style="width:28px;height:28px;border-radius:10px;background:#7c3aed18;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <i class="fas fa-money-bills" style="color:#7c3aed;font-size:11px;"></i>
+              </div>
+              <p style="font-size:10px;font-weight:900;color:#7c3aed;letter-spacing:0.06em;text-transform:uppercase;margin:0;">Pembayaran</p>
+            </div>
+            <div style="padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px;">
+              <!-- Tombol nominal cepat -->
+              <div id="ke-quick-btns" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+              <!-- Input jumlah bayar -->
+              <div style="background:white;border:2px solid #7c3aed44;border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:8px;" id="ke-bayar-wrap">
+                <span style="font-size:11px;font-weight:900;color:#7c3aed;">Rp</span>
+                <input type="number" id="ke-bayar" inputmode="numeric" placeholder="Jumlah bayar..."
+                  style="flex:1;border:none;outline:none;font-size:15px;font-weight:900;color:#0f172a;background:transparent;font-family:inherit;"
+                  oninput="hitungKembalian('ke')">
+              </div>
+              <!-- Kembalian -->
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:white;border-radius:10px;border:1.5px solid #e2e8f0;">
+                <span style="font-size:11px;font-weight:700;color:#64748b;">Kembalian</span>
+                <span id="ke-kembalian" style="font-size:14px;font-weight:900;color:#94a3b8;">Rp 0</span>
               </div>
             </div>
           </div>
@@ -9137,6 +9190,9 @@
       }
     
       if (tipe === 'fisik') updateKasirFisikTotal();
+    
+      // Render ulang quick buttons sesuai tipe
+      if (typeof renderQuickBayarBtns === 'function') renderQuickBayarBtns(tipe === 'digital' ? 'kd' : 'kf');
     }
 
     function updateKasirStatus(tipe) {
@@ -10064,31 +10120,91 @@
       if (rEl) rEl.innerHTML = rincian;
       if (tEl) tEl.textContent = 'Rp ' + _fmt(total);
       hitungKembalianFisik();
+      renderQuickBayarBtns('kf');
     }
 
-    function hitungKembalianFisik() {
-      const jualDasar     = Number(document.getElementById('kf-jual')?.value) || 0;
-      const diskonVal     = Number(document.getElementById('kf-diskon-val')?.value) || 0;
-      const diskonTipe    = document.getElementById('kf-diskon-tipe')?.value || 'rp';
-      const biayaTambahan = Number(document.getElementById('kf-biaya-tambahan')?.value) || 0;
-      const diskonNominal = diskonTipe === 'pct' ? Math.round(jualDasar * diskonVal / 100) : diskonVal;
-      const total         = Math.max(0, jualDasar - diskonNominal) + biayaTambahan;
+    // ── Hitung total per tipe (untuk quick buttons & kembalian) ──────────────
+    function _getTotal(prefix) {
+      if (prefix === 'kf') {
+        const jualDasar     = Number(document.getElementById('kf-jual')?.value) || 0;
+        const diskonVal     = Number(document.getElementById('kf-diskon-val')?.value) || 0;
+        const diskonTipe    = document.getElementById('kf-diskon-tipe')?.value || 'rp';
+        const biayaTambahan = Number(document.getElementById('kf-biaya-tambahan')?.value) || 0;
+        const diskonNominal = diskonTipe === 'pct' ? Math.round(jualDasar * diskonVal / 100) : diskonVal;
+        return Math.max(0, jualDasar - diskonNominal) + biayaTambahan;
+      }
+      if (prefix === 'kd') {
+        return Number(document.getElementById('kd-jual')?.value) || 0;
+      }
+      if (prefix === 'ke') {
+        const nominal     = Number(document.getElementById('ke-nominal')?.value) || 0;
+        const adminBank   = Number(document.getElementById('ke-admin-bank')?.value) || 0;
+        const adminAgen   = Number(document.getElementById('ke-admin-agen')?.value) || 0;
+        return nominal + adminBank + adminAgen;
+      }
+      return 0;
+    }
 
-      const bayar     = Number(document.getElementById('kf-bayar')?.value) || 0;
+    // ── Render tombol nominal cepat ────────────────────────────────────────────
+    function renderQuickBayarBtns(prefix) {
+      const total = _getTotal(prefix);
+      const wrap  = document.getElementById(prefix + '-quick-btns');
+      if (!wrap) return;
+
+      // Nominal yang ditawarkan: pas, lalu pecahan uang di atas total
+      const pecahan = [1000,2000,5000,10000,20000,50000,100000,200000,500000];
+      const candidates = [total]; // "Pas"
+      for (const p of pecahan) {
+        // Ambil kelipatan terkecil yang >= total (maks 5 pilihan setelah Pas)
+        const kelipatan = Math.ceil(total / p) * p;
+        if (kelipatan > total && !candidates.includes(kelipatan)) {
+          candidates.push(kelipatan);
+        }
+        if (candidates.length >= 6) break;
+      }
+
+      const accentMap = { kd: '#0061C2', kf: '#10b981', ke: '#7c3aed' };
+      const accent = accentMap[prefix] || '#0061C2';
+
+      wrap.innerHTML = candidates.map((val, i) => {
+        const label = i === 0 ? 'Pas' : (val >= 1000 ? (val/1000)+'K' : 'Rp'+val);
+        const isActive = Number(document.getElementById(prefix+'-bayar')?.value) === val;
+        return `<button type="button" onclick="pilihNominalBayar('${prefix}',${val})"
+          style="padding:7px 12px;border-radius:20px;font-size:11px;font-weight:900;cursor:pointer;border:2px solid ${isActive ? accent : '#e2e8f0'};background:${isActive ? accent : 'white'};color:${isActive ? 'white' : '#475569'};transition:all .15s;font-family:inherit;"
+          onmouseover="if(!${isActive})this.style.borderColor='${accent}';this.style.color='${accent}'"
+          onmouseout="if(!${isActive})this.style.borderColor='#e2e8f0';this.style.color='#475569'"
+        >${label}</button>`;
+      }).join('');
+    }
+
+    function pilihNominalBayar(prefix, val) {
+      const el = document.getElementById(prefix + '-bayar');
+      if (el) el.value = val;
+      hitungKembalian(prefix);
+      renderQuickBayarBtns(prefix); // re-render untuk update active state
+    }
+
+    function hitungKembalian(prefix) {
+      const total     = _getTotal(prefix);
+      const bayar     = Number(document.getElementById(prefix + '-bayar')?.value) || 0;
       const kembalian = bayar > 0 ? bayar - total : 0;
-      const elKem = document.getElementById('kf-kembalian');
+      const elKem     = document.getElementById(prefix + '-kembalian');
       if (!elKem) return;
+      const accentMap = { kd: '#0061C2', kf: '#10b981', ke: '#7c3aed' };
       if (bayar <= 0) {
         elKem.textContent = 'Rp 0';
-        elKem.style.color = '#f59e0b';
+        elKem.style.color = '#94a3b8';
       } else if (kembalian < 0) {
         elKem.textContent = '− Rp ' + _fmt(Math.abs(kembalian));
         elKem.style.color = '#ef4444';
       } else {
         elKem.textContent = 'Rp ' + _fmt(kembalian);
-        elKem.style.color = '#10b981';
+        elKem.style.color = kembalian === 0 ? (accentMap[prefix]||'#10b981') : '#10b981';
       }
     }
+
+    // Backward compat alias (dipanggil dari updateKasirFisikTotal)
+    function hitungKembalianFisik() { hitungKembalian('kf'); }
 
     function resetKasirForms() {
       const today = getWIBDate();
@@ -10102,10 +10218,17 @@
       if (man) man.value = "";
       ['kd-laba-row','kf-laba-row'].forEach(id => { const el = document.getElementById(id); if(el) el.style.display='none'; });
       // Reset fisik extra fields
-      ['kf-diskon-val','kf-biaya-tambahan','kf-bayar'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+      ['kf-diskon-val','kf-biaya-tambahan','kf-bayar','kd-bayar','ke-bayar'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
       const _kfDiskonTipe = document.getElementById('kf-diskon-tipe'); if(_kfDiskonTipe) _kfDiskonTipe.value='rp';
       const _kfPrv = document.getElementById('kf-total-preview'); if(_kfPrv) _kfPrv.classList.add('hidden');
-      const _kfKem = document.getElementById('kf-kembalian'); if(_kfKem) { _kfKem.textContent='Rp 0'; _kfKem.style.color='#f59e0b'; }
+      ['kf-kembalian','kd-kembalian','ke-kembalian'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.textContent = 'Rp 0'; el.style.color = '#94a3b8'; }
+      });
+      ['kf-quick-btns','kd-quick-btns','ke-quick-btns'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = '';
+      });
       const ewlCalc = document.getElementById('ewl-calc-row');
       if (ewlCalc) ewlCalc.classList.add('hidden');
       const ewlLive = document.getElementById('ewl-profit-live');
@@ -11909,6 +12032,7 @@
         }
 
         // Simpan transaksi — modal = nominal+adminBank, jual = totalBayar, laba = adminAgen
+        const _keBayar = Number(document.getElementById('ke-bayar')?.value) || 0;
         db.transaksi.push({
           id: 'TR-'+Date.now(), tgl,
           produk: 'EWL: ' + productName,
@@ -11917,7 +12041,8 @@
           pelanggan: cust, status,
           walletModal: wModalId, walletJual: wBayarId,
           tipe: 'ewallet',
-          adminBank, adminAgen, nominal
+          adminBank, adminAgen, nominal,
+          bayar: _keBayar || undefined, kembalian: _keBayar > 0 ? _keBayar - totalBayar : undefined
         });
 
         resetKasirForms();
@@ -11960,7 +12085,9 @@
         } else {
           db.hutang.push({ id: 'H-'+Date.now(), tipe: 'pelanggan', nama: cust, jumlah: jual, tgl, ket: 'DIG: '+productName+' '+note });
         }
-        db.transaksi.push({ id: 'TR-'+Date.now(), tgl, produk: 'DIG: '+productName, modal, jual, pelanggan: cust, status, walletModal: wmId, walletJual: wpId, pRef: isManual ? null : selVal, tipe: 'digital', note });
+        const _kdBayar = Number(document.getElementById('kd-bayar')?.value) || 0;
+        db.transaksi.push({ id: 'TR-'+Date.now(), tgl, produk: 'DIG: '+productName, modal, jual, pelanggan: cust, status, walletModal: wmId, walletJual: wpId, pRef: isManual ? null : selVal, tipe: 'digital', note,
+          bayar: _kdBayar || undefined, kembalian: _kdBayar > 0 ? _kdBayar - jual : undefined });
       } else {
         const pid = document.getElementById('kf-produk').value;
         const pIdx = db.inventory.findIndex(p => p.id === pid);
