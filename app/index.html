@@ -12174,6 +12174,8 @@
         $(enc(padLine('Pelanggan', t.pelanggan || 'Umum')), NL);
         $(enc(padLine('Tanggal',   t.tgl || '-')), NL);
         $(enc(divider()), NL);
+        $(enc(center(namaProduk.substring(0, COLS))), NL);
+        $(enc(center(`Qty: ${t.qty||1} pcs`)), NL);
 
         // ── Rincian harga (TANPA info modal) ────────────
         if (t.tipe === 'ewallet') {
@@ -12376,6 +12378,7 @@
             H += 10 + 1 + 10;
             H += 20 + 10;                      // header item + gap
             H += 24;                           // nama produk
+            H += 16;                           // qty
             if (t2.nomor)   H += 16;
             if (t2.nominal) H += 16;
             H += 10 + 1 + 16;                  // gap + divider + gap
@@ -12441,11 +12444,11 @@
             }
 
             // Nama toko
-            cx.font = `700 18px ${SANS}`;
+            cx.font = `700 11px ${SANS}`;
             cx.fillStyle = '#0f172a';
             cx.textAlign = 'center';
-            cx.fillText(sName, W/2, y + 18);
-            y += 26;
+            cx.fillText(sName, W/2, y + 14);
+            y += 20;
 
             // Alamat
             cx.font = `400 11px ${SANS}`;
@@ -12469,11 +12472,11 @@
             cx.fillText('ITEM PEMBELIAN', PAD, y + 14);
             y += 20; y += 10;
 
-            // Nama produk + badge
+            // Nama produk di tengah + badge tipe
             cx.font = `600 13px ${SANS}`;
             cx.fillStyle = '#0f172a';
-            cx.textAlign = 'left';
-            cx.fillText(nProduk, PAD, y + 16);
+            cx.textAlign = 'center';
+            cx.fillText(nProduk, W/2, y + 16);
             cx.font = `600 9px ${SANS}`;
             const bw2 = cx.measureText(tLabel).width + 14;
             cx.fillStyle = '#eff6ff';
@@ -12484,6 +12487,14 @@
             cx.textAlign = 'right';
             cx.fillText(tLabel, W - PAD - 7, y + 14);
             y += 24;
+
+            // Qty
+            const qtyVal = t2.qty || 1;
+            cx.font = `400 10px ${SANS}`;
+            cx.fillStyle = '#94a3b8';
+            cx.textAlign = 'center';
+            cx.fillText(`Qty: ${qtyVal} pcs`, W/2, y + 12);
+            y += 16;
 
             if (t2.nomor)   { cx.font=`400 10px ${SANS}`; cx.fillStyle='#94a3b8'; cx.textAlign='left'; cx.fillText('No: '+t2.nomor, PAD, y+12); y+=16; }
             if (t2.nominal) { cx.font=`400 10px ${SANS}`; cx.fillStyle='#94a3b8'; cx.textAlign='left'; cx.fillText('Nominal: '+rp2(t2.nominal), PAD, y+12); y+=16; }
@@ -12694,7 +12705,7 @@
   /* ── HEADER ── */
   .header { text-align: center; padding-bottom: 4px; }
   .store-name {
-    font-size: 14pt;
+    font-size: 9.5pt;
     font-weight: 700;
     letter-spacing: 0.08em;
     color: var(--ink);
@@ -12914,9 +12925,6 @@
 
 <hr class="rule-dash">
 
-<!-- PRODUK -->
-<div class="product-name">${namaProduk}</div>
-
 <div class="info-row">
   <span class="info-lbl">Pelanggan</span>
   <span class="info-dots"></span>
@@ -12926,6 +12934,14 @@
   <span class="info-lbl">Tgl Transaksi</span>
   <span class="info-dots"></span>
   <span class="info-val">${t.tgl||'-'}</span>
+</div>
+
+<hr class="rule-dash">
+
+<!-- PRODUK (tengah, di atas harga) -->
+<div style="text-align:center;margin:4px 0 2px;">
+  <div class="product-name" style="text-align:center;">${namaProduk}</div>
+  <div style="font-size:7.5pt;color:var(--ink-soft);font-weight:500;margin-top:2px;">Qty: ${t.qty||1} pcs</div>
 </div>
 
 <hr class="rule-dash">
