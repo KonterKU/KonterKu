@@ -355,19 +355,22 @@
     .swal2-popup.swal2-ku .swal2-close:hover { color: #ef4444 !important; transform: scale(1.2); }
 
     /* Toast premium — bersih, tanpa backdrop, mirip notif OS */
-    .swal2-container.swal2-top {
-      padding: 0 !important;
+    .swal2-container.swal2-toast-column {
       background: transparent !important;
       backdrop-filter: none !important;
       pointer-events: none !important;
+      inset: 0 !important;
+      top: 0 !important;
       left: 0 !important;
       right: 0 !important;
-      width: 100% !important;
-      overflow: visible !important;
+      width: 100vw !important;
+      padding: 0 !important;
       display: flex !important;
-      justify-content: center !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: flex-start !important;
     }
-    .swal2-container.swal2-top > .swal2-popup {
+    .swal2-container.swal2-toast-column > .swal2-popup {
       pointer-events: auto !important;
     }
     .swal2-popup.swal2-toast.swal2-ku-toast {
@@ -378,15 +381,12 @@
       border: none !important;
       background: #ffffff !important;
       font-weight: 700 !important;
-      margin: 10px auto 0 !important;
-      left: 12px !important;
-      right: 12px !important;
-      width: auto !important;
-      max-width: calc(100vw - 24px) !important;
+      margin: 10px 12px 0 !important;
+      width: calc(100vw - 24px) !important;
+      max-width: 480px !important;
       min-width: 0 !important;
       box-sizing: border-box !important;
       align-items: flex-start !important;
-      position: relative !important;
     }
     .swal2-popup.swal2-toast.swal2-ku-toast .swal2-title {
       font-size: 0.84rem !important;
@@ -3268,7 +3268,7 @@
         showConfirmButton: false,
         timer: 3000,
         timerProgressBar: true,
-        customClass: { popup: 'swal2-ku-toast' },
+        customClass: { popup: 'swal2-ku-toast', container: 'swal2-toast-column' },
         zIndex: 99999,
         didOpen: (toast) => {
           toast.addEventListener('mouseenter', Swal.stopTimer);
@@ -21875,7 +21875,7 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
         showConfirmButton: false,
         timer: 5000,
         timerProgressBar: true,
-        customClass: { popup: 'swal2-ku-toast' },
+        customClass: { popup: 'swal2-ku-toast', container: 'swal2-toast-column' },
         didOpen: (t) => {
           t.addEventListener('mouseenter', S.stopTimer);
           t.addEventListener('mouseleave', S.resumeTimer);
