@@ -324,6 +324,26 @@
       padding: 32px 28px 28px !important;
       box-shadow: 0 32px 80px rgba(0,0,0,0.28), 0 8px 32px rgba(124,58,237,0.18) !important;
     }
+
+    /* ── REQUEST TAB ── */
+    .top-tabs { display:flex; gap:8px; margin-bottom:16px; }
+    .top-tab  { flex:1; padding:10px; border-radius:12px; border:none; font-size:12px; font-weight:800; cursor:pointer; font-family:'Plus Jakarta Sans',sans-serif; transition:all .2s; }
+    .top-tab.aktif { background:linear-gradient(135deg,#0061C2,#38BDF8); color:#fff; }
+    .top-tab.idle  { background:rgba(255,255,255,0.05); color:#64748b; }
+    .req-badge-count { display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:#ef4444;border-radius:50%;font-size:9px;font-weight:900;color:#fff;margin-left:5px; }
+    .req-card { background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:16px;padding:16px;margin-bottom:12px; }
+    .req-card-header { display:flex;align-items:center;gap:10px;margin-bottom:10px; }
+    .req-avatar { width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#0061C2,#38BDF8);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0; }
+    .req-nama { font-size:14px;font-weight:800;color:#e2e8f0; }
+    .req-hp   { font-size:11px;font-weight:600;color:#64748b; }
+    .req-detail { background:rgba(0,97,194,0.08);border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:12px;font-weight:700;color:#94a3b8; }
+    .req-actions { display:flex;gap:8px; }
+    .btn-konfirmasi { flex:1;padding:10px;background:linear-gradient(135deg,#10b981,#34d399);border:none;border-radius:10px;font-size:12px;font-weight:800;color:#fff;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s; }
+    .btn-konfirmasi:active { transform:scale(.96); }
+    .btn-tolak { flex:1;padding:10px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.2);border-radius:10px;font-size:12px;font-weight:800;color:#ef4444;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s; }
+    .btn-tolak:active { transform:scale(.96); }
+    .req-waktu { font-size:10px;font-weight:600;color:#475569;margin-top:8px; }
+    .empty-req { text-align:center;padding:40px 20px;color:#475569;font-size:13px;font-weight:700; }
   </style>
 </head>
 <body>
@@ -341,6 +361,17 @@
     </div>
   </div>
 
+  <!-- TAB NAVIGASI -->
+  <div class="top-tabs">
+    <button class="top-tab aktif" id="tab-nav-cari" onclick="switchNavTab('cari')">
+      <i class="fas fa-search" style="margin-right:5px;"></i>Cari Pelanggan
+    </button>
+    <button class="top-tab idle" id="tab-nav-req" onclick="switchNavTab('req')">
+      <i class="fas fa-bell" style="margin-right:5px;"></i>Request
+      <span class="req-badge-count" id="req-count-badge" style="display:none;">0</span>
+    </button>
+  </div>
+
   <!-- SEARCH -->
   <div class="search-wrap" id="search-wrap">
     <i class="fas fa-search search-icon"></i>
@@ -356,6 +387,16 @@
 
   <!-- KARTU PELANGGAN (hidden dulu) -->
   <div id="card-wrap"></div>
+
+  <!-- PANEL REQUEST PELANGGAN -->
+  <div id="panel-request" style="display:none;">
+    <div id="req-list-wrap">
+      <div class="empty-req">
+        <i class="fas fa-bell" style="font-size:24px;margin-bottom:8px;display:block;color:#334155;"></i>
+        Belum ada request penukaran
+      </div>
+    </div>
+  </div>
 
 </div>
 
@@ -943,6 +984,7 @@ async function _doSavePoin(newPoin, redeemEntry) {
       return;
     }
     await loadPelanggan(storeId);
+    listenRequestBadge();
     await loadPoinConfig(storeId);
     // Cek apakah ada ?id= di URL (deep link dari halaman utama)
     const urlParams = new URLSearchParams(window.location.search);
@@ -953,6 +995,200 @@ async function _doSavePoin(newPoin, redeemEntry) {
     }
   });
 })();
+
+/* ============================================================
+   REQUEST MANAGEMENT (kasir sisi)
+============================================================ */
+let reqUnsubscribe = null;
+
+function switchNavTab(tab) {
+  const isCari = tab === 'cari';
+  document.getElementById('tab-nav-cari').className = 'top-tab ' + (isCari ? 'aktif' : 'idle');
+  document.getElementById('tab-nav-req').className  = 'top-tab ' + (!isCari ? 'aktif' : 'idle');
+  document.getElementById('search-wrap').style.display  = isCari ? '' : 'none';
+  document.getElementById('card-wrap').style.display    = isCari ? '' : 'none';
+  document.getElementById('panel-request').style.display = !isCari ? '' : 'none';
+  if (!isCari) loadRequests();
+}
+
+function listenRequestBadge() {
+  if (!storeId) return;
+  if (reqUnsubscribe) reqUnsubscribe();
+  reqUnsubscribe = window._db.collection('poin_requests')
+    .where('storeId', '==', storeId)
+    .where('status', '==', 'pending')
+    .onSnapshot(snap => {
+      const count = snap ? snap.size : 0;
+      const badge = document.getElementById('req-count-badge');
+      if (count > 0) {
+        badge.style.display = '';
+        badge.textContent = count;
+        // Notif jika tab tidak aktif
+        if (document.getElementById('panel-request').style.display === 'none') {
+          showToast('Ada ' + count + ' request penukaran baru!', 'bell');
+        }
+      } else {
+        badge.style.display = 'none';
+      }
+    }, () => {});
+}
+
+async function loadRequests() {
+  const wrap = document.getElementById('req-list-wrap');
+  wrap.innerHTML = '<div class="empty-req"><i class="fas fa-spinner" style="animation:spin 1s linear infinite;font-size:20px;color:#334155;margin-bottom:8px;display:block;"></i>Memuat request...</div>';
+
+  if (!storeId) {
+    wrap.innerHTML = '<div class="empty-req">Toko belum terdeteksi.</div>';
+    return;
+  }
+
+  const snap = await window._db.collection('poin_requests')
+    .where('storeId', '==', storeId)
+    .where('status', '==', 'pending')
+    .orderBy('createdAt', 'desc')
+    .get().catch(() => null);
+
+  if (!snap || snap.empty) {
+    wrap.innerHTML = '<div class="empty-req"><i class="fas fa-check-circle" style="font-size:24px;color:#10b981;margin-bottom:8px;display:block;"></i>Tidak ada request yang menunggu</div>';
+    return;
+  }
+
+  const fmt2 = n => Number(n||0).toLocaleString('id-ID');
+  wrap.innerHTML = snap.docs.map(doc => {
+    const r = doc.data();
+    const label = r.tipe === 'hadiah'
+      ? `🎁 Hadiah: <b>${r.hadiah}</b> (${fmt2(r.poinDipakai)} poin)`
+      : `💸 Diskon: <b>Rp ${fmt2(r.nilaiDiskon)}</b> (${fmt2(r.poinDipakai)} poin)`;
+    return `
+      <div class="req-card" id="reqcard-${doc.id}">
+        <div class="req-card-header">
+          <div class="req-avatar">👤</div>
+          <div>
+            <div class="req-nama">${r.pelangganNama}</div>
+            <div class="req-hp">${r.pelangganHp}</div>
+            <div class="req-poin">Poin saat ini: ${fmt2(r.poinSaatIni)}</div>
+          </div>
+        </div>
+        <div class="req-detail">${label}</div>
+        <div class="req-actions">
+          <button class="btn-konfirmasi" onclick="konfirmasiRequest('${doc.id}')">
+            <i class="fas fa-check" style="margin-right:5px;"></i>Konfirmasi & Tukar
+          </button>
+          <button class="btn-tolak" onclick="tolakRequest('${doc.id}')">
+            <i class="fas fa-times" style="margin-right:5px;"></i>Tolak
+          </button>
+        </div>
+        <div class="req-waktu"><i class="fas fa-clock" style="margin-right:4px;"></i>${r.tgl||''} ${r.jam||''}</div>
+      </div>`;
+  }).join('');
+}
+
+async function konfirmasiRequest(docId) {
+  const docRef = window._db.collection('poin_requests').doc(docId);
+  const snap   = await docRef.get().catch(() => null);
+  if (!snap || !snap.exists) { showToast('Request tidak ditemukan', 'error'); return; }
+  const r = snap.data();
+
+  const ok = await Swal.fire({
+    icon: 'question', title: 'Konfirmasi Penukaran',
+    html: `Proses penukaran poin untuk <b>${r.pelangganNama}</b>?<br>
+      <span style="font-size:12px;color:#94a3b8;">Poin akan langsung dipotong dari akun pelanggan.</span>`,
+    showCancelButton: true, confirmButtonText: 'Ya, Proses!', cancelButtonText: 'Batal',
+    customClass: { popup: 'swal2-ku' }
+  });
+  if (!ok.isConfirmed) return;
+
+  // Cari pelanggan di list dan potong poin
+  const listSnap = await window._db.collection('user_stores').doc(storeId).get().catch(()=>null);
+  let pelList = [], inDb = false, docRefStore = null;
+  if (listSnap && listSnap.exists) {
+    const d = listSnap.data();
+    if (d.pelanggan && d.pelanggan.length) { pelList = d.pelanggan; inDb = false; docRefStore = listSnap.ref; }
+    else if (d.db && d.db.pelanggan) { pelList = d.db.pelanggan; inDb = true; docRefStore = listSnap.ref; }
+  }
+  if (!pelList.length) {
+    const s2 = await window._db.collection('stores').doc(storeId).get().catch(()=>null);
+    if (s2 && s2.exists) {
+      const d = s2.data();
+      pelList = d.pelanggan || (d.db && d.db.pelanggan) || [];
+      inDb = !!(d.db && d.db.pelanggan);
+      docRefStore = s2.ref;
+    }
+  }
+
+  const pelangganId = r.pelangganId;
+  const idx = pelList.findIndex(p => (p.id||p.hp) === pelangganId);
+  if (idx === -1) { showToast('Data pelanggan tidak ditemukan!', 'error'); return; }
+
+  const poinLama   = Number(pelList[idx].poin || pelList[idx].point || 0);
+  const poinPotong = Number(r.poinDipakai || 0);
+  const poinBaru   = Math.max(0, poinLama - poinPotong);
+
+  const now = new Date();
+  const tgl = now.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
+  const riwayatEntry = {
+    tgl, poinDipakai: poinPotong,
+    ...(r.tipe === 'hadiah' ? { hadiah: r.hadiah } : { nilaiDiskon: r.nilaiDiskon })
+  };
+
+  pelList[idx] = {
+    ...pelList[idx],
+    poin: poinBaru,
+    redeemHistory: [...(pelList[idx].redeemHistory || []), riwayatEntry]
+  };
+
+  // Simpan ke Firestore
+  if (inDb) { await docRefStore.update({ 'db.pelanggan': pelList }); }
+  else       { await docRefStore.update({ pelanggan: pelList }); }
+
+  // Update status request
+  await docRef.update({ status: 'selesai', selesaiAt: firebase.firestore.FieldValue.serverTimestamp() });
+
+  // Hapus card dari UI
+  const card = document.getElementById('reqcard-' + docId);
+  if (card) card.remove();
+  if (!document.querySelector('.req-card')) {
+    document.getElementById('req-list-wrap').innerHTML =
+      '<div class="empty-req"><i class="fas fa-check-circle" style="font-size:24px;color:#10b981;margin-bottom:8px;display:block;"></i>Tidak ada request yang menunggu</div>';
+  }
+
+  showToast('Poin berhasil ditukar untuk ' + r.pelangganNama + '!');
+  Swal.fire({ icon:'success', title:'Berhasil!',
+    html:`Poin <b>${r.pelangganNama}</b> berhasil dipotong.<br>Sisa poin: <b style="color:#38BDF8;">${Number(poinBaru).toLocaleString('id-ID')}</b>`,
+    customClass:{popup:'swal2-ku'} });
+}
+
+async function tolakRequest(docId) {
+  const ok = await Swal.fire({
+    icon:'warning', title:'Tolak Request?',
+    text:'Request penukaran ini akan ditolak dan pelanggan tidak jadi menukar poin.',
+    showCancelButton:true, confirmButtonText:'Ya, Tolak', cancelButtonText:'Batal',
+    customClass:{popup:'swal2-ku'}
+  });
+  if (!ok.isConfirmed) return;
+
+  await window._db.collection('poin_requests').doc(docId).update({
+    status: 'ditolak',
+    ditolakAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+
+  const card = document.getElementById('reqcard-' + docId);
+  if (card) card.remove();
+  if (!document.querySelector('.req-card')) {
+    document.getElementById('req-list-wrap').innerHTML =
+      '<div class="empty-req"><i class="fas fa-check-circle" style="font-size:24px;color:#10b981;margin-bottom:8px;display:block;"></i>Tidak ada request yang menunggu</div>';
+  }
+  showToast('Request ditolak');
+}
+
+function showToast(msg, type) {
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toast-msg');
+  if (!toast) return;
+  toastMsg.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
 </script>
 </body>
 </html>

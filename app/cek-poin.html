@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cek Poin – KonterKU</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey:            "AIzaSyBgVPVwYJudzAMNmR011PlWZC0_P0SnK8w",
+      authDomain:        "konterkupro.firebaseapp.com",
+      projectId:         "konterkupro",
+      storageBucket:     "konterkupro.firebasestorage.app",
+      messagingSenderId: "819746888017",
+      appId:             "1:819746888017:web:437b6e5b4cbaf1aa821b70"
+    };
+    function _initFB() {
+      if (typeof firebase === 'undefined') { setTimeout(_initFB, 50); return; }
+      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      window._db = firebase.firestore();
+    }
+    _initFB();
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #050c1a; min-height: 100vh; color: #e2e8f0;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(0,97,194,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(124,58,237,0.14) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+    .page-wrap { position:relative;z-index:1;max-width:480px;margin:0 auto;padding:24px 16px 80px; }
+    .glass-card { background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:20px;padding:20px;margin-bottom:14px; }
+    .field-wrap  { margin-bottom:14px; }
+    .field-label { font-size:10px;font-weight:800;color:#64748b;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px; }
+    .field-input { width:100%;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.10);border-radius:12px;padding:12px 14px;font-size:14px;font-weight:600;color:#e2e8f0;font-family:'Plus Jakarta Sans',sans-serif;outline:none;transition:border .2s; }
+    .field-input:focus { border-color:#0061C2; }
+    .field-input::placeholder { color:#475569;font-weight:500; }
+    .btn-primary { width:100%;padding:14px;background:linear-gradient(135deg,#0061C2,#38BDF8);border:none;border-radius:14px;font-size:14px;font-weight:800;color:#fff;cursor:pointer;transition:opacity .2s,transform .1s;font-family:'Plus Jakarta Sans',sans-serif; }
+    .btn-primary:active { transform:scale(.97);opacity:.9; }
+    .btn-primary:disabled { opacity:.4;cursor:not-allowed; }
+    .poin-hero { text-align:center;padding:28px 20px;background:linear-gradient(135deg,rgba(0,97,194,0.15),rgba(56,189,248,0.08));border:1px solid rgba(56,189,248,0.2);border-radius:20px;margin-bottom:14px; }
+    .poin-value { font-size:52px;font-weight:900;background:linear-gradient(135deg,#38BDF8,#818CF8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1; }
+    .poin-label { font-size:11px;font-weight:700;color:#64748b;margin-top:4px; }
+    .poin-name  { font-size:18px;font-weight:800;color:#e2e8f0;margin-bottom:4px; }
+    .poin-hp    { font-size:11px;color:#64748b;font-weight:600; }
+    .hadiah-item { background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:10px; }
+    .hadiah-item.bisa { border-color:rgba(56,189,248,0.25); }
+    .hadiah-icon { width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:rgba(56,189,248,0.12); }
+    .hadiah-nama  { font-size:13px;font-weight:800;color:#e2e8f0; }
+    .hadiah-poin  { font-size:11px;font-weight:700;color:#38BDF8; }
+    .hadiah-kurang{ font-size:10px;font-weight:600;color:#ef4444; }
+    .btn-request  { margin-left:auto;flex-shrink:0;padding:7px 14px;border-radius:10px;border:none;font-size:11px;font-weight:800;cursor:pointer;transition:all .2s;font-family:'Plus Jakarta Sans',sans-serif; }
+    .btn-request.aktif { background:linear-gradient(135deg,#0061C2,#38BDF8);color:#fff; }
+    .btn-request.aktif:active { transform:scale(.95); }
+    .btn-request.nonaktif { background:rgba(255,255,255,0.05);color:#475569;cursor:not-allowed; }
+    .ri-item { display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05); }
+    .ri-item:last-child { border-bottom:none; }
+    .ri-dot  { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+    .ri-desc { font-size:12px;font-weight:700;color:#cbd5e1; }
+    .ri-date { font-size:10px;font-weight:600;color:#475569;margin-top:2px; }
+    .req-badge { display:inline-flex;align-items:center;gap:6px;background:rgba(234,179,8,0.15);border:1px solid rgba(234,179,8,0.3);border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;color:#eab308;margin-bottom:14px;width:100%;justify-content:center; }
+    .sec-title { font-size:11px;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px; }
+    .logo-wrap  { display:flex;align-items:center;gap:10px;margin-bottom:28px; }
+    .logo-icon  { width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#0061C2,#38BDF8);display:flex;align-items:center;justify-content:center;font-size:20px; }
+    .logo-title { font-size:20px;font-weight:900;color:#e2e8f0; }
+    .logo-sub   { font-size:10px;font-weight:600;color:#64748b; }
+    .toko-badge { display:flex;align-items:center;gap:8px;background:rgba(0,97,194,0.08);border:1px solid rgba(0,97,194,0.2);border-radius:12px;padding:10px 14px;margin-bottom:16px; }
+    .toko-badge-icon { width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#0061C2,#38BDF8);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0; }
+    .toko-badge-name { font-size:13px;font-weight:800;color:#e2e8f0; }
+    .toko-badge-sub  { font-size:10px;font-weight:600;color:#64748b; }
+    .swal2-ku { border-radius:20px !important;font-family:'Plus Jakarta Sans',sans-serif !important; }
+    .spinner { animation:spin 1s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <!-- LOGO -->
+  <div class="logo-wrap">
+    <div class="logo-icon">🏪</div>
+    <div>
+      <div class="logo-title">Cek Poin</div>
+      <div class="logo-sub">Portal Pelanggan – KonterKU</div>
+    </div>
+  </div>
+
+  <!-- ===== HALAMAN 0: INPUT KODE TOKO ===== -->
+  <div id="page-toko">
+    <div class="glass-card">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div style="font-size:32px;margin-bottom:8px;">🏪</div>
+        <p style="font-size:16px;font-weight:800;color:#e2e8f0;">Masukkan Kode Toko</p>
+        <p style="font-size:11px;color:#64748b;font-weight:600;margin-top:4px;">Minta kode toko ke kasir atau pemilik toko</p>
+      </div>
+      <div class="field-wrap">
+        <div class="field-label">Kode / ID Toko</div>
+        <input id="inp-kode-toko" class="field-input" type="text"
+          placeholder="Kode dari kasir" autocomplete="off"
+          onkeydown="if(event.key==='Enter')cariToko()">
+      </div>
+      <button class="btn-primary" onclick="cariToko()">
+        <i class="fas fa-search" style="margin-right:6px;"></i>Cari Toko
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== HALAMAN 1: LOGIN PELANGGAN ===== -->
+  <div id="page-login" style="display:none;">
+    <div id="toko-badge-wrap"></div>
+    <div class="glass-card">
+      <div style="text-align:center;margin-bottom:20px;">
+        <div style="font-size:32px;margin-bottom:8px;">👤</div>
+        <p style="font-size:16px;font-weight:800;color:#e2e8f0;">Login Pelanggan</p>
+        <p style="font-size:11px;color:#64748b;font-weight:600;margin-top:4px;">Masukkan data sesuai yang didaftarkan ke toko</p>
+      </div>
+      <div class="field-wrap">
+        <div class="field-label">Nomor HP</div>
+        <input id="inp-hp" class="field-input" type="tel"
+          placeholder="08xxxxxxxxxx" autocomplete="off" inputmode="numeric">
+      </div>
+      <div class="field-wrap">
+        <div class="field-label">Nama Lengkap</div>
+        <input id="inp-nama" class="field-input" type="text"
+          placeholder="Nama sesuai data toko" autocomplete="off"
+          onkeydown="if(event.key==='Enter')loginPelanggan()">
+      </div>
+      <button class="btn-primary" onclick="loginPelanggan()">
+        <i class="fas fa-sign-in-alt" style="margin-right:6px;"></i>Cek Poin Saya
+      </button>
+      <p style="text-align:center;font-size:10px;color:#475569;margin-top:12px;font-weight:600;">
+        Belum terdaftar? Minta kasir untuk mendaftarkan kamu terlebih dahulu.
+      </p>
+      <button onclick="gantiToko()" style="width:100%;margin-top:8px;padding:10px;background:transparent;border:none;color:#475569;font-size:11px;font-weight:700;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;">
+        <i class="fas fa-arrow-left" style="margin-right:4px;"></i>Ganti Toko
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== HALAMAN 2: DASHBOARD POIN ===== -->
+  <div id="page-dashboard" style="display:none;">
+    <div id="toko-badge-dashboard"></div>
+
+    <!-- Poin Hero -->
+    <div class="poin-hero">
+      <div class="poin-name" id="d-nama"></div>
+      <div class="poin-hp"   id="d-hp"></div>
+      <div class="poin-value" id="d-poin" style="margin-top:16px;">0</div>
+      <div class="poin-label">POIN KAMU</div>
+      <div id="d-badge-req" style="display:none;margin-top:12px;">
+        <div class="req-badge">
+          <i class="fas fa-clock"></i>
+          <span>Request penukaran menunggu konfirmasi kasir…</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nilai poin -->
+    <div class="glass-card">
+      <div class="sec-title">Nilai Poin</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:13px;font-weight:700;color:#94a3b8;">100 poin =</div>
+        <div style="font-size:18px;font-weight:900;color:#a78bfa;" id="d-nilai-100">Rp 1.000</div>
+      </div>
+    </div>
+
+    <!-- Hadiah -->
+    <div id="d-hadiah-wrap" style="display:none;margin-bottom:4px;">
+      <div class="sec-title">🎁 Tukar Poin – Hadiah</div>
+      <div id="d-hadiah-list"></div>
+    </div>
+
+    <!-- Diskon -->
+    <div style="margin-bottom:14px;">
+      <div class="sec-title">💸 Tukar Poin – Diskon</div>
+      <div class="hadiah-item bisa" style="flex-direction:column;align-items:flex-start;gap:8px;">
+        <div style="display:flex;align-items:center;gap:10px;width:100%;">
+          <div class="hadiah-icon">💸</div>
+          <div style="flex:1;">
+            <div class="hadiah-nama">Tukar Jadi Diskon</div>
+            <div class="hadiah-poin" id="d-diskon-nilai">—</div>
+          </div>
+          <button id="btn-req-diskon" class="btn-request aktif" onclick="requestTukar('diskon')">
+            Request
+          </button>
+        </div>
+        <div style="font-size:10px;color:#64748b;font-weight:600;padding-left:52px;">
+          Semua poin dikonversi jadi diskon belanja
+        </div>
+      </div>
+    </div>
+
+    <!-- Riwayat -->
+    <div id="d-riwayat-wrap" style="display:none;">
+      <div class="sec-title">📋 Riwayat Penukaran</div>
+      <div class="glass-card" style="padding:14px;">
+        <div id="d-riwayat-list"></div>
+      </div>
+    </div>
+
+    <!-- Ganti akun -->
+    <button onclick="logout()"
+      style="width:100%;margin-top:8px;padding:12px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:12px;color:#ef4444;font-size:12px;font-weight:800;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;">
+      <i class="fas fa-sign-out-alt" style="margin-right:6px;"></i>Ganti Akun
+    </button>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================ STATE ============================================================ */
+let storeId = null, tokoData = null, pelanggan = null;
+let poinCfg = { nilaiTukar:1000, daftarHadiah:[] };
+let reqListener = null;
+const fmt = n => Number(n||0).toLocaleString('id-ID');
+
+/* ============================================================ CARI TOKO ============================================================ */
+async function cariToko() {
+  const kode = (document.getElementById('inp-kode-toko').value||'').trim().toUpperCase();
+  if (!kode) { swalErr('Kode toko tidak boleh kosong'); return; }
+  const btn = document.querySelector('#page-toko .btn-primary');
+  setBtnLoading(btn, 'Mencari...');
+
+  let data = null, id = null;
+
+  // 1. user_stores kode_toko
+  let s = await _db.collection('user_stores').where('kode_toko','==',kode).limit(1).get().catch(()=>null);
+  if (s&&!s.empty){data=s.docs[0].data();id=s.docs[0].id;}
+
+  // 2. stores kode_toko
+  if (!data){
+    s = await _db.collection('stores').where('kode_toko','==',kode).limit(1).get().catch(()=>null);
+    if(s&&!s.empty){data=s.docs[0].data();id=s.docs[0].id;}
+  }
+
+  // 3. user_stores namaToko prefix
+  if (!data){
+    s = await _db.collection('user_stores').where('namaToko','>=',kode).where('namaToko','<=',kode+'\uf8ff').limit(3).get().catch(()=>null);
+    if(s&&!s.empty){data=s.docs[0].data();id=s.docs[0].id;}
+  }
+
+  // 4. stores/{kode} sebagai doc id
+  if (!data){
+    const d = await _db.collection('stores').doc(kode).get().catch(()=>null);
+    if(d&&d.exists){data=d.data();id=kode;}
+  }
+
+  setBtnNormal(btn, '<i class="fas fa-search" style="margin-right:6px;"></i>Cari Toko');
+
+  if (!data) {
+    Swal.fire({icon:'error',title:'Toko Tidak Ditemukan',text:'Pastikan kode yang kamu masukkan benar. Minta kasir untuk kode yang tepat.',customClass:{popup:'swal2-ku'}});
+    return;
+  }
+  storeId=id; tokoData=data;
+  sessionStorage.setItem('ku_store_id', storeId);
+  showLoginPage();
+}
+
+/* ============================================================ LOGIN ============================================================ */
+async function loginPelanggan() {
+  const hp   = (document.getElementById('inp-hp').value||'').trim().replace(/\D/g,'');
+  const nama = (document.getElementById('inp-nama').value||'').trim().toLowerCase();
+  if (!hp)   { swalErr('Nomor HP tidak boleh kosong'); return; }
+  if (!nama) { swalErr('Nama tidak boleh kosong'); return; }
+
+  const btn = document.querySelector('#page-login .btn-primary');
+  setBtnLoading(btn,'Mencari data...');
+
+  const list = await getPelangganList();
+  setBtnNormal(btn,'<i class="fas fa-sign-in-alt" style="margin-right:6px;"></i>Cek Poin Saya');
+
+  if (!list||!list.length) { swalErr('Data pelanggan toko tidak ditemukan. Hubungi kasir.'); return; }
+
+  const found = list.find(p => {
+    const hpP   = (p.hp||p.noHp||p.telepon||'').replace(/\D/g,'');
+    const namaP = (p.nama||p.name||'').trim().toLowerCase();
+    const hpOk  = hpP===hp || hpP==='0'+hp || '0'+hpP===hp;
+    const nmOk  = namaP===nama || namaP.includes(nama) || nama.includes(namaP);
+    return hpOk && nmOk;
+  });
+
+  if (!found) {
+    Swal.fire({
+      icon:'warning',title:'Data Tidak Ditemukan',
+      html:'Nomor HP atau nama tidak cocok.<br><span style="font-size:12px;color:#94a3b8;">Pastikan data sesuai yang didaftarkan ke kasir, atau minta kasir mendaftarkan kamu dulu.</span>',
+      customClass:{popup:'swal2-ku'}
+    });
+    return;
+  }
+  pelanggan = found;
+  await loadPoinCfg();
+  showDashboard();
+}
+
+async function getPelangganList() {
+  let doc = await _db.collection('user_stores').doc(storeId).get().catch(()=>null);
+  if (doc&&doc.exists){const d=doc.data();const a=d.pelanggan||(d.db&&d.db.pelanggan)||[];if(a.length)return a.map((c,i)=>({id:c.id||String(i),...c}));}
+  doc = await _db.collection('stores').doc(storeId).get().catch(()=>null);
+  if (doc&&doc.exists){const d=doc.data();const a=d.pelanggan||(d.db&&d.db.pelanggan)||[];return a.map((c,i)=>({id:c.id||String(i),...c}));}
+  return [];
+}
+
+async function loadPoinCfg() {
+  let doc = await _db.collection('user_stores').doc(storeId).get().catch(()=>null);
+  if (doc&&doc.exists){const d=doc.data();const r=d.settingPoin||(d.db&&d.db.settingPoin)||{};if(r.nilaiTukar||r.daftarHadiah){poinCfg=Object.assign({nilaiTukar:1000,daftarHadiah:[]},r);return;}}
+  doc = await _db.collection('stores').doc(storeId).get().catch(()=>null);
+  if (doc&&doc.exists){const d=doc.data();const r=d.settingPoin||(d.db&&d.db.settingPoin)||{};poinCfg=Object.assign({nilaiTukar:1000,daftarHadiah:[]},r);}
+}
+
+/* ============================================================ DASHBOARD ============================================================ */
+function showDashboard() {
+  showPage('dashboard');
+  const namaToko = tokoData?.namaToko||tokoData?.nama||'Toko';
+  document.getElementById('toko-badge-dashboard').innerHTML = tokoBadgeHTML(namaToko,'Poin berlaku di toko ini');
+
+  const poin = Number(pelanggan.poin||pelanggan.point||0);
+  const nilaiPer100 = poinCfg.nilaiTukar||1000;
+  const nilaiDiskon = Math.floor(poin/100)*nilaiPer100;
+
+  document.getElementById('d-nama').textContent = pelanggan.nama||pelanggan.name||'-';
+  document.getElementById('d-hp').textContent   = pelanggan.hp||pelanggan.noHp||'';
+  document.getElementById('d-poin').textContent = fmt(poin);
+  document.getElementById('d-nilai-100').textContent = 'Rp '+fmt(nilaiPer100);
+  document.getElementById('d-diskon-nilai').textContent =
+    poin >= 100 ? `Nilai diskon: Rp ${fmt(nilaiDiskon)}` : 'Poin belum cukup (min. 100)';
+
+  const btnDiskon = document.getElementById('btn-req-diskon');
+  if (poin < 100) { btnDiskon.className='btn-request nonaktif'; btnDiskon.onclick=null; }
+
+  // Hadiah
+  const hadiah = (poinCfg.daftarHadiah||[]).filter(h=>h.nama&&h.poin>0);
+  if (hadiah.length) {
+    document.getElementById('d-hadiah-wrap').style.display='';
+    document.getElementById('d-hadiah-list').innerHTML = hadiah.map((h,i) => {
+      const bisa = poin >= h.poin;
+      return `<div class="hadiah-item ${bisa?'bisa':''}">
+        <div class="hadiah-icon">🎁</div>
+        <div style="flex:1;">
+          <div class="hadiah-nama">${h.nama}</div>
+          <div class="hadiah-poin">${fmt(h.poin)} poin</div>
+          ${!bisa?`<div class="hadiah-kurang">Kurang ${fmt(h.poin-poin)} poin lagi</div>`:''}
+        </div>
+        <button class="btn-request ${bisa?'aktif':'nonaktif'}" ${bisa?`onclick="requestTukar('hadiah',${i})"`:' disabled'}>Request</button>
+      </div>`;
+    }).join('');
+  }
+
+  // Riwayat
+  const rw = (pelanggan.redeemHistory||[]).slice(-8).reverse();
+  if (rw.length) {
+    document.getElementById('d-riwayat-wrap').style.display='';
+    document.getElementById('d-riwayat-list').innerHTML = rw.map(r=>`
+      <div class="ri-item">
+        <div class="ri-dot" style="background:${r.hadiah?'#38BDF8':'#a78bfa'};"></div>
+        <div>
+          <div class="ri-desc">${r.hadiah?'🎁 '+r.hadiah:'💸 Diskon Rp '+fmt(r.nilaiDiskon)}</div>
+          <div class="ri-date">${r.tgl||r.tanggal||'-'} · ${fmt(r.poinDipakai)} poin</div>
+        </div>
+      </div>`).join('');
+  }
+
+  listenRequest();
+}
+
+/* ============================================================ REQUEST TUKAR ============================================================ */
+async function requestTukar(tipe, hadiahIdx) {
+  const poin = Number(pelanggan.poin||pelanggan.point||0);
+
+  // Cek pending
+  const existing = await _db.collection('poin_requests')
+    .where('storeId','==',storeId)
+    .where('pelangganId','==', pelanggan.id||pelanggan.hp)
+    .where('status','==','pending')
+    .limit(1).get().catch(()=>null);
+  if (existing&&!existing.empty) {
+    Swal.fire({icon:'info',title:'Ada Request Pending',text:'Masih ada request yang belum dikonfirmasi kasir. Tunggu sebentar ya.',customClass:{popup:'swal2-ku'}});
+    return;
+  }
+
+  let label, payload;
+  if (tipe==='diskon') {
+    const nilaiDiskon = Math.floor(poin/100)*(poinCfg.nilaiTukar||1000);
+    label   = `Diskon Rp ${fmt(nilaiDiskon)}`;
+    payload = { tipe:'diskon', nilaiDiskon, poinDipakai:poin };
+  } else {
+    const h = (poinCfg.daftarHadiah||[])[hadiahIdx];
+    if (!h) return;
+    label   = h.nama;
+    payload = { tipe:'hadiah', hadiah:h.nama, poinDipakai:h.poin };
+  }
+
+  const ok = await Swal.fire({
+    icon:'question',title:'Konfirmasi Request',
+    html:`Kamu akan request tukar:<br><b style="color:#38BDF8;">${label}</b><br>
+      <span style="font-size:12px;color:#94a3b8;">Kasir akan mengkonfirmasi dan memproses penukaran.</span>`,
+    showCancelButton:true, confirmButtonText:'Ya, Request!', cancelButtonText:'Batal',
+    customClass:{popup:'swal2-ku'}
+  });
+  if (!ok.isConfirmed) return;
+
+  const now = new Date();
+  await _db.collection('poin_requests').add({
+    storeId,
+    pelangganId  : pelanggan.id||pelanggan.hp,
+    pelangganNama: pelanggan.nama||pelanggan.name||'-',
+    pelangganHp  : pelanggan.hp||pelanggan.noHp||'-',
+    poinSaatIni  : poin,
+    tgl          : now.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}),
+    jam          : now.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}),
+    createdAt    : firebase.firestore.FieldValue.serverTimestamp(),
+    status       : 'pending',
+    ...payload
+  });
+
+  document.getElementById('d-badge-req').style.display = '';
+  Swal.fire({
+    icon:'success',title:'Request Terkirim! ✅',
+    html:`Request <b>${label}</b> sudah dikirim ke kasir.<br>
+      <span style="font-size:12px;color:#94a3b8;">Tunjukkan layar ini ke kasir dan tunggu konfirmasi.</span>`,
+    customClass:{popup:'swal2-ku'}
+  });
+}
+
+/* ============================================================ LISTEN REQUEST ============================================================ */
+function listenRequest() {
+  if (reqListener) reqListener();
+  reqListener = _db.collection('poin_requests')
+    .where('storeId','==',storeId)
+    .where('pelangganId','==', pelanggan.id||pelanggan.hp)
+    .where('status','==','pending')
+    .onSnapshot(snap => {
+      const badge = document.getElementById('d-badge-req');
+      if (snap&&!snap.empty) { badge.style.display=''; }
+      else { badge.style.display='none'; reloadPoin(); }
+    }, ()=>{});
+}
+
+async function reloadPoin() {
+  const list = await getPelangganList();
+  if (!list) return;
+  const pid = pelanggan.id||pelanggan.hp;
+  const found = list.find(p=>p.id===pid||p.hp===pid);
+  if (!found) return;
+  pelanggan = found;
+  const poin = Number(found.poin||found.point||0);
+  document.getElementById('d-poin').textContent = fmt(poin);
+  Swal.fire({icon:'success',title:'Poin Diperbarui!',text:`Poin kamu sekarang: ${fmt(poin)} poin`,timer:3000,showConfirmButton:false,customClass:{popup:'swal2-ku'}});
+}
+
+/* ============================================================ NAVIGATION ============================================================ */
+function showLoginPage() {
+  const namaToko = tokoData?.namaToko||tokoData?.nama||'Toko';
+  document.getElementById('toko-badge-wrap').innerHTML = tokoBadgeHTML(namaToko, 'ID: '+storeId);
+  showPage('login');
+}
+
+function gantiToko() {
+  sessionStorage.removeItem('ku_store_id');
+  storeId=null; tokoData=null;
+  showPage('toko');
+}
+
+function logout() {
+  pelanggan=null;
+  document.getElementById('inp-hp').value='';
+  document.getElementById('inp-nama').value='';
+  if(reqListener){reqListener();reqListener=null;}
+  showPage('login');
+}
+
+function showPage(p) {
+  ['toko','login','dashboard'].forEach(x=>document.getElementById('page-'+x).style.display= x===p?'':'none');
+}
+
+function tokoBadgeHTML(nama, sub) {
+  return `<div class="toko-badge"><div class="toko-badge-icon"><i class="fas fa-store text-white" style="font-size:13px;"></i></div><div><div class="toko-badge-name">${nama}</div><div class="toko-badge-sub">${sub}</div></div></div>`;
+}
+
+function setBtnLoading(btn, msg) { btn.disabled=true; btn.innerHTML=`<i class="fas fa-spinner spinner" style="margin-right:6px;"></i>${msg}`; }
+function setBtnNormal(btn, html) { btn.disabled=false; btn.innerHTML=html; }
+function swalErr(msg) { Swal.fire({icon:'error',title:'Oops',text:msg,customClass:{popup:'swal2-ku'}}); }
+
+/* ============================================================ INIT ============================================================ */
+async function init() {
+  await new Promise(r=>{const t=setInterval(()=>{if(window._db){clearInterval(t);r();}},50);});
+  const savedId = sessionStorage.getItem('ku_store_id');
+  if (savedId) {
+    storeId = savedId;
+    let doc = await _db.collection('user_stores').doc(storeId).get().catch(()=>null);
+    if (doc&&doc.exists) tokoData=doc.data();
+    else { doc = await _db.collection('stores').doc(storeId).get().catch(()=>null); if(doc&&doc.exists) tokoData=doc.data(); }
+    if (tokoData) { showLoginPage(); return; }
+  }
+  showPage('toko');
+}
+init();
+</script>
+</body>
+</html>
