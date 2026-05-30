@@ -11476,7 +11476,18 @@
                 </div>
               </div>
 
-              <!-- ROW 2: Info keuangan (modal, laba, tanggal) -->
+              <!-- ROW 2: Info keuangan (modal, laba, tanggal+waktu) -->
+              ${(() => {
+                // Ekstrak jam:menit dari timestamp di ID transaksi (TR-1234567890123)
+                let jamTrx = '';
+                try {
+                  const _tsM = (t.id||'').match(/TR-(\d{13,})/);
+                  if (_tsM) {
+                    const _dt = new Date(parseInt(_tsM[1], 10));
+                    jamTrx = String(_dt.getHours()).padStart(2,'0') + ':' + String(_dt.getMinutes()).padStart(2,'0');
+                  }
+                } catch(_e) {}
+                return `
               <div class="grid grid-cols-3 gap-2">
                 <div class="rounded-xl p-2.5 flex flex-col gap-0.5" style="background:rgba(100,116,139,0.08);">
                   <p class="text-[7px] font-black uppercase tracking-wide" style="color:var(--sb-text-label);">Modal</p>
@@ -11487,10 +11498,12 @@
                   <p class="text-[10px] font-black" style="color:${profitPos ? '#10b981' : '#ef4444'};">${profitPos ? '+' : ''}Rp ${fmt(profit)}</p>
                 </div>
                 <div class="rounded-xl p-2.5 flex flex-col gap-0.5" style="background:rgba(100,116,139,0.08);">
-                  <p class="text-[7px] font-black uppercase tracking-wide" style="color:var(--sb-text-label);">Tanggal</p>
-                  <p class="text-[10px] font-black" style="color:var(--sb-text-title);">${t.tgl||'—'}</p>
+                  <p class="text-[7px] font-black uppercase tracking-wide" style="color:var(--sb-text-label);">Waktu</p>
+                  <p class="text-[10px] font-black leading-tight" style="color:var(--sb-text-title);">${t.tgl||'—'}</p>
+                  ${jamTrx ? `<p class="text-[9px] font-black flex items-center gap-0.5 mt-0.5" style="color:#38BDF8;"><i class="fas fa-clock" style="font-size:7px;"></i> ${jamTrx}</p>` : ''}
                 </div>
-              </div>
+              </div>`;
+              })()}
 
               <!-- ROW 3: Info Dompet -->
               <div class="flex gap-2 flex-wrap">
