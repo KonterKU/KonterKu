@@ -4783,19 +4783,7 @@
             </div>
             <div class="flex-1 min-w-0">
               <p class="text-[12px] font-black text-slate-800">Kelola Toko</p>
-              <p class="text-[9px] text-slate-400 font-bold">Tambah & atur toko Anda</p>
-            </div>
-            <i class="fas fa-chevron-right text-slate-300 text-[9px]"></i>
-          </button>
-
-          <!-- Monitor Cabang -->
-          <button id="sidebar-monitor-cabang-menu" class="sidebar-menu-item" onclick="openSidebarMenu('monitor-cabang')">
-            <div class="sidebar-icon-wrap" style="background:rgba(14,116,144,0.12);">
-              <i class="fas fa-chart-network" style="color:#0e7490;"></i>
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-[12px] font-black text-slate-800">Monitor Cabang</p>
-              <p class="text-[9px] text-slate-400 font-bold">Pantau semua data toko</p>
+              <p class="text-[9px] text-slate-400 font-bold">Toko, slot & monitor cabang</p>
             </div>
             <i class="fas fa-chevron-right text-slate-300 text-[9px]"></i>
           </button>
@@ -4924,12 +4912,6 @@
           <button class="desktop-sidenav-item" id="dsn-kelola-toko" onclick="openSidebarMenu('kelola-toko')">
             <div class="dsn-icon" style="background:rgba(0,97,194,0.15);"><i class="fas fa-store" style="color:#0061C2;"></i></div>
             Kelola Toko
-          </button>
-
-          <!-- Monitor Cabang -->
-          <button class="desktop-sidenav-item" id="dsn-monitor-cabang" onclick="openSidebarMenu('monitor-cabang')">
-            <div class="dsn-icon" style="background:rgba(14,116,144,0.15);"><i class="fas fa-chart-network" style="color:#0e7490;"></i></div>
-            Monitor Cabang
           </button>
 
           <!-- ── Divider + Pengaturan ── -->
@@ -5082,31 +5064,20 @@
             <i class="fas fa-chevron-right" style="color:rgba(251,191,36,0.6);font-size:10px;flex-shrink:0;"></i>
           </button>
 
-          <!-- Shortcut ke Kelola Toko & Monitor Cabang -->
-          <div class="grid grid-cols-2 gap-3">
-            <button onclick="closeModal('modal-sidebar-akun'); setTimeout(()=>openSidebarMenu('kelola-toko'),150);"
-              class="flex flex-col items-center gap-2 p-4 rounded-2xl border-0 cursor-pointer transition-all active:scale-95"
-              style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #bfdbfe;">
-              <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#0061C2,#38BDF8);box-shadow:0 4px 12px rgba(0,97,194,0.3);">
-                <i class="fas fa-store text-white" style="font-size:14px;"></i>
-              </div>
-              <div>
-                <p class="text-[11px] font-black text-blue-800">Kelola Toko</p>
-                <p class="text-[8px] font-bold text-blue-400">Toko & slot</p>
-              </div>
-            </button>
-            <button onclick="closeModal('modal-sidebar-akun'); setTimeout(()=>openSidebarMenu('monitor-cabang'),150);"
-              class="flex flex-col items-center gap-2 p-4 rounded-2xl border-0 cursor-pointer transition-all active:scale-95"
-              style="background:linear-gradient(135deg,#0a1628,#0d2550);border:1.5px solid rgba(56,189,248,0.2);">
-              <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:linear-gradient(135deg,#0061C2,#38BDF8);box-shadow:0 4px 12px rgba(0,97,194,0.4);">
-                <i class="fas fa-chart-network text-white" style="font-size:14px;"></i>
-              </div>
-              <div>
-                <p class="text-[11px] font-black text-white">Monitor Cabang</p>
-                <p class="text-[8px] font-bold text-slate-400">Data semua toko</p>
-              </div>
-            </button>
-          </div>
+          <!-- Shortcut ke Kelola Toko -->
+          <button onclick="closeModal('modal-sidebar-akun'); setTimeout(()=>openSidebarMenu('kelola-toko'),150);"
+            class="w-full flex items-center gap-4 rounded-2xl border-0 cursor-pointer transition-all active:scale-95"
+            style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1.5px solid #bfdbfe;padding:14px 16px;">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+              style="background:linear-gradient(135deg,#0061C2,#38BDF8);box-shadow:0 4px 12px rgba(0,97,194,0.3);">
+              <i class="fas fa-store text-white" style="font-size:14px;"></i>
+            </div>
+            <div class="flex-1 text-left">
+              <p class="font-black text-blue-800" style="font-size:13px;">Kelola Toko</p>
+              <p class="font-bold text-blue-400" style="font-size:9px;margin-top:2px;">Toko, slot & monitor cabang</p>
+            </div>
+            <i class="fas fa-chevron-right" style="color:#0061C2;font-size:10px;"></i>
+          </button>
 
           <!-- Shortcut ke Pengaturan -->
           <button onclick="closeModal('modal-sidebar-akun'); setTimeout(()=>openSidebarMenu('setting'),150);"
@@ -5400,6 +5371,21 @@
               <p class="text-[8px] text-center text-slate-400 font-bold" id="multitoko-upgrade-hint"></p>
             </div>
           </div>
+
+          <!-- Shortcut Monitor Cabang -->
+          <button onclick="closeModal('modal-sidebar-kelola-toko'); setTimeout(()=>openSidebarMenu('monitor-cabang'),150);"
+            class="w-full flex items-center gap-4 rounded-2xl border-0 cursor-pointer transition-all active:scale-95"
+            style="background:linear-gradient(135deg,#0a1628,#0d2550);border:1.5px solid rgba(56,189,248,0.2);padding:14px 16px;">
+            <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+              style="background:linear-gradient(135deg,#0061C2,#38BDF8);box-shadow:0 4px 12px rgba(0,97,194,0.4);">
+              <i class="fas fa-chart-network text-white" style="font-size:14px;"></i>
+            </div>
+            <div class="flex-1 text-left">
+              <p class="font-black text-white" style="font-size:13px;">Monitor Cabang</p>
+              <p class="font-bold text-slate-400" style="font-size:9px;margin-top:2px;">Pantau semua data toko secara real-time</p>
+            </div>
+            <i class="fas fa-chevron-right" style="color:rgba(56,189,248,0.6);font-size:10px;"></i>
+          </button>
         </div>
       </div>
     </div>
