@@ -1752,6 +1752,12 @@
     [data-theme="dark"] #modal-sidebar-tentang [style*="background:#fff7ed"],
     [data-theme="dark"] #modal-sidebar-tentang [style*="background:#fed7aa"] { background: rgba(234,88,12,0.12) !important; }
     [data-theme="dark"] #modal-sidebar-tentang [style*="background:#ecfdf5"] { background: rgba(16,185,129,0.10) !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background:#f0f9ff"] { background: rgba(2,132,199,0.10) !important; border-color: rgba(2,132,199,0.2) !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background:#fefce8"] { background: rgba(161,98,7,0.12) !important; border-color: rgba(234,179,8,0.18) !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background:#fdf4ff"] { background: rgba(168,85,247,0.10) !important; border-color: rgba(168,85,247,0.2) !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="background:#f8fafc"][style*="border:1px solid #e2e8f0"] { background: rgba(255,255,255,0.05) !important; border-color: rgba(255,255,255,0.1) !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#0284c7"] { color: #38bdf8 !important; }
+    [data-theme="dark"] #modal-sidebar-tentang [style*="color:#a16207"] { color: #fbbf24 !important; }
     /* Warna teks fitur card */
     [data-theme="dark"] #modal-sidebar-tentang [style*="color:#1d4ed8"],
     [data-theme="dark"] #modal-sidebar-tentang [style*="color:#1e40af"] { color: #60a5fa !important; }
@@ -4829,9 +4835,37 @@
             Hutang
           </button>
 
-          <!-- ── Divider + Menu Pengaturan (mirip mobile) ── -->
+          <!-- Supplier & Restok -->
+          <button class="desktop-sidenav-item" id="dsn-supplier" onclick="(typeof openSidebarMenuSupplier === 'function') ? openSidebarMenuSupplier() : openModal('modal-sidebar-supplier')">
+            <div class="dsn-icon" style="background:rgba(234,88,12,0.15);"><i class="fas fa-truck" style="color:#ea580c;"></i></div>
+            Supplier
+          </button>
+
+          <!-- ── Divider + Toko ── -->
+          <div class="sidebar-divider" style="margin:8px 4px;"></div>
+          <div class="sidebar-section-label" style="padding-left:4px;">Toko</div>
+
+          <!-- Kelola Toko -->
+          <button class="desktop-sidenav-item" id="dsn-kelola-toko" onclick="openSidebarMenu('kelola-toko')">
+            <div class="dsn-icon" style="background:rgba(0,97,194,0.15);"><i class="fas fa-store" style="color:#0061C2;"></i></div>
+            Kelola Toko
+          </button>
+
+          <!-- Monitor Cabang -->
+          <button class="desktop-sidenav-item" id="dsn-monitor-cabang" onclick="openSidebarMenu('monitor-cabang')">
+            <div class="dsn-icon" style="background:rgba(14,116,144,0.15);"><i class="fas fa-chart-network" style="color:#0e7490;"></i></div>
+            Monitor Cabang
+          </button>
+
+          <!-- ── Divider + Pengaturan ── -->
           <div class="sidebar-divider" style="margin:8px 4px;"></div>
           <div class="sidebar-section-label" style="padding-left:4px;">Pengaturan</div>
+
+          <!-- Akun Toko -->
+          <button class="desktop-sidenav-item" onclick="openSidebarMenu('akun')">
+            <div class="dsn-icon" style="background:rgba(59,130,246,0.15);"><i class="fas fa-user-circle" style="color:#60a5fa;"></i></div>
+            Akun Toko
+          </button>
 
           <!-- Pengaturan -->
           <button class="desktop-sidenav-item" onclick="openSidebarMenu('setting')">
@@ -4839,11 +4873,9 @@
             Pengaturan
           </button>
 
-          <!-- Akun Toko -->
-          <button class="desktop-sidenav-item" onclick="openSidebarMenu('akun')">
-            <div class="dsn-icon" style="background:rgba(59,130,246,0.15);"><i class="fas fa-user-circle" style="color:#60a5fa;"></i></div>
-            Akun Toko
-          </button>
+          <!-- ── Divider + Data ── -->
+          <div class="sidebar-divider" style="margin:8px 4px;"></div>
+          <div class="sidebar-section-label" style="padding-left:4px;">Data</div>
 
           <!-- Kelola Kasir -->
           <button class="desktop-sidenav-item" id="dsn-kelola-kasir" onclick="openSidebarMenu('kelola-kasir')">
@@ -4869,6 +4901,23 @@
             Poin Pelanggan
           </button>
 
+          <!-- ── Divider + Keamanan ── -->
+          <div class="sidebar-divider" style="margin:8px 4px;"></div>
+          <div class="sidebar-section-label" style="padding-left:4px;">Keamanan</div>
+
+          <!-- Audit Trail -->
+          <button class="desktop-sidenav-item" onclick="typeof bukaAuditLog === 'function' && bukaAuditLog()">
+            <div class="dsn-icon" style="background:rgba(239,68,68,0.15);"><i class="fas fa-shield-halved" style="color:#ef4444;"></i></div>
+            Audit Trail
+          </button>
+
+          <!-- Push Notifikasi -->
+          <button class="desktop-sidenav-item" onclick="typeof bukaNotifPWA === 'function' && bukaNotifPWA()">
+            <div class="dsn-icon" style="background:rgba(0,97,194,0.15);"><i class="fas fa-bell" style="color:#0061C2;"></i></div>
+            Notifikasi PWA
+          </button>
+
+          <!-- ── Divider + Lainnya ── -->
           <div class="sidebar-divider" style="margin:8px 4px;"></div>
           <div class="sidebar-section-label" style="padding-left:4px;">Lainnya</div>
 
@@ -9195,7 +9244,7 @@
     // ── PLAN LIMITS ──
     const PLAN_LIMITS = {
       trial:     { produk: 100,  dompet: 20  },
-      basic:     { produk: 100,  dompet: 20  },
+      basic:     { produk: 200,  dompet: 20  },
       pro:       { produk: 500,  dompet: 50  },
       unlimited: { produk: 1000, dompet: 100 },
     };
@@ -9211,14 +9260,32 @@
         label: 'BASIC', price: 'Rp20K/bln',
         icon: 'fa-star', iconColor: '#0ea5e9',
         desc: 'Untuk konter kecil yang ingin mulai tertata.',
-        fitur: ['Kasir Digital', 'Manajemen Stok', 'Laporan Harian', 'Hutang Piutang', 'Maks. 100 Produk', 'Maks. 20 Dompet', 'Transaksi Unlimited'],
+        fitur: [
+          'Kasir Digital, Fisik & E-Wallet',
+          'Manajemen Stok & Barcode',
+          'Laporan Harian',
+          'Hutang Piutang',
+          'Pelanggan & Catatan',
+          '1 Toko · Maks. 100 Produk',
+          'Transaksi Unlimited',
+        ],
       },
       pro: {
         color: '#10b981', bg: 'rgba(16,185,129,0.08)', border: 'rgba(16,185,129,0.2)',
         label: 'PRO ⭐', price: 'Rp50K/bln',
         icon: 'fa-crown', iconColor: '#10b981',
         desc: 'Fitur lengkap untuk konter yang berkembang pesat.',
-        fitur: ['Semua fitur Basic', 'Ekspor PDF & Laporan', 'Kasir Karyawan', 'Absensi Kasir', 'Hingga 3 Toko', 'Maks. 500 Produk', 'Maks. 50 Dompet'],
+        fitur: [
+          'Semua Fitur Basic',
+          'Ekspor PDF & Laporan',
+          'Cetak Struk Thermal',
+          'Kasir Karyawan + Izin Akses',
+          'Absensi Kasir (Shift)',
+          'Supplier & Restok + HPP Otomatis',
+          'Poin Pelanggan & Reward',
+          'Audit Trail',
+          'Hingga 3 Toko · 500 Produk',
+        ],
         badge: 'TERPOPULER',
       },
       unlimited: {
@@ -9226,24 +9293,41 @@
         label: 'UNLIMITED 🔥', price: 'Rp125K/bln',
         icon: 'fa-fire', iconColor: '#f59e0b',
         desc: 'Untuk konter besar dengan kebutuhan bisnis penuh.',
-        fitur: ['Semua Fitur Pro', 'Hingga 10 Toko / Cabang', 'Maks. 1.000 Produk', 'Maks. 100 Dompet', 'Laporan Bulanan Lanjutan', 'Support Dedicated WA'],
+        fitur: [
+          'Semua Fitur Pro',
+          'Hingga 10 Toko / Cabang',
+          'Monitor Semua Cabang Real-Time',
+          'Notifikasi PWA',
+          'Maks. 1.000 Produk · 100 Dompet',
+          'Laporan Bulanan Lanjutan',
+          'Support Dedicated WA',
+        ],
       },
     };
 
     const _FEATURE_LABEL = {
-      hutang: 'Hutang Piutang',
-      ekspor_pdf: 'Laporan & Ekspor PDF',
-      pantau_stok: 'Pantau Stok Realtime',
-      notif_stok: 'Notifikasi Stok Menipis',
-      cloud_sync: 'Multi-Device Cloud Sync',
-      absensi: 'Absensi Kasir',
-      limit_produk: 'Tambah Produk',
-      limit_dompet: 'Tambah Dompet',
-      setting_struk: 'Setting Struk Thermal',
-      kelola_kasir: 'Kelola Kasir Karyawan',
-      poin_pelanggan: 'Sistem Poin Pelanggan',
-      catatan_premium: 'Catatan Bisnis',
-      manajemen_pelanggan: 'Manajemen Pelanggan',
+      // ── Fitur basic ──
+      hutang:               'Hutang Piutang',
+      limit_produk:         'Tambah Produk',
+      limit_dompet:         'Tambah Dompet',
+      manajemen_pelanggan:  'Manajemen Pelanggan',
+      catatan_premium:      'Catatan Bisnis',
+      // ── Fitur pro ──
+      ekspor_pdf:           'Laporan & Ekspor PDF',
+      ekspor_excel:         'Ekspor Excel',
+      share_whatsapp:       'Bagikan Laporan via WhatsApp',
+      pantau_stok:          'Pantau Stok Real-Time',
+      notif_stok:           'Notifikasi Stok Menipis',
+      setting_struk:        'Setting Struk Thermal',
+      kelola_kasir:         'Kelola Kasir Karyawan',
+      absensi:              'Absensi Kasir (Shift)',
+      supplier_restok:      'Supplier & Restok',
+      poin_pelanggan:       'Sistem Poin Pelanggan & Reward',
+      audit_trail:          'Audit Trail',
+      // ── Fitur unlimited ──
+      cloud_sync:           'Multi-Device Cloud Sync',
+      monitor_cabang:       'Monitor Cabang Real-Time',
+      notif_pwa:            'Notifikasi PWA',
     };
 
     function showUpgradeModal(featureKey, minPlan, onUnlock) {
@@ -12531,26 +12615,26 @@
 
     function _isPlanPro() {
       const PLAN_RANK = { trial: 0, basic: 1, pro: 2, unlimited: 3 };
-      return (PLAN_RANK[localStorage.getItem('k_plan') || 'trial'] ?? 0) >= 2;
+      return (PLAN_RANK[localStorage.getItem('k_plan') || 'trial'] ?? 0) >= 1;
     }
 
     function _loadSettingStrukToForm() {
       const wrap = document.getElementById('struk-setting-body');
       const lockEl = document.getElementById('struk-setting-lock');
 
-      // Hanya PRO & UNLIMITED yang bisa akses setting struk
+      // Minimal BASIC yang bisa akses setting struk
       if (!_isPlanPro()) {
         if (wrap)   wrap.style.display = 'none';
         if (lockEl) {
           lockEl.style.display = 'block';
           lockEl.innerHTML = `
-            <div style="margin:16px 0;padding:20px;border-radius:18px;background:rgba(16,185,129,0.06);border:1.5px solid rgba(16,185,129,0.2);text-align:center;">
+            <div style="margin:16px 0;padding:20px;border-radius:18px;background:rgba(14,165,233,0.06);border:1.5px solid rgba(14,165,233,0.2);text-align:center;">
               <div style="width:48px;height:48px;border-radius:14px;background:rgba(16,185,129,0.12);border:1.5px solid rgba(16,185,129,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 10px;">
                 <i class="fas fa-lock" style="font-size:18px;color:#10b981;"></i>
               </div>
               <p style="font-size:13px;font-weight:900;color:#065f46;margin:0 0 4px;">Setting Struk Thermal</p>
               <p style="font-size:10px;color:rgba(0,0,0,0.45);font-weight:600;line-height:1.5;margin:0 0 14px;">Kustomisasi struk (logo, alamat, tagline)<br>tersedia untuk paket <b style="color:#10b981;">PRO ⭐ & UNLIMITED 🔥</b></p>
-              <button onclick="showUpgradeModal('setting_struk','pro')"
+              <button onclick="showUpgradeModal('setting_struk','basic')"
                 style="padding:10px 24px;border-radius:12px;border:0;background:linear-gradient(135deg,#10b981,#34d399);color:white;font-weight:900;font-size:11px;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;box-shadow:0 6px 18px rgba(16,185,129,0.35);">
                 <i class="fas fa-crown mr-2"></i>Upgrade ke PRO
               </button>
@@ -16498,6 +16582,11 @@ ${t.bayar ? `
           return;
         }
         if (menu === 'monitor-cabang') {
+          var _r = ({trial:0,basic:1,pro:2,unlimited:3})[localStorage.getItem('k_plan')||'trial']??0;
+          if (_r < 2) {
+            if (typeof showUpgradeModal === 'function') showUpgradeModal('monitor_cabang','pro');
+            return;
+          }
           closeSidebar && closeSidebar();
           openModal('modal-sidebar-monitor-cabang');
           setTimeout(loadMonitorCabang, 300);
@@ -22153,6 +22242,11 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
   // ═══════════════════════════════════════════════════
 
   window.bukaNotifPWA = function() {
+    var _r = ({trial:0,basic:1,pro:2,unlimited:3})[localStorage.getItem('k_plan')||'trial']??0;
+    if (_r < 3) {
+      if (typeof showUpgradeModal === 'function') showUpgradeModal('notif_pwa','unlimited');
+      return;
+    }
     renderNotifPWA();
     openModal('modal-notif-pwa');
   };
@@ -22754,6 +22848,11 @@ Mohon konfirmasi & aktivasi segera. Terima kasih! 🙏`;
 
   /* ── Buka modal Audit Trail ── */
   window.bukaAuditLog = function () {
+    var _r = ({trial:0,basic:1,pro:2,unlimited:3})[localStorage.getItem('k_plan')||'trial']??0;
+    if (_r < 2) {
+      if (typeof showUpgradeModal === 'function') showUpgradeModal('audit_trail','pro');
+      return;
+    }
     var overlay = document.getElementById('modal-audit-trail');
     if (!overlay) {
       overlay = document.createElement('div');
@@ -24202,6 +24301,11 @@ function fmtRp(n) {
 
 // ─── OPEN SIDEBAR SUPPLIER ───
 function openSidebarMenuSupplier() {
+  const _r = ({trial:0,basic:1,pro:2,unlimited:3})[localStorage.getItem('k_plan')||'trial']??0;
+  if (_r < 1) {
+    if (typeof showUpgradeModal === 'function') showUpgradeModal('supplier_restok','basic');
+    return;
+  }
   openModal('modal-sidebar-supplier');
   setSupplierTab('daftar');
   renderSupplierList();
